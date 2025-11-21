@@ -5,10 +5,10 @@
   <title>Fiducia Collective | Director's Market</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Fonts -->
+  <!-- Fonts: Inter(영어/브랜드) + Pretendard(한국어) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" />
 
   <style>
@@ -28,7 +28,7 @@
     body {
       background: radial-gradient(circle at top, #1b2640 0, #02030a 52%);
       color: var(--text);
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      font-family: 'Pretendard', Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
@@ -39,8 +39,14 @@
     .nav-wrap { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(14px);
       background: linear-gradient(to bottom, rgba(2, 3, 10, 0.92), rgba(2, 3, 10, 0.4), transparent); }
     .nav { height: 64px; display: flex; align-items: center; justify-content: space-between; }
-    .nav-logo { font-size: 13px; letter-spacing: 0.19em; text-transform: uppercase; font-family: 'Poppins', system-ui, sans-serif; color: #e5e7eb; }
-    .nav-menu { display: flex; gap: 8px; font-size: 11px; flex-wrap: nowrap; justify-content: flex-end; overflow-x: auto; padding-left: 16px; }
+    .nav-logo {
+      font-size: 13px; letter-spacing: 0.19em; text-transform: uppercase;
+      font-family: Inter, system-ui, sans-serif; color: #e5e7eb; font-weight: 600;
+    }
+    .nav-menu {
+      display: flex; gap: 8px; font-size: 11px; flex-wrap: nowrap; justify-content: flex-end;
+      overflow-x: auto; padding-left: 16px; font-family: Inter, system-ui, sans-serif;
+    }
     .nav-menu::-webkit-scrollbar { display: none; }
     .nav-menu a { text-decoration: none; color: var(--muted); padding: 5px 10px; border-radius: 999px; border: 1px solid transparent;
       transition: color 0.18s, background 0.18s, border-color 0.18s, transform 0.12s; white-space: nowrap; }
@@ -49,17 +55,28 @@
 
     /* HERO */
     .hero { text-align: center; margin: 26px 0 42px; padding: 10px 6px 0; }
-    .hero-brand { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px; font-family: 'Poppins', system-ui, sans-serif; color: #9ca3af; }
+    .hero-brand {
+      font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px;
+      font-family: Inter, system-ui, sans-serif; color: #9ca3af; font-weight: 500;
+    }
     .hero-title-kr { font-size: 26px; line-height: 1.3; font-weight: 600; margin-bottom: 18px; white-space: pre-line; }
-    .hero-sub-title { display: inline-flex; align-items: center; justify-content: center; position: relative; font-size: 19px;
-      font-family: 'Poppins', system-ui, sans-serif; padding: 4px 16px 3px; margin-bottom: 16px; }
+    .hero-sub-title {
+      display: inline-flex; align-items: center; justify-content: center; position: relative; font-size: 19px;
+      font-family: Inter, system-ui, sans-serif; padding: 4px 16px 3px; margin-bottom: 16px; font-weight: 600;
+    }
     .hero-sub-title::before { content: ""; position: absolute; inset: -7px -16px; border-radius: 999px; border: 2px solid var(--accent);
       box-shadow: 0 0 22px rgba(79, 125, 255, 0.45); opacity: 0.95; }
     .hero-sub-title span { position: relative; }
-    .hero-quote { font-size: 12px; color: var(--muted); margin-top: 8px; white-space: pre-line; font-family: 'Poppins', system-ui, sans-serif; }
+    .hero-quote {
+      font-size: 12px; color: var(--muted); margin-top: 8px; white-space: pre-line;
+      font-family: Inter, system-ui, sans-serif;
+    }
 
     section { scroll-margin-top: 86px; }
-    .section-title { font-size: 18px; font-weight: 500; margin: 34px 0 16px; text-align: left; text-transform: lowercase; font-family: 'Poppins', system-ui, sans-serif; }
+    .section-title {
+      font-size: 18px; font-weight: 600; margin: 34px 0 16px; text-align: left; text-transform: lowercase;
+      font-family: Inter, system-ui, sans-serif;
+    }
 
     /* Recent work */
     .work-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
@@ -79,7 +96,7 @@
     .work-meta { padding: 13px 13px 14px; display: flex; flex-direction: column; gap: 4px; }
     .work-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
     .work-sub { font-size: 11px; opacity: 0.9; margin-bottom: 6px; color: #e5e7eb; }
-    .work-role-label { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.09em; color: #cbd5f5; }
+    .work-role-label { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.09em; color: #cbd5f5; font-family: Inter, system-ui, sans-serif; }
     .work-role-name { font-size: 12px; font-weight: 500; color: #eef2ff; }
 
     /* About */
@@ -89,15 +106,16 @@
       border: 1px solid var(--border-subtle); box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
     }
     .about-title { font-size: 13px; margin-bottom: 10px; }
-    .about-title span { font-family: 'Poppins', system-ui, sans-serif; }
+    .about-title span { font-family: Inter, system-ui, sans-serif; font-weight: 600; }
     .about-bold { font-weight: 600; }
     .about-accent { color: #bfdbfe; font-weight: 600; }
     .about-spaced { margin-top: 14px; color: #e5e7eb; }
     .cta-wrapper { margin-top: 22px; display: flex; justify-content: center; }
     .cta-btn {
       display: inline-flex; align-items: center; justify-content: center; padding: 9px 18px; border-radius: 999px; border: 1px solid rgba(191, 219, 254, 0.35);
-      font-size: 13px; font-weight: 500; background: linear-gradient(135deg, #4f7dff, #6366f1); color: #f9fafb; cursor: pointer; text-decoration: none;
+      font-size: 13px; font-weight: 600; background: linear-gradient(135deg, #4f7dff, #6366f1); color: #f9fafb; cursor: pointer; text-decoration: none;
       transition: transform 0.13s ease, box-shadow 0.13s ease, opacity 0.13s, filter 0.13s; box-shadow: 0 12px 30px rgba(79, 125, 255, 0.65);
+      font-family: Inter, system-ui, sans-serif;
     }
     .cta-btn:hover { transform: translateY(-1px); filter: brightness(1.03); box-shadow: 0 18px 42px rgba(79, 125, 255, 0.85); }
     .footer-icons { margin-top: 22px; display: flex; justify-content: center; gap: 32px; font-size: 24px; }
@@ -106,7 +124,7 @@
 
     /* Crew */
     .crew-section { margin-top: 40px; }
-    .crew-group-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .crew-group-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; font-family: Inter, system-ui, sans-serif; }
     .crew-grid { display: grid; grid-template-columns: 1fr; gap: 13px; }
     @media (min-width: 640px) { .crew-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .crew-card {
@@ -183,9 +201,16 @@
       <main id="main">
         <header class="hero">
           <div class="hero-brand">FIDUCIA COLLECTIVE</div>
-          <h1 class="hero-title-kr">신뢰를\n디자인하는\n프로덕션 플랫폼</h1>
+          <h1 class="hero-title-kr">
+            신뢰를<br>
+            디자인하는<br>
+            프로덕션 플랫폼
+          </h1>
           <div class="hero-sub-title"><span>Director's Market</span></div>
-          <p class="hero-quote">"Trust isn't what follows art\nIt's where art begins."</p>
+          <p class="hero-quote">
+            "Trust isn't what follows art<br>
+            It's where art begins."
+          </p>
         </header>
 
         <!-- Recent work -->
