@@ -1,61 +1,79 @@
 // netlify/functions/works.js
-const { Client } = require('@notionhq/client');
+const { Client } = require("@notionhq/client");
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 const DATABASE_ID = process.env.NOTION_WORKS_DB_ID;
+
+// 노션 property 타입이 뭐든 최대한 텍스트로 뽑아주는 함수
+function getText(prop) {
+  if (!prop) return "";
+
+  if (prop.type === "title") {
+    return prop.title?.[0]?.plain_text || "";
+  }
+  if (prop.type === "rich_text") {
+    return prop.rich_text?.[0]?.plain_text || "";
+  }
+  if (prop.type === "select") {
+    return prop.select?.name || "";
+  }
+  if (prop.type === "multi_select") {
+    return (prop.multi_select || []).map(v => v.name).join(", ");
+  }
+  if (prop.type === "relation") {
+    // relation은 이름 대신 id만 있으니 “연결됨” 정도로만 표기
+    return (prop.relation || []).length ? "linked" : "";
+  }
+  return "";
+}
+
+function getFileUrl(prop) {
+  const f = prop?.files?.[0];
+  if (!f) return "";
+  return f.file?.url || f.external?.url || "";
+}
 
 exports.handler = async () => {
   try {
     const response = await notion.databases.query({
       database_id: DATABASE_ID,
       filter: {
-        property: 'Published',
-        checkbox: { equals: true }
+        property: "Published",
+        checkbox: { equals: true },
       },
-      sorts: [
-        { property: 'Sort', direction: 'ascending' }
-      ]
+      sorts: [{ property: "Sort", direction: "ascending" }],
     });
 
     const works = response.results.map((page) => {
-      const props = page.properties;
-
-      const title = props.Title?.title?.[0]?.plain_text || '';
-      const subTitle = props.SubTitle?.rich_text?.[0]?.plain_text || '';
-      const roleLabel = props.RoleLabel?.rich_text?.[0]?.plain_text || '';
-      const roleName = props.RoleName?.rich_text?.[0]?.plain_text || '';
-
-      // 파일 방식 Thumbnail
-      let thumbnailUrl = '';
-      if (props.ThumbnailUrl?.files?.[0]) {
-        const file = props.ThumbnailUrl.files[0];
-        thumbnailUrl =
-          file.file?.url ||
-          file.external?.url ||
-          '';
-      }
+      const p = page.properties;
 
       return {
         id: page.id,
-        title,
-        subTitle,
-        roleLabel,
-        roleName,
-        thumbnailUrl
+        title: getText(p.Title),
+        subTitle: getText(p.SubTitle),
+        roleLabel: getText(p.RoleLabel),
+        roleName: getText(p.RoleName),
+        thumbnailUrl: getFileUrl(p.ThumbnailUrl),
       };
     });
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      body: JSON.stringify(works)
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(works),
     };
-
   } catch (error) {
-    console.error(error);
+    console.error("Notion works error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: 'Notion works fetch error' })
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({
+        message: "Notion works fetch error",
+        details: error?.body || error?.message,
+      }),
     };
   }
 };
