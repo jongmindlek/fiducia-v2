@@ -30,6 +30,8 @@ exports.handler = async () => {
         profileImageUrl = file.file?.url || file.external?.url || "";
       }
 
+      const verified = p.Verified?.checkbox || false;
+
       return {
         id: page.id,
         name,
@@ -41,6 +43,7 @@ exports.handler = async () => {
         phone,
         email,
         profileImageUrl,
+        verified,
       };
     });
 
