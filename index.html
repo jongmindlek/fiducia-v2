@@ -645,25 +645,30 @@
 
       const makeCard = (m) => {
         const card = document.createElement('div');
-        card.className = 'crew-card';
-        card.innerHTML = `
-          ${m.verified ? `<div class="crew-verified">Verified</div>` : ''}
-          <div class="crew-avatar">${m.profileImageUrl ? `<img src="${m.profileImageUrl}" alt="${m.name}">` : ''}</div>
-          <div class="crew-body">
-            <div class="crew-name">${m.name || ''}</div>
-            <div class="crew-role-line">${(m.roles && m.roles.length) ? m.roles.join(' · ') : (m.mainRole || '')}</div>
-            ${m.bio ? `<div class="crew-bio">${m.bio}</div>` : ''}
-            <div class="crew-tags">
-              ${(m.skills || []).map(s => `<span class="crew-tag">${s}</span>`).join('')}
-            </div>
-            <div class="crew-links">
-              ${m.instagram ? `<a href="${m.instagram}" target="_blank">Instagram</a>` : ''}
-              ${m.email ? `<a href="mailto:${m.email}">${m.email}</a>` : ''}
-              ${m.phone ? `<span>${m.phone}</span>` : ''}
-            </div>
-          </div>
-        `;
-        return card;
+card.className = 'crew-card';
+card.style.cursor = 'pointer';
+card.dataset.crewId = m.id;
+card.innerHTML = `
+  ${m.verified ? `<div class="crew-verified">Verified</div>` : ''}
+  <div class="crew-avatar">${m.profileImageUrl ? `<img src="${m.profileImageUrl}" alt="${m.name}">` : ''}</div>
+  <div class="crew-body">
+    <div class="crew-name">${m.name || ''}</div>
+    <div class="crew-role-line">${(m.roles && m.roles.length) ? m.roles.join(' · ') : (m.mainRole || '')}</div>
+    ${m.bio ? `<div class="crew-bio">${m.bio}</div>` : ''}
+    <div class="crew-tags">
+      ${(m.skills || []).map(s => `<span class="crew-tag">${s}</span>`).join('')}
+    </div>
+    <div class="crew-links">
+      ${m.instagram ? `<a href="${m.instagram}" target="_blank" onclick="event.stopPropagation()">Instagram</a>` : ''}
+      ${m.email ? `<a href="mailto:${m.email}" onclick="event.stopPropagation()">${m.email}</a>` : ''}
+      ${m.phone ? `<span>${m.phone}</span>` : ''}
+    </div>
+  </div>
+`;
+card.addEventListener('click', () => {
+  location.href = `crew.html?id=${m.id}`;
+});
+return card;
       };
 
       if (!directors.length) directorsGrid.innerHTML = '<p class="placeholder-text">조건에 맞는 Director가 없습니다.</p>';
