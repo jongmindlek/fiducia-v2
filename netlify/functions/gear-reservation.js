@@ -22,8 +22,7 @@ exports.handler = async () => {
       const status = p.Status?.select?.name || "";
       const memo = p.Memo?.rich_text?.[0]?.plain_text || "";
 
-      const date = p.Date?.date || null; // {start, end}
-
+      const date = p.Date?.date || null;
       const gearIds = (p.Gear?.relation || []).map((r) => r.id);
 
       return {
