@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fiducia Collective | Director's Market</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- 폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" />
+
+  <style>
+    :root {
+      --bg: #050505;
+      --text: #ffffff;
+      --muted: #a4a4a4;
+      --accent: #3d6bff;
+      --card-bg: #2f5bff;
+      --card-radius: 18px;
+      --max-width: 960px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      line-height: 1.5;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 0 20px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .inner {
+      width: 100%;
+      max-width: var(--max-width);
+    }
+
+    /* NAV */
+    .nav {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+    }
+
+    .nav-logo {
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-family: 'Poppins', system-ui, sans-serif;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 14px;
+      font-size: 11px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.is-active {
+      color: #fff;
+      border-color: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      margin: 28px 0 40px;
+    }
+
+    .hero-brand {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      font-family: 'Poppins', system-ui, sans-serif;
+    }
+
+    .hero-title-kr {
+      font-size: 26px;
+      line-height: 1.3;
+      font-weight: 600;
+      margin-bottom: 18px;
+      white-space: pre-line;
+    }
+
+    .hero-sub-title {
+      display: inline-block;
+      position: relative;
+      font-size: 20px;
+      font-family: 'Poppins', system-ui, sans-serif;
+      padding: 4px 10px 2px;
+      margin-bottom: 18px;
+    }
+
+    .hero-sub-title::before {
+      content: "";
+      position: absolute;
+      inset: -6px -12px;
+      border-radius: 999px;
+      border: 3px solid var(--accent);
+      pointer-events: none;
+    }
+
+    .hero-quote {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+      white-space: pre-line;
+      font-family: 'Poppins', system-ui, sans-serif;
+    }
+
+    /* 공통 섹션 */
+    section {
+      scroll-margin-top: 80px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 36px 0 18px;
+      text-align: left;
+      text-transform: lowercase;
+      font-family: 'Poppins', system-ui, sans-serif;
+    }
+
+    /* Recent work 카드 */
+    .work-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 640px) {
+      .work-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .work-card {
+      background-color: #111;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+    }
+
+    .work-thumb {
+      position: relative;
+      padding-top: 60%;
+      overflow: hidden;
+    }
+
+    .work-thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.1);
+      transform: scale(1.02);
+    }
+
+    .work-meta {
+      background-color: var(--card-bg);
+      padding: 14px 14px 16px;
+      color: #f6f6f6;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .work-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .work-sub {
+      font-size: 11px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .work-role-label {
+      font-size: 10px;
+      opacity: 0.8;
+    }
+
+    .work-role-name {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* About + CTA */
+    .about {
+      text-align: center;
+      margin-top: 52px;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .about-title {
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .about-title span {
+      font-family: 'Poppins', system-ui, sans-serif;
+    }
+
+    .about-bold {
+      font-weight: 600;
+    }
+
+    .about-accent {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .about-spaced {
+      margin-top: 14px;
+    }
+
+    .cta-wrapper {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: none;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+      box-shadow: 0 8px 18px rgba(61, 107, 255, 0.4);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.97;
+      box-shadow: 0 10px 24px rgba(61, 107, 255, 0.55);
+    }
+
+    .footer-icons {
+      margin-top: 26px;
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      font-size: 26px;
+    }
+
+    .footer-icons a {
+      text-decoration: none;
+      color: #ffffff;
+      opacity: 0.9;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .footer-icons a:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+
+    /* Crew 리스트 */
+    .crew-section {
+      margin-top: 40px;
+    }
+
+    .crew-group-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .crew-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 640px) {
+      .crew-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .crew-card {
+      background: #101010;
+      border-radius: 14px;
+      padding: 12px 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    }
+
+    .crew-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      background: #222;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .crew-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .crew-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .crew-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .crew-role-line {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .crew-bio {
+      font-size: 11px;
+      margin-bottom: 6px;
+      color: #d7d7d7;
+    }
+
+    .crew-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .crew-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #ddd;
+    }
+
+    .crew-links {
+      font-size: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+      color: var(--muted);
+    }
+
+    .crew-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .crew-links a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .placeholder-text {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="inner">
+
+      <!-- NAV -->
+      <nav class="nav">
+        <div class="nav-logo">FIDUCIA COLLECTIVE</div>
+        <div class="nav-menu">
+          <a href="#main" class="is-active">메인</a>
+          <a href="#ai-stillcut">AI 스틸컷 (예약)</a>
+          <a href="#gear">장비 예약</a>
+          <a href="#crew-list">감독/스태프 리스트</a>
+          <a href="#crew-register">감독/스태프 등록</a>
+        </div>
+      </nav>
+
+      <main id="main">
+        <!-- HERO -->
+        <header class="hero">
+          <div class="hero-brand">FIDUCIA COLLECTIVE</div>
+
+          <h1 class="hero-title-kr">
+신뢰를
+디자인하는
+프로덕션 플랫폼
+          </h1>
+
+          <div class="hero-sub-title">
+            Director's Market
+          </div>
+
+          <p class="hero-quote">
+"Trust isn't what follows art
+It's where art begins."
+          </p>
+        </header>
+
+        <!-- RECENT WORK -->
+        <section>
+          <h2 class="section-title">recent work</h2>
+          <div id="work-grid" class="work-grid">
+            <!-- Notion 연결 전이니까, 기본 카드 하나만 예시로 넣어둠 -->
+            <article class="work-card">
+              <div class="work-thumb">
+                <img src="https://via.placeholder.com/600x400?text=Stillcut" alt="sample" />
+              </div>
+              <div class="work-meta">
+                <div class="work-title">Sample Project</div>
+                <div class="work-sub">브랜딩 필름 / 테스트</div>
+                <div class="work-role-label">Director</div>
+                <div class="work-role-name">Choi Jongmin</div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- ABOUT + AI 스틸컷 CTA -->
+        <section class="about" id="ai-stillcut">
+          <div class="about-title">
+            '<span>Fiducia collective</span>'란?
+          </div>
+
+          <p>
+            <span class="about-accent">AI 기반 시각화 기술</span>과<br>
+            검증된 감독 네트워크를 결합해<br>
+            영상 기획 과정 부담은 줄이고<br>
+            신뢰 있게 연결하는<br>
+            <span class="about-bold">크리에이티브 프로덕션</span>입니다!
+          </p>
+
+          <p class="about-spaced">
+            AI 스틸컷 / 감독 매칭 / 장비 예약<br>
+            한 곳에서.<br>
+            당신의 비전을 가장 잘 구현할 팀을<br>
+            AI가 연결합니다.
+          </p>
+
+          <div class="cta-wrapper">
+            <a class="cta-btn" href="#ai-stillcut-reserve">
+              AI 스틸컷 이용해보기
+            </a>
+          </div>
+
+          <div class="footer-icons">
+            <a href="https://instagram.com" target="_blank" aria-label="Instagram">📷</a>
+            <a href="tel:01000000000" aria-label="Phone">📱</a>
+          </div>
+        </section>
+
+        <!-- 장비 예약 -->
+        <section id="gear">
+          <h2 class="section-title">gear reservation</h2>
+          <p class="placeholder-text">
+            장비 예약 기능은 나중에 이 섹션에 붙이면 돼.  
+            우선은 메인 구조만 맞춰두자!
+          </p>
+        </section>
+
+        <!-- 감독/스태프 리스트 -->
+        <section id="crew-list" class="crew-section">
+          <h2 class="section-title">crew</h2>
+
+          <div>
+            <div class="crew-group-title">Directors</div>
+            <div id="directors-grid" class="crew-grid">
+              <div class="crew-card">
+                <div class="crew-avatar"></div>
+                <div class="crew-body">
+                  <div class="crew-name">Choi Jongmin</div>
+                  <div class="crew-role-line">Directing · Cinematography</div>
+                  <div class="crew-bio">브랜딩 필름과 영화 사이 톤을 좋아하는 디렉터입니다.</div>
+                  <div class="crew-tags">
+                    <span class="crew-tag">Film</span>
+                    <span class="crew-tag">Commercial</span>
+                  </div>
+                  <div class="crew-links">
+                    <span>010-0000-0000</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 26px;">
+            <div class="crew-group-title">Staff</div>
+            <div id="staff-grid" class="crew-grid">
+              <p class="placeholder-text">스태프 정보는 Notion 연동 후 자동으로 들어오게 만들자.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 감독/스태프 등록 -->
+        <section id="crew-register" class="crew-section">
+          <h2 class="section-title">crew register</h2>
+          <p class="placeholder-text">
+            여기에서 노션 폼 링크로 연결하면, 등록은 전부 노션에서 관리 가능해.
+          </p>
+          <div class="cta-wrapper" style="margin-top: 16px;">
+            <a class="cta-btn" href="#" target="_blank">
+              감독/스태프 등록 폼 열기
+            </a>
+          </div>
+        </section>
+
+        <!-- AI 스틸컷 예약 상세 -->
+        <section id="ai-stillcut-reserve" class="crew-section">
+          <h2 class="section-title">AI stillcut reservation</h2>
+          <p class="placeholder-text">
+            원하는 무드 설명, 레퍼런스 링크, 마감일 등을 받는 예약 폼이나  
+            카카오톡 오픈채팅 링크를 나중에 여기에 넣으면 된다.
+          </p>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
