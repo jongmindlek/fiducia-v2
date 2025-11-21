@@ -1,781 +1,106 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>Fiducia Collective | Director's Market</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+<title>Fiducia Collective | Director's Market</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" />
-
-  <style>
-    :root {
-      --bg: #02030a;
-      --text: #ffffff;
-      --muted: #9ca3af;
-      --accent: #4f7dff;
-      --accent-soft: rgba(79, 125, 255, 0.2);
-      --card-bg: #101320;
-      --card-radius: 18px;
-      --max-width: 980px;
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --ok: #22c55e;
-      --bad: #ef4444;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: radial-gradient(circle at top, #1b2640 0, #02030a 52%);
-      color: var(--text);
-      font-family: 'Pretendard', Inter, system-ui, sans-serif;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-    .page { min-height: 100vh; padding: 0 16px 80px; display: flex; flex-direction: column; align-items: center; }
-    .inner { width: 100%; max-width: var(--max-width); }
-
-    /* NAV */
-    .nav-wrap { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(14px);
-      background: linear-gradient(to bottom, rgba(2, 3, 10, 0.92), rgba(2, 3, 10, 0.4), transparent); }
-    .nav { height: 64px; display: flex; align-items: center; justify-content: space-between; }
-    .nav-logo {
-      font-size: 13px; letter-spacing: 0.19em; text-transform: uppercase;
-      font-family: Inter, system-ui, sans-serif; color: #e5e7eb; font-weight: 600;
-    }
-    .nav-menu {
-      display: flex; gap: 8px; font-size: 11px; flex-wrap: nowrap; justify-content: flex-end;
-      overflow-x: auto; padding-left: 16px; font-family: Inter, system-ui, sans-serif;
-    }
-    .nav-menu::-webkit-scrollbar { display: none; }
-    .nav-menu a { text-decoration: none; color: var(--muted); padding: 5px 10px; border-radius: 999px; border: 1px solid transparent;
-      transition: color 0.18s, background 0.18s, border-color 0.18s, transform 0.12s; white-space: nowrap; }
-    .nav-menu a:hover { color: #f9fafb; border-color: rgba(148, 163, 184, 0.5); background: rgba(15, 23, 42, 0.8); transform: translateY(-1px); }
-    .nav-menu a.is-active { color: #f9fafb; border-color: var(--accent-soft); background: radial-gradient(circle at top left, rgba(79, 125, 255, 0.5), rgba(15, 23, 42, 0.9)); }
-
-    /* HERO */
-    .hero { text-align: center; margin: 26px 0 42px; padding: 10px 6px 0; }
-    .hero-brand {
-      font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px;
-      font-family: Inter, system-ui, sans-serif; color: #9ca3af; font-weight: 500;
-    }
-    .hero-title-kr { font-size: 26px; line-height: 1.3; font-weight: 600; margin-bottom: 18px; }
-    .hero-sub-title {
-      display: inline-flex; align-items: center; justify-content: center; position: relative; font-size: 19px;
-      font-family: Inter, system-ui, sans-serif; padding: 4px 16px 3px; margin-bottom: 16px; font-weight: 600;
-    }
-    .hero-sub-title::before { content: ""; position: absolute; inset: -7px -16px; border-radius: 999px; border: 2px solid var(--accent);
-      box-shadow: 0 0 22px rgba(79, 125, 255, 0.45); opacity: 0.95; }
-    .hero-sub-title span { position: relative; }
-    .hero-quote {
-      font-size: 12px; color: var(--muted); margin-top: 8px;
-      font-family: Inter, system-ui, sans-serif;
-    }
-
-    section { scroll-margin-top: 86px; }
-    .section-title {
-      font-size: 18px; font-weight: 600; margin: 34px 0 16px; text-align: left; text-transform: lowercase;
-      font-family: Inter, system-ui, sans-serif;
-    }
-
-    /* Recent work */
-    .work-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
-    @media (min-width: 640px) { .work-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    .work-card {
-      background: radial-gradient(circle at top left, rgba(79, 125, 255, 0.23), var(--card-bg));
-      border-radius: var(--card-radius);
-      overflow: hidden; display: flex; flex-direction: column;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.9);
-      transition: transform 0.14s ease-out, box-shadow 0.14s ease-out, border-color 0.14s;
-    }
-    .work-card:hover { transform: translateY(-4px); box-shadow: 0 20px 45px rgba(15, 23, 42, 0.95); border-color: rgba(129, 140, 248, 0.7); }
-    .work-thumb { position: relative; padding-top: 62%; overflow: hidden; background: #020617; }
-    .work-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .work-meta { padding: 13px 13px 14px; display: flex; flex-direction: column; gap: 4px; }
-    .work-title { font-size: 14px; font-weight: 600; }
-    .work-sub { font-size: 11px; opacity: 0.9; margin-bottom: 6px; color: #e5e7eb; }
-    .work-role-label { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.09em; color: #cbd5f5; font-family: Inter, system-ui, sans-serif; }
-    .work-role-name { font-size: 12px; font-weight: 500; color: #eef2ff; }
-
-    /* About */
-    .about {
-      text-align: center; margin-top: 46px; font-size: 12px; line-height: 1.7; padding: 20px 14px 24px; border-radius: 22px;
-      background: radial-gradient(circle at top left, rgba(79, 125, 255, 0.24), rgba(15, 23, 42, 0.98));
-      border: 1px solid var(--border-subtle); box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
-    }
-    .about-title { font-size: 13px; margin-bottom: 10px; }
-    .about-title span { font-family: Inter, system-ui, sans-serif; font-weight: 600; }
-    .about-bold { font-weight: 600; }
-    .about-accent { color: #bfdbfe; font-weight: 600; }
-    .about-spaced { margin-top: 14px; color: #e5e7eb; }
-
-    .cta-wrapper { margin-top: 18px; display: flex; justify-content: center; }
-    .cta-btn {
-      display: inline-flex; align-items: center; justify-content: center; padding: 9px 18px; border-radius: 999px; border: 1px solid rgba(191, 219, 254, 0.35);
-      font-size: 13px; font-weight: 600; background: linear-gradient(135deg, #4f7dff, #6366f1); color: #f9fafb; cursor: pointer; text-decoration: none;
-      box-shadow: 0 12px 30px rgba(79, 125, 255, 0.65);
-      font-family: Inter, system-ui, sans-serif;
-    }
-    .cta-btn:hover { transform: translateY(-1px); filter: brightness(1.03); box-shadow: 0 18px 42px rgba(79, 125, 255, 0.85); }
-
-    .footer-icons { margin-top: 22px; display: flex; justify-content: center; gap: 32px; font-size: 24px; }
-    .footer-icons a { text-decoration: none; color: #e5e7eb; opacity: 0.92; transition: opacity 0.18s, transform 0.18s; }
-    .footer-icons a:hover { opacity: 1; transform: translateY(-2px) scale(1.02); }
-
-    /* Forms */
-    .form-card{
-      margin-top:14px;
-      background: rgba(15,23,42,0.9);
-      border:1px solid var(--border-subtle);
-      border-radius:16px;
-      padding:14px;
-      text-align:left;
-      font-size:12px;
-    }
-    .form-grid{ display:grid; grid-template-columns:1fr; gap:10px; }
-    .form-row label{ font-size:11px; color:#cbd5e1; display:block; margin-bottom:4px; }
-    .form-row input, .form-row select, .form-row textarea{
-      width:100%; padding:9px 10px; border-radius:10px; background:#0b1020; color:#fff;
-      border:1px solid rgba(148,163,184,0.35); font-size:13px; outline:none;
-    }
-    .form-row textarea{ min-height:90px; resize:vertical; }
-    .form-actions{ display:flex; gap:8px; margin-top:8px;}
-    .form-msg{ margin-top:8px; font-size:12px; }
-    .form-msg.ok{ color:var(--ok); }
-    .form-msg.bad{ color:var(--bad); }
-
-    /* Gear */
-    .gear-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 640px) { .gear-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    .gear-card{
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 10px 12px;
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      position:relative;
-    }
-    .gear-thumb{
-      width: 64px; height: 64px; border-radius: 12px; background:#0b1020; overflow:hidden; flex: 0 0 auto;
-      border:1px solid rgba(148, 163, 184, 0.35);
-    }
-    .gear-thumb img{ width:100%; height:100%; object-fit:cover; }
-    .gear-body{ flex:1; min-width:0; }
-    .gear-name{ font-size:13px; font-weight:600; margin-bottom:4px; }
-    .gear-meta{ font-size:11px; color: var(--muted); margin-bottom:6px; }
-    .gear-badges{ display:flex; flex-wrap:wrap; gap:4px; }
-    .gear-badge{
-      font-size:10px; padding:2px 6px; border-radius:999px; border:1px solid rgba(148,163,184,0.6); color:#e5e7eb; background:rgba(15,23,42,0.85);
-    }
-    .gear-rate{ font-size:11px; color:#e5e7eb; margin-top:6px; }
-    .gear-reserve-btn{
-      position:absolute; right:10px; bottom:10px; font-size:11px; padding:6px 10px; border-radius:999px;
-      border:1px solid rgba(191,219,254,0.35); background:rgba(79,125,255,0.15); color:#e5e7eb; cursor:pointer;
-      font-family:Inter,system-ui,sans-serif;
-    }
-
-    /* Crew */
-    .crew-section { margin-top: 40px; }
-    .crew-group-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; font-family: Inter, system-ui, sans-serif; }
-
-    .crew-filters{
-      display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 14px;
-    }
-    .crew-filters input, .crew-filters select{
-      padding:7px 9px; border-radius:10px; background:#0b1020; color:#fff;
-      border:1px solid rgba(148,163,184,0.35); font-size:12px;
-    }
-    .crew-filters label{ font-size:11px; color:#cbd5e1; display:flex; gap:6px; align-items:center;}
-
-    .crew-grid { display: grid; grid-template-columns: 1fr; gap: 13px; }
-    @media (min-width: 640px) { .crew-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    .crew-card {
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.92));
-      border-radius: 16px; padding: 11px 12px 13px; display: flex; gap: 10px; align-items: flex-start; border: 1px solid var(--border-subtle);
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
-      position:relative;
-    }
-    .crew-verified{
-      position:absolute; right:10px; top:10px; font-size:10px; padding:2px 6px; border-radius:999px;
-      background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.5); color:#bbf7d0;
-      font-family:Inter,system-ui,sans-serif;
-    }
-
-    .crew-avatar { width: 42px; height: 42px; border-radius: 999px; background: radial-gradient(circle at top, #1f2937, #020617);
-      overflow: hidden; flex-shrink: 0; border: 1px solid rgba(148, 163, 184, 0.45); }
-    .crew-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .crew-body { flex: 1; min-width: 0; }
-    .crew-name { font-size: 13px; font-weight: 600; margin-bottom: 1px; }
-    .crew-role-line { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
-    .crew-bio { font-size: 11px; margin-bottom: 6px; color: #e5e7eb; }
-    .crew-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
-    .crew-tag { font-size: 10px; padding: 2px 6px; border-radius: 999px; border: 1px solid rgba(148, 163, 184, 0.6); color: #e5e7eb; background: rgba(15, 23, 42, 0.85); }
-    .crew-links { font-size: 10px; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; color: var(--muted); }
-
-    .placeholder-text { font-size: 11px; color: var(--muted); margin-top: 4px; }
-    .info-card {
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 16px;
-      padding: 14px 14px 16px;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.95);
-      font-size: 12px;
-      color: #d1d5db;
-    }
-
-    /* Modal */
-    .modal-backdrop{
-      position:fixed; inset:0; background:rgba(2,3,10,0.7); display:none; z-index:50;
-      align-items:center; justify-content:center; padding:16px;
-    }
-    .modal{
-      width:100%; max-width:520px; background:#050815; border:1px solid var(--border-subtle);
-      border-radius:18px; padding:14px;
-    }
-    .modal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
-    .modal-title{ font-size:14px; font-weight:600; }
-    .modal-close{ font-size:20px; cursor:pointer; opacity:.8; }
-
-  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" />
+<link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <div class="page">
-    <div class="inner">
+<div class="page"><div class="inner">
 
-      <div class="nav-wrap">
-        <nav class="nav">
-          <div class="nav-logo">FIDUCIA COLLECTIVE</div>
-          <div class="nav-menu">
-            <a href="#main" class="is-active">메인</a>
-            <a href="#ai-stillcut">AI 스틸컷 (예약)</a>
-            <a href="#gear">장비 예약</a>
-            <a href="#crew-list">감독/스태프 리스트</a>
-            <a href="#crew-register">감독/스태프 등록</a>
-          </div>
-        </nav>
+  <div class="nav-wrap">
+    <nav class="nav">
+      <div class="nav-logo">FIDUCIA COLLECTIVE</div>
+      <div class="nav-menu">
+        <a href="index.html" class="is-active">메인</a>
+        <a href="stillcut.html">AI 스틸컷(예약)</a>
+        <a href="gear.html">장비 예약</a>
+        <a href="crew-list.html">감독/스태프 리스트</a>
+        <a href="register.html">감독/스태프 등록</a>
       </div>
-
-      <main id="main">
-        <header class="hero">
-          <div class="hero-brand">FIDUCIA COLLECTIVE</div>
-          <h1 class="hero-title-kr">
-            신뢰를<br>
-            디자인하는<br>
-            프로덕션 플랫폼
-          </h1>
-          <div class="hero-sub-title"><span>Director's Market</span></div>
-          <p class="hero-quote">
-            "Trust isn't what follows art<br>
-            It's where art begins."
-          </p>
-        </header>
-
-        <!-- Recent work -->
-        <section>
-          <h2 class="section-title">recent work</h2>
-          <div id="work-grid" class="work-grid">
-            <p class="placeholder-text">노션에서 Published 체크된 작업을 불러오는 중입니다.</p>
-          </div>
-        </section>
-
-        <!-- About / Stillcut -->
-        <section class="about" id="ai-stillcut">
-          <div class="about-title">'<span>Fiducia collective</span>'란?</div>
-          <p>
-            <span class="about-accent">AI 기반 시각화 기술</span>과<br>
-            검증된 감독 네트워크를 결합해<br>
-            영상 기획 과정 부담은 줄이고<br>
-            신뢰 있게 연결하는<br>
-            <span class="about-bold">크리에이티브 프로덕션</span>입니다.
-          </p>
-          <p class="about-spaced">
-            AI 스틸컷 / 감독 매칭 / 장비 예약을<br>
-            한 곳에서.<br>
-            당신의 비전을 가장 잘 구현할 팀을<br>
-            AI가 연결합니다.
-          </p>
-          <div class="cta-wrapper">
-            <a class="cta-btn" href="#ai-stillcut-reserve">AI 스틸컷 이용해보기</a>
-          </div>
-          <div class="footer-icons">
-            <a href="https://instagram.com" target="_blank" aria-label="Instagram">📷</a>
-            <a href="tel:01000000000" aria-label="Phone">📱</a>
-          </div>
-        </section>
-
-        <!-- Gear -->
-        <section id="gear" class="crew-section">
-          <h2 class="section-title">gear reservation</h2>
-          <div id="gear-grid" class="gear-grid">
-            <p class="placeholder-text">노션에서 장비 목록을 불러오는 중입니다.</p>
-          </div>
-          <div class="info-card" style="margin-top:12px;">
-            장비 예약 요청은 여기서 바로 입력하면 Gear Reservation DB로 자동 저장됩니다.
-          </div>
-        </section>
-
-        <!-- Crew -->
-        <section id="crew-list" class="crew-section">
-          <h2 class="section-title">crew</h2>
-
-          <!-- Filters -->
-          <div class="crew-filters">
-            <input id="crew-search" placeholder="이름/키워드 검색" />
-            <select id="crew-skill-filter">
-              <option value="">Skill 전체</option>
-              <option value="Film">Film</option>
-              <option value="Music Video">Music Video</option>
-              <option value="Commercial">Commercial</option>
-              <option value="Wedding">Wedding</option>
-            </select>
-            <select id="crew-role-filter">
-              <option value="">Role 전체</option>
-              <option value="연출">연출</option>
-              <option value="촬영">촬영</option>
-              <option value="조명">조명</option>
-              <option value="음향">음향</option>
-              <option value="편집">편집</option>
-              <option value="미술">미술</option>
-              <option value="제작">제작</option>
-            </select>
-            <label>
-              <input type="checkbox" id="crew-verified-only" />
-              Verified만
-            </label>
-          </div>
-
-          <div>
-            <div class="crew-group-title">Directors</div>
-            <div id="directors-grid" class="crew-grid">
-              <p class="placeholder-text">Director 불러오는 중...</p>
-            </div>
-          </div>
-          <div style="margin-top: 24px;">
-            <div class="crew-group-title">Staff</div>
-            <div id="staff-grid" class="crew-grid">
-              <p class="placeholder-text">Staff 불러오는 중...</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Crew register -->
-        <section id="crew-register" class="crew-section">
-          <h2 class="section-title">crew register</h2>
-          <div class="info-card">
-            감독/스태프 등록은 노션 폼으로 연결하세요.<br>
-            아래 링크를 네 폼 공유 링크로 바꾸면 끝!
-            <div class="cta-wrapper" style="margin-top: 14px;">
-              <a class="cta-btn" href="https://www.notion.so/your-form-url" target="_blank">감독/스태프 등록 폼 열기</a>
-            </div>
-          </div>
-        </section>
-
-        <!-- Stillcut reservation form -->
-        <section id="ai-stillcut-reserve" class="crew-section">
-          <h2 class="section-title">AI stillcut reservation</h2>
-
-          <div class="form-card">
-            <div class="form-grid">
-              <div class="form-row">
-                <label>프로젝트 제목</label>
-                <input id="sc-title" placeholder="예: 브랜드 런칭 티저" />
-              </div>
-
-              <div class="form-row">
-                <label>의뢰인/팀 이름</label>
-                <input id="sc-client" placeholder="예: Fiducia Marketing" />
-              </div>
-
-              <div class="form-row">
-                <label>연락처(카톡/전화/이메일)</label>
-                <input id="sc-contact" placeholder="예: @kakaoid / 010-0000-0000" />
-              </div>
-
-              <div class="form-row">
-                <label>프로젝트 타입</label>
-                <select id="sc-type">
-                  <option value="">선택</option>
-                  <option value="Film">Film</option>
-                  <option value="Music Video">Music Video</option>
-                  <option value="Commercial">Commercial</option>
-                  <option value="Wedding">Wedding</option>
-                </select>
-              </div>
-
-              <div class="form-row">
-                <label>레퍼런스 링크(선택)</label>
-                <input id="sc-ref-link" placeholder="https://..." />
-              </div>
-
-              <div class="form-row">
-                <label>레퍼런스 이미지 URL 1</label>
-                <input id="sc-img-1" placeholder="https://image-url..." />
-              </div>
-              <div class="form-row">
-                <label>레퍼런스 이미지 URL 2</label>
-                <input id="sc-img-2" placeholder="https://image-url..." />
-              </div>
-              <div class="form-row">
-                <label>레퍼런스 이미지 URL 3</label>
-                <input id="sc-img-3" placeholder="https://image-url..." />
-              </div>
-
-              <div class="form-row">
-                <label>요구/무드 설명</label>
-                <textarea id="sc-desc" placeholder="원하는 분위기, 캐릭터, 컬러, 장면 등 자유롭게 적어줘"></textarea>
-              </div>
-
-              <div class="form-row">
-                <label>희망 마감일(선택)</label>
-                <input id="sc-deadline" type="date" />
-              </div>
-
-              <div class="form-row">
-                <label>선호 감독(선택)</label>
-                <select id="sc-preferred" multiple style="height:110px;"></select>
-                <div class="placeholder-text" style="margin-top:4px;">(여러 명 선택 가능)</div>
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button class="cta-btn" id="sc-submit" type="button">스틸컷 예약 제출</button>
-            </div>
-            <div id="sc-msg" class="form-msg"></div>
-          </div>
-        </section>
-      </main>
-    </div>
+    </nav>
   </div>
 
-  <!-- Gear Reservation Modal -->
-  <div id="gear-modal-backdrop" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-head">
-        <div class="modal-title" id="gear-modal-title">장비 예약</div>
-        <div class="modal-close" id="gear-modal-close">×</div>
+  <main>
+    <header class="hero">
+      <div class="hero-brand">FIDUCIA COLLECTIVE</div>
+      <h1 class="hero-title-kr">신뢰를<br>디자인하는<br>프로덕션 플랫폼</h1>
+      <div class="hero-sub-title"><span>Director's Market</span></div>
+      <p class="hero-quote">"Trust isn't what follows art<br>It's where art begins."</p>
+    </header>
+
+    <section>
+      <h2 class="section-title">recent work</h2>
+      <div id="work-grid" class="work-grid">
+        <p class="placeholder-text">노션에서 Published 체크된 작업을 불러오는 중입니다.</p>
       </div>
+    </section>
 
-      <div class="form-grid">
-        <div class="form-row">
-          <label>예약자 이름</label>
-          <input id="gr-name" placeholder="이름" />
-        </div>
-        <div class="form-row">
-          <label>프로젝트명(선택)</label>
-          <input id="gr-project" placeholder="예: 뮤비 촬영" />
-        </div>
-        <div class="form-row">
-          <label>연락처</label>
-          <input id="gr-contact" placeholder="카톡/전화" />
-        </div>
-        <div class="form-row">
-          <label>대여 시작일</label>
-          <input id="gr-start" type="date" />
-        </div>
-        <div class="form-row">
-          <label>대여 종료일(선택)</label>
-          <input id="gr-end" type="date" />
-        </div>
-        <div class="form-row">
-          <label>요청 메모(선택)</label>
-          <textarea id="gr-memo" placeholder="세부요청/시간/픽업 등"></textarea>
-        </div>
+    <section class="about">
+      <div class="about-title">'<span>Fiducia collective</span>'란?</div>
+      <p>
+        <span class="about-accent">AI 기반 시각화 기술</span>과<br>
+        검증된 감독 네트워크를 결합해<br>
+        영상 기획 과정 부담은 줄이고<br>
+        신뢰 있게 연결하는<br>
+        <span class="about-bold">크리에이티브 프로덕션</span>입니다.
+      </p>
+      <p class="about-spaced">
+        AI 스틸컷 / 감독 매칭 / 장비 예약을 한 곳에서.<br>
+        당신의 비전을 가장 잘 구현할 팀을 AI가 연결합니다.
+      </p>
+      <div class="cta-wrapper">
+        <a class="cta-btn" href="stillcut.html">AI 스틸컷 이용해보기</a>
       </div>
-
-      <div class="form-actions">
-        <button class="cta-btn" id="gr-submit" type="button">예약 요청 보내기</button>
+      <div class="footer-icons">
+        <a href="https://instagram.com" target="_blank" aria-label="Instagram">📷</a>
+        <a href="tel:01000000000" aria-label="Phone">📱</a>
       </div>
-      <div id="gr-msg" class="form-msg"></div>
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <script>
-    const PLACEHOLDER_IMG = 'https://via.placeholder.com/600x400?text=Stillcut';
-    let ALL_CREW = [];
-    let ALL_GEAR = [];
-    let selectedGearId = null;
-    let selectedGearName = null;
+</div></div>
 
-    // ---------- Works ----------
-    async function loadWorks() {
-      try {
-        const res = await fetch('/.netlify/functions/works');
-        if (!res.ok) return console.error('works fetch failed', res.status);
-        const works = await res.json();
-        const grid = document.getElementById('work-grid');
-        grid.innerHTML = '';
+<script>
+const PLACEHOLDER_IMG = 'https://via.placeholder.com/600x400?text=Stillcut';
 
-        works.forEach(work => {
-          const card = document.createElement('article');
-          card.className = 'work-card';
-          card.innerHTML = `
-            <div class="work-thumb">
-              <img src="${work.thumbnailUrl || PLACEHOLDER_IMG}" alt="${work.title || ''}">
-            </div>
-            <div class="work-meta">
-              <div class="work-title">${work.title || ''}</div>
-              <div class="work-sub">${work.subTitle || ''}</div>
-              <div class="work-role-label">${work.roleLabel || ''}</div>
-              <div class="work-role-name">${work.roleName || ''}</div>
-            </div>
-          `;
-          grid.appendChild(card);
-        });
+async function loadWorks(){
+  try{
+    const res = await fetch('/.netlify/functions/works');
+    const works = await res.json();
+    const grid = document.getElementById('work-grid');
+    grid.innerHTML='';
 
-        if (works.length === 0) {
-          grid.innerHTML = '<p class="placeholder-text">Published 체크된 작업이 없습니다.</p>';
-        }
-      } catch (e) { console.error(e); }
-    }
-
-    // ---------- Gear ----------
-    async function loadGear() {
-      try {
-        const res = await fetch('/.netlify/functions/gear');
-        if (!res.ok) return console.error('gear fetch failed', res.status);
-        const gear = await res.json();
-        ALL_GEAR = gear;
-
-        const grid = document.getElementById('gear-grid');
-        grid.innerHTML = '';
-
-        gear.forEach(g => {
-          const card = document.createElement('div');
-          card.className = 'gear-card';
-          card.innerHTML = `
-            <div class="gear-thumb">${g.thumbnailUrl ? `<img src="${g.thumbnailUrl}" alt="${g.name}">` : ''}</div>
-            <div class="gear-body">
-              <div class="gear-name">${g.name || ''}</div>
-              <div class="gear-meta">${g.brandModel || ''}</div>
-              <div class="gear-badges">
-                ${g.category ? `<span class="gear-badge">${g.category}</span>` : ''}
-                ${g.status ? `<span class="gear-badge">${g.status}</span>` : ''}
-              </div>
-              ${g.dayRate ? `<div class="gear-rate">Day rate: ${g.dayRate.toLocaleString()}원</div>` : ''}
-            </div>
-            <button class="gear-reserve-btn" data-gear-id="${g.id}" data-gear-name="${g.name || ''}">예약하기</button>
-          `;
-          grid.appendChild(card);
-        });
-
-        if (gear.length === 0) {
-          grid.innerHTML = '<p class="placeholder-text">장비가 아직 없습니다.</p>';
-        }
-
-        // reserve 버튼 이벤트
-        grid.querySelectorAll('.gear-reserve-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            selectedGearId = btn.dataset.gearId;
-            selectedGearName = btn.dataset.gearName;
-            openGearModal();
-          });
-        });
-
-      } catch(e){ console.error(e); }
-    }
-
-    // ---------- Crew + Filters ----------
-    async function loadCrew() {
-      try {
-        const res = await fetch('/.netlify/functions/crew');
-        if (!res.ok) return console.error('crew fetch failed', res.status);
-        const crew = await res.json();
-        ALL_CREW = crew;
-
-        // preferred crew select 채우기
-        const pref = document.getElementById('sc-preferred');
-        pref.innerHTML = '';
-        crew.filter(c => c.mainRole === 'Director').forEach(d => {
-          const opt = document.createElement('option');
-          opt.value = d.id;
-          opt.textContent = d.name;
-          pref.appendChild(opt);
-        });
-
-        renderCrew();
-        bindCrewFilters();
-      } catch (e) { console.error(e); }
-    }
-
-    function bindCrewFilters(){
-      const searchEl = document.getElementById('crew-search');
-      const skillEl = document.getElementById('crew-skill-filter');
-      const roleEl = document.getElementById('crew-role-filter');
-      const verifiedEl = document.getElementById('crew-verified-only');
-
-      [searchEl, skillEl, roleEl, verifiedEl].forEach(el=>{
-        el.addEventListener('input', renderCrew);
-        el.addEventListener('change', renderCrew);
-      });
-    }
-
-    function renderCrew(){
-      const search = (document.getElementById('crew-search').value || '').toLowerCase().trim();
-      const skill = document.getElementById('crew-skill-filter').value;
-      const role = document.getElementById('crew-role-filter').value;
-      const verifiedOnly = document.getElementById('crew-verified-only').checked;
-
-      const directorsGrid = document.getElementById('directors-grid');
-      const staffGrid = document.getElementById('staff-grid');
-      directorsGrid.innerHTML = '';
-      staffGrid.innerHTML = '';
-
-      const filtered = ALL_CREW.filter(c=>{
-        if (verifiedOnly && !c.verified) return false;
-        if (skill && !(c.skills || []).includes(skill)) return false;
-        if (role && !(c.roles || []).includes(role)) return false;
-
-        if (search){
-          const hay = [
-            c.name, c.bio,
-            ...(c.skills||[]),
-            ...(c.roles||[])
-          ].join(' ').toLowerCase();
-          if (!hay.includes(search)) return false;
-        }
-        return true;
-      });
-
-      const directors = filtered.filter(c => c.mainRole === 'Director');
-      const staff = filtered.filter(c => c.mainRole === 'Staff');
-
-      const makeCard = (m) => {
-        const card = document.createElement('div');
-card.className = 'crew-card';
-card.style.cursor = 'pointer';
-card.dataset.crewId = m.id;
-card.innerHTML = `
-  ${m.verified ? `<div class="crew-verified">Verified</div>` : ''}
-  <div class="crew-avatar">${m.profileImageUrl ? `<img src="${m.profileImageUrl}" alt="${m.name}">` : ''}</div>
-  <div class="crew-body">
-    <div class="crew-name">${m.name || ''}</div>
-    <div class="crew-role-line">${(m.roles && m.roles.length) ? m.roles.join(' · ') : (m.mainRole || '')}</div>
-    ${m.bio ? `<div class="crew-bio">${m.bio}</div>` : ''}
-    <div class="crew-tags">
-      ${(m.skills || []).map(s => `<span class="crew-tag">${s}</span>`).join('')}
-    </div>
-    <div class="crew-links">
-      ${m.instagram ? `<a href="${m.instagram}" target="_blank" onclick="event.stopPropagation()">Instagram</a>` : ''}
-      ${m.email ? `<a href="mailto:${m.email}" onclick="event.stopPropagation()">${m.email}</a>` : ''}
-      ${m.phone ? `<span>${m.phone}</span>` : ''}
-    </div>
-  </div>
-`;
-card.addEventListener('click', () => {
-  location.href = `crew.html?id=${m.id}`;
-});
-return card;
-      };
-
-      if (!directors.length) directorsGrid.innerHTML = '<p class="placeholder-text">조건에 맞는 Director가 없습니다.</p>';
-      else directors.forEach(m => directorsGrid.appendChild(makeCard(m)));
-
-      if (!staff.length) staffGrid.innerHTML = '<p class="placeholder-text">조건에 맞는 Staff가 없습니다.</p>';
-      else staff.forEach(m => staffGrid.appendChild(makeCard(m)));
-    }
-
-    // ---------- Stillcut create ----------
-    async function submitStillcut(){
-      const msg = document.getElementById('sc-msg');
-      msg.className = 'form-msg';
-      msg.textContent = '전송 중...';
-
-      const preferredSelect = document.getElementById('sc-preferred');
-      const preferredCrewIds = Array.from(preferredSelect.selectedOptions).map(o => o.value);
-
-      const payload = {
-        title: document.getElementById('sc-title').value,
-        clientName: document.getElementById('sc-client').value,
-        contact: document.getElementById('sc-contact').value,
-        projectType: document.getElementById('sc-type').value,
-        referenceLink: document.getElementById('sc-ref-link').value,
-        description: document.getElementById('sc-desc').value,
-        deadline: document.getElementById('sc-deadline').value,
-        preferredCrewIds,
-        referenceImageUrls: [
-          document.getElementById('sc-img-1').value,
-          document.getElementById('sc-img-2').value,
-          document.getElementById('sc-img-3').value,
-        ],
-      };
-
-      try{
-        const res = await fetch('/.netlify/functions/stillcut-create', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if (!res.ok || !data.ok) throw new Error(data.details || data.message);
-
-        msg.className = 'form-msg ok';
-        msg.textContent = '✅ 예약이 접수됐어! 곧 카톡으로 안내할게.';
-        document.getElementById('sc-submit').disabled = true;
-      }catch(e){
-        msg.className = 'form-msg bad';
-        msg.textContent = '❌ 전송 실패: ' + (e.message || '');
-      }
-    }
-
-    // ---------- Gear modal + reservation create ----------
-    function openGearModal(){
-      document.getElementById('gear-modal-title').textContent = selectedGearName ? `장비 예약: ${selectedGearName}` : '장비 예약';
-      document.getElementById('gr-msg').textContent = '';
-      document.getElementById('gear-modal-backdrop').style.display='flex';
-    }
-    function closeGearModal(){
-      document.getElementById('gear-modal-backdrop').style.display='none';
-    }
-
-    async function submitGearReservation(){
-      const msg = document.getElementById('gr-msg');
-      msg.className='form-msg';
-      msg.textContent='전송 중...';
-
-      const payload = {
-        gearId: selectedGearId,
-        renterName: document.getElementById('gr-name').value,
-        projectName: document.getElementById('gr-project').value,
-        contact: document.getElementById('gr-contact').value,
-        startDate: document.getElementById('gr-start').value,
-        endDate: document.getElementById('gr-end').value,
-        memo: document.getElementById('gr-memo').value,
-      };
-
-      try{
-        const res = await fetch('/.netlify/functions/gear-reservation-create', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if(!res.ok || !data.ok) throw new Error(data.details || data.message);
-
-        msg.className='form-msg ok';
-        msg.textContent='✅ 장비 예약 요청 완료! 확인 후 연락할게.';
-        document.getElementById('gr-submit').disabled = true;
-      }catch(e){
-        msg.className='form-msg bad';
-        msg.textContent='❌ 전송 실패: ' + (e.message || '');
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      loadWorks();
-      loadCrew();
-      loadGear();
-
-      document.getElementById('sc-submit').addEventListener('click', submitStillcut);
-      document.getElementById('gear-modal-close').addEventListener('click', closeGearModal);
-      document.getElementById('gear-modal-backdrop').addEventListener('click', (e)=>{
-        if(e.target.id==='gear-modal-backdrop') closeGearModal();
-      });
-      document.getElementById('gr-submit').addEventListener('click', submitGearReservation);
+    (works||[]).forEach(work=>{
+      const card=document.createElement('article');
+      card.className='work-card';
+      card.innerHTML=`
+        <div class="work-thumb">
+          <img src="${work.thumbnailUrl||PLACEHOLDER_IMG}" alt="${work.title||''}">
+        </div>
+        <div class="work-meta">
+          <div class="work-title">${work.title||''}</div>
+          <div class="work-sub">${work.subTitle||''}</div>
+          <div class="work-role-label">${work.roleLabel||''}</div>
+          <div class="work-role-name">${work.roleName||''}</div>
+        </div>`;
+      grid.appendChild(card);
     });
-  </script>
+
+    if(!works || works.length===0){
+      grid.innerHTML='<p class="placeholder-text">Published 체크된 작업이 없습니다.</p>';
+    }
+  }catch(e){console.error(e);}
+}
+
+document.addEventListener('DOMContentLoaded', loadWorks);
+</script>
 </body>
 </html>
