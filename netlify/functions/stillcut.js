@@ -27,7 +27,9 @@ exports.handler = async () => {
       const preferredCrewIds = (p.PreferredCrew?.relation || []).map((r) => r.id);
 
       const referenceImages =
-        (p.ReferenceImages?.files || []).map((f) => f.file?.url || f.external?.url).filter(Boolean);
+        (p.ReferenceImages?.files || [])
+          .map((f) => f.file?.url || f.external?.url)
+          .filter(Boolean);
 
       return {
         id: page.id,
