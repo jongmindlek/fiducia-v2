@@ -10,7 +10,6 @@ function getText(prop) {
   if (prop.type === "rich_text") return prop.rich_text?.[0]?.plain_text || "";
   if (prop.type === "select") return prop.select?.name || "";
   if (prop.type === "multi_select") return (prop.multi_select || []).map(v => v.name).join(", ");
-  if (prop.type === "relation") return (prop.relation || []).length ? "linked" : "";
   return "";
 }
 
@@ -18,6 +17,11 @@ function getFileUrl(prop) {
   const f = prop?.files?.[0];
   if (!f) return "";
   return f.file?.url || f.external?.url || "";
+}
+
+function getRelationIds(prop){
+  if(!prop || prop.type !== "relation") return [];
+  return (prop.relation || []).map(r => r.id);
 }
 
 exports.handler = async () => {
@@ -33,6 +37,17 @@ exports.handler = async () => {
 
     const works = response.results.map((page) => {
       const p = page.properties;
+
+      // relation 컬럼 이름이 뭐든 최대한 찾아서 crewIds로
+      const relationCandidates = ["Crew", "Creators", "Director", "Staff", "People"];
+      let crewIds = [];
+      for (const key of relationCandidates) {
+        if (p[key]?.type === "relation") {
+          crewIds = getRelationIds(p[key]);
+          if (crewIds.length) break;
+        }
+      }
+
       return {
         id: page.id,
         title: getText(p.Title),
@@ -40,6 +55,7 @@ exports.handler = async () => {
         roleLabel: getText(p.RoleLabel),
         roleName: getText(p.RoleName),
         thumbnailUrl: getFileUrl(p.ThumbnailUrl),
+        crewIds, // <-- 상세페이지 필모 자동연결용
       };
     });
 
