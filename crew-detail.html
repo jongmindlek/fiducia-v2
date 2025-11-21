@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>Crew Detail</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" />
+<link rel="stylesheet" href="style.css" />
+
+<style>
+.topbar{display:flex;align-items:center;gap:10px;margin:4px 0 14px;position:sticky;top:0;backdrop-filter:blur(10px);
+  padding:8px 0;background:linear-gradient(to bottom, rgba(2,3,10,0.9), transparent);z-index:5}
+.back{font-size:12px;color:#e5e7eb;text-decoration:none;padding:6px 10px;border-radius:999px;border:1px solid var(--border-subtle);
+  background:rgba(79,125,255,0.12);font-family:Inter}
+.profile-card{background:rgba(15,23,42,.92);border:1px solid var(--border-subtle);border-radius:18px;padding:14px;display:flex;gap:14px;align-items:flex-start;box-shadow:0 14px 35px rgba(15,23,42,.9)}
+.avatar{width:84px;height:84px;border-radius:999px;overflow:hidden;flex:0 0 auto;border:1px solid rgba(148,163,184,.45);background:#0b1020}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.profile-body{flex:1;min-width:0}
+.name-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.name{font-size:18px;font-weight:700}
+.verified{font-size:11px;padding:2px 7px;border-radius:999px;color:#bbf7d0;border:1px solid rgba(34,197,94,.5);background:rgba(34,197,94,.15);font-family:Inter}
+.main-role{font-size:12px;color:var(--muted);margin-top:4px}
+.subline{font-size:12px;margin-top:6px;color:#e5e7eb}
+.bio{font-size:13px;margin-top:10px;color:#e5e7eb;white-space:pre-line}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid rgba(148,163,184,.6);color:#e5e7eb;background:rgba(15,23,42,.85)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:12px;color:var(--muted)}
+.links a{color:#cbd5f5;text-decoration:none}
+.work-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:640px){.work-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.work-card{background:rgba(15,23,42,.9);border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.work-thumb{position:relative;padding-top:62%;background:#020617}
+.work-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.work-meta{padding:10px 11px}
+.work-title{font-size:13px;font-weight:700}
+.work-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.work-role{font-size:11px;color:#e5e7eb;margin-top:6px;font-family:Inter}
+.error{padding:14px;border:1px solid var(--border-subtle);border-radius:14px;background:rgba(15,23,42,.92);font-size:13px}
+</style>
+</head>
+
+<body>
+<div class="page"><div class="inner">
+
+  <div class="topbar">
+    <a class="back" href="crew-list.html">← 크루 리스트</a>
+    <div class="nav-logo" style="font-size:11px;">FIDUCIA COLLECTIVE</div>
+  </div>
+
+  <div id="profile-root" class="profile-card">
+    <div class="placeholder-text">불러오는 중...</div>
+  </div>
+
+  <section id="works-section" style="display:none;">
+    <h2 class="section-title">filmography</h2>
+    <div id="works-grid" class="work-grid"></div>
+  </section>
+
+</div></div>
+
+<script>
+const PLACEHOLDER_IMG='https://via.placeholder.com/600x400?text=Work';
+const id=new URLSearchParams(location.search).get('id');
+
+async function fetchJSON(url){
+  const res=await fetch(url);
+  const data=await res.json();
+  if(!res.ok) throw new Error(data.details||data.message||res.statusText);
+  return data;
+}
+
+function renderProfile(m){
+  profile-root.innerHTML=`
+    <div class="avatar">${m.profileImageUrl?`<img src="${m.profileImageUrl}" alt="${m.name}">`:''}</div>
+    <div class="profile-body">
+      <div class="name-wrap">
+        <div class="name">${m.name||''}</div>
+        ${m.verified?`<div class="verified">Verified</div>`:''}
+      </div>
+      <div class="main-role">${m.mainRole||''}</div>
+      <div class="subline">${(m.roles||[]).join(' · ')}</div>
+      ${m.bio?`<div class="bio">${m.bio}</div>`:''}
+      <div class="tags">${(m.skills||[]).map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+      <div class="links">
+        ${m.instagram?`<a href="${m.instagram}" target="_blank">Instagram</a>`:''}
+        ${m.email?`<a href="mailto:${m.email}">${m.email}</a>`:''}
+        ${m.phone?`<span>${m.phone}</span>`:''}
+      </div>
+    </div>`;
+}
+
+function renderWorks(works){
+  works-section.style.display='block';
+  works-grid.innerHTML='';
+  if(!works.length){
+    works-grid.innerHTML='<div class="placeholder-text">연결된 작품이 아직 없어요.</div>';
+    return;
+  }
+  works.forEach(w=>{
+    const card=document.createElement('article');
+    card.className='work-card';
+    card.innerHTML=`
+      <div class="work-thumb"><img src="${w.thumbnailUrl||PLACEHOLDER_IMG}" alt="${w.title||''}"></div>
+      <div class="work-meta">
+        <div class="work-title">${w.title||''}</div>
+        <div class="work-sub">${w.subTitle||''}</div>
+        <div class="work-role">${w.roleLabel||''} ${w.roleName||''}</div>
+      </div>`;
+    works-grid.appendChild(card);
+  });
+}
+
+async function init(){
+  if(!id){
+    profile-root.innerHTML='<div class="error">id가 없어요.</div>';
+    return;
+  }
+  try{
+    const crew=await fetchJSON('/.netlify/functions/crew');
+    const me=crew.find(c=>c.id===id);
+    if(!me){
+      profile-root.innerHTML='<div class="error">해당 크루를 찾을 수 없어요.</div>';
+      return;
+    }
+    renderProfile(me);
+
+    const works=await fetchJSON('/.netlify/functions/works');
+    const myWorks=(works||[]).filter(w=>(w.crewIds||[]).includes(id));
+    renderWorks(myWorks);
+  }catch(e){
+    profile-root.innerHTML=`<div class="error">데이터 로드 실패: ${e.message}</div>`;
+  }
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
