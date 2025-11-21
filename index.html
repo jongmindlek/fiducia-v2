@@ -5,7 +5,7 @@
   <title>Fiducia Collective | Director's Market</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- 폰트 -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -24,13 +24,7 @@
       --max-width: 980px;
       --border-subtle: rgba(255, 255, 255, 0.08);
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: radial-gradient(circle at top, #1b2640 0, #02030a 52%);
       color: var(--text);
@@ -38,441 +32,126 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
-
-    .page {
-      min-height: 100vh;
-      padding: 0 16px 80px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .inner {
-      width: 100%;
-      max-width: var(--max-width);
-    }
+    .page { min-height: 100vh; padding: 0 16px 80px; display: flex; flex-direction: column; align-items: center; }
+    .inner { width: 100%; max-width: var(--max-width); }
 
     /* NAV */
-    .nav-wrap {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(14px);
-      background: linear-gradient(to bottom, rgba(2, 3, 10, 0.92), rgba(2, 3, 10, 0.4), transparent);
-    }
-
-    .nav {
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nav-logo {
-      font-size: 13px;
-      letter-spacing: 0.19em;
-      text-transform: uppercase;
-      font-family: 'Poppins', system-ui, sans-serif;
-      color: #e5e7eb;
-    }
-
-    .nav-menu {
-      display: flex;
-      gap: 8px;
-      font-size: 11px;
-      flex-wrap: nowrap;
-      justify-content: flex-end;
-      overflow-x: auto;
-      padding-left: 16px;
-    }
-
-    .nav-menu::-webkit-scrollbar {
-      display: none;
-    }
-
-    .nav-menu a {
-      text-decoration: none;
-      color: var(--muted);
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      transition: color 0.18s, background 0.18s, border-color 0.18s, transform 0.12s;
-      white-space: nowrap;
-    }
-
-    .nav-menu a:hover {
-      color: #f9fafb;
-      border-color: rgba(148, 163, 184, 0.5);
-      background: rgba(15, 23, 42, 0.8);
-      transform: translateY(-1px);
-    }
-
-    .nav-menu a.is-active {
-      color: #f9fafb;
-      border-color: var(--accent-soft);
-      background: radial-gradient(circle at top left, rgba(79, 125, 255, 0.5), rgba(15, 23, 42, 0.9));
-    }
+    .nav-wrap { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(2, 3, 10, 0.92), rgba(2, 3, 10, 0.4), transparent); }
+    .nav { height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-size: 13px; letter-spacing: 0.19em; text-transform: uppercase; font-family: 'Poppins', system-ui, sans-serif; color: #e5e7eb; }
+    .nav-menu { display: flex; gap: 8px; font-size: 11px; flex-wrap: nowrap; justify-content: flex-end; overflow-x: auto; padding-left: 16px; }
+    .nav-menu::-webkit-scrollbar { display: none; }
+    .nav-menu a { text-decoration: none; color: var(--muted); padding: 5px 10px; border-radius: 999px; border: 1px solid transparent;
+      transition: color 0.18s, background 0.18s, border-color 0.18s, transform 0.12s; white-space: nowrap; }
+    .nav-menu a:hover { color: #f9fafb; border-color: rgba(148, 163, 184, 0.5); background: rgba(15, 23, 42, 0.8); transform: translateY(-1px); }
+    .nav-menu a.is-active { color: #f9fafb; border-color: var(--accent-soft); background: radial-gradient(circle at top left, rgba(79, 125, 255, 0.5), rgba(15, 23, 42, 0.9)); }
 
     /* HERO */
-    .hero {
-      text-align: center;
-      margin: 26px 0 42px;
-      padding: 10px 6px 0;
-    }
+    .hero { text-align: center; margin: 26px 0 42px; padding: 10px 6px 0; }
+    .hero-brand { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px; font-family: 'Poppins', system-ui, sans-serif; color: #9ca3af; }
+    .hero-title-kr { font-size: 26px; line-height: 1.3; font-weight: 600; margin-bottom: 18px; white-space: pre-line; }
+    .hero-sub-title { display: inline-flex; align-items: center; justify-content: center; position: relative; font-size: 19px;
+      font-family: 'Poppins', system-ui, sans-serif; padding: 4px 16px 3px; margin-bottom: 16px; }
+    .hero-sub-title::before { content: ""; position: absolute; inset: -7px -16px; border-radius: 999px; border: 2px solid var(--accent);
+      box-shadow: 0 0 22px rgba(79, 125, 255, 0.45); opacity: 0.95; }
+    .hero-sub-title span { position: relative; }
+    .hero-quote { font-size: 12px; color: var(--muted); margin-top: 8px; white-space: pre-line; font-family: 'Poppins', system-ui, sans-serif; }
 
-    .hero-brand {
-      font-size: 12px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      font-family: 'Poppins', system-ui, sans-serif;
-      color: #9ca3af;
-    }
+    section { scroll-margin-top: 86px; }
+    .section-title { font-size: 18px; font-weight: 500; margin: 34px 0 16px; text-align: left; text-transform: lowercase; font-family: 'Poppins', system-ui, sans-serif; }
 
-    .hero-title-kr {
-      font-size: 26px;
-      line-height: 1.3;
-      font-weight: 600;
-      margin-bottom: 18px;
-      white-space: pre-line;
-    }
-
-    .hero-sub-title {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      font-size: 19px;
-      font-family: 'Poppins', system-ui, sans-serif;
-      padding: 4px 16px 3px;
-      margin-bottom: 16px;
-    }
-
-    .hero-sub-title::before {
-      content: "";
-      position: absolute;
-      inset: -7px -16px;
-      border-radius: 999px;
-      border: 2px solid var(--accent);
-      box-shadow: 0 0 22px rgba(79, 125, 255, 0.45);
-      opacity: 0.95;
-    }
-
-    .hero-sub-title span {
-      position: relative;
-    }
-
-    .hero-quote {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 8px;
-      white-space: pre-line;
-      font-family: 'Poppins', system-ui, sans-serif;
-    }
-
-    /* 공통 섹션 */
-    section {
-      scroll-margin-top: 86px;
-    }
-
-    .section-title {
-      font-size: 18px;
-      font-weight: 500;
-      margin: 34px 0 16px;
-      text-align: left;
-      text-transform: lowercase;
-      font-family: 'Poppins', system-ui, sans-serif;
-    }
-
-    /* Recent work 카드 */
-    .work-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-    }
-
-    @media (min-width: 640px) {
-      .work-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
+    /* Recent work */
+    .work-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+    @media (min-width: 640px) { .work-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     .work-card {
       background: radial-gradient(circle at top left, rgba(79, 125, 255, 0.23), var(--card-bg));
       border-radius: var(--card-radius);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      overflow: hidden; display: flex; flex-direction: column;
       border: 1px solid var(--border-subtle);
       box-shadow: 0 14px 35px rgba(15, 23, 42, 0.9);
       transform: translateY(0);
       transition: transform 0.14s ease-out, box-shadow 0.14s ease-out, border-color 0.14s ease-out;
     }
+    .work-card:hover { transform: translateY(-4px); box-shadow: 0 20px 45px rgba(15, 23, 42, 0.95); border-color: rgba(129, 140, 248, 0.7); }
+    .work-thumb { position: relative; padding-top: 62%; overflow: hidden; background: #020617; }
+    .work-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(1.08) contrast(1.02); transform: scale(1.03); }
+    .work-meta { padding: 13px 13px 14px; display: flex; flex-direction: column; gap: 4px; }
+    .work-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .work-sub { font-size: 11px; opacity: 0.9; margin-bottom: 6px; color: #e5e7eb; }
+    .work-role-label { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.09em; color: #cbd5f5; }
+    .work-role-name { font-size: 12px; font-weight: 500; color: #eef2ff; }
 
-    .work-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.95);
-      border-color: rgba(129, 140, 248, 0.7);
-    }
-
-    .work-thumb {
-      position: relative;
-      padding-top: 62%;
-      overflow: hidden;
-      background: #020617;
-    }
-
-    .work-thumb img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: saturate(1.08) contrast(1.02);
-      transform: scale(1.03);
-    }
-
-    .work-meta {
-      padding: 13px 13px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .work-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .work-sub {
-      font-size: 11px;
-      opacity: 0.9;
-      margin-bottom: 6px;
-      color: #e5e7eb;
-    }
-
-    .work-role-label {
-      font-size: 10px;
-      opacity: 0.8;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: #cbd5f5;
-    }
-
-    .work-role-name {
-      font-size: 12px;
-      font-weight: 500;
-      color: #eef2ff;
-    }
-
-    /* About + CTA */
+    /* About */
     .about {
-      text-align: center;
-      margin-top: 46px;
-      font-size: 12px;
-      line-height: 1.7;
-      padding: 20px 14px 24px;
-      border-radius: 22px;
+      text-align: center; margin-top: 46px; font-size: 12px; line-height: 1.7; padding: 20px 14px 24px; border-radius: 22px;
       background: radial-gradient(circle at top left, rgba(79, 125, 255, 0.24), rgba(15, 23, 42, 0.98));
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-subtle); box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
     }
-
-    .about-title {
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-
-    .about-title span {
-      font-family: 'Poppins', system-ui, sans-serif;
-    }
-
-    .about-bold {
-      font-weight: 600;
-    }
-
-    .about-accent {
-      color: #bfdbfe;
-      font-weight: 600;
-    }
-
-    .about-spaced {
-      margin-top: 14px;
-      color: #e5e7eb;
-    }
-
-    .cta-wrapper {
-      margin-top: 22px;
-      display: flex;
-      justify-content: center;
-    }
-
+    .about-title { font-size: 13px; margin-bottom: 10px; }
+    .about-title span { font-family: 'Poppins', system-ui, sans-serif; }
+    .about-bold { font-weight: 600; }
+    .about-accent { color: #bfdbfe; font-weight: 600; }
+    .about-spaced { margin-top: 14px; color: #e5e7eb; }
+    .cta-wrapper { margin-top: 22px; display: flex; justify-content: center; }
     .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 9px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(191, 219, 254, 0.35);
-      font-size: 13px;
-      font-weight: 500;
-      background: linear-gradient(135deg, #4f7dff, #6366f1);
-      color: #f9fafb;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.13s ease, box-shadow 0.13s ease, opacity 0.13s, filter 0.13s;
-      box-shadow: 0 12px 30px rgba(79, 125, 255, 0.65);
+      display: inline-flex; align-items: center; justify-content: center; padding: 9px 18px; border-radius: 999px; border: 1px solid rgba(191, 219, 254, 0.35);
+      font-size: 13px; font-weight: 500; background: linear-gradient(135deg, #4f7dff, #6366f1); color: #f9fafb; cursor: pointer; text-decoration: none;
+      transition: transform 0.13s ease, box-shadow 0.13s ease, opacity 0.13s, filter 0.13s; box-shadow: 0 12px 30px rgba(79, 125, 255, 0.65);
     }
+    .cta-btn:hover { transform: translateY(-1px); filter: brightness(1.03); box-shadow: 0 18px 42px rgba(79, 125, 255, 0.85); }
+    .footer-icons { margin-top: 22px; display: flex; justify-content: center; gap: 32px; font-size: 24px; }
+    .footer-icons a { text-decoration: none; color: #e5e7eb; opacity: 0.92; transition: opacity 0.18s, transform 0.18s; }
+    .footer-icons a:hover { opacity: 1; transform: translateY(-2px) scale(1.02); }
 
-    .cta-btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.03);
-      box-shadow: 0 18px 42px rgba(79, 125, 255, 0.85);
-    }
-
-    .footer-icons {
-      margin-top: 22px;
-      display: flex;
-      justify-content: center;
-      gap: 32px;
-      font-size: 24px;
-    }
-
-    .footer-icons a {
-      text-decoration: none;
-      color: #e5e7eb;
-      opacity: 0.92;
-      transition: opacity 0.18s, transform 0.18s;
-    }
-
-    .footer-icons a:hover {
-      opacity: 1;
-      transform: translateY(-2px) scale(1.02);
-    }
-
-    /* Crew 리스트 */
-    .crew-section {
-      margin-top: 40px;
-    }
-
-    .crew-group-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .crew-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 13px;
-    }
-
-    @media (min-width: 640px) {
-      .crew-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
+    /* Crew */
+    .crew-section { margin-top: 40px; }
+    .crew-group-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .crew-grid { display: grid; grid-template-columns: 1fr; gap: 13px; }
+    @media (min-width: 640px) { .crew-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .crew-card {
       background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.92));
-      border-radius: 16px;
-      padding: 11px 12px 13px;
+      border-radius: 16px; padding: 11px 12px 13px; display: flex; gap: 10px; align-items: flex-start; border: 1px solid var(--border-subtle);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+    .crew-avatar { width: 42px; height: 42px; border-radius: 999px; background: radial-gradient(circle at top, #1f2937, #020617);
+      overflow: hidden; flex-shrink: 0; border: 1px solid rgba(148, 163, 184, 0.45); }
+    .crew-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .crew-body { flex: 1; min-width: 0; }
+    .crew-name { font-size: 13px; font-weight: 600; margin-bottom: 1px; }
+    .crew-role-line { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+    .crew-bio { font-size: 11px; margin-bottom: 6px; color: #e5e7eb; }
+    .crew-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+    .crew-tag { font-size: 10px; padding: 2px 6px; border-radius: 999px; border: 1px solid rgba(148, 163, 184, 0.6); color: #e5e7eb; background: rgba(15, 23, 42, 0.85); }
+    .crew-links { font-size: 10px; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; color: var(--muted); }
+
+    /* Gear */
+    .gear-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 640px) { .gear-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .gear-card{
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 10px 12px;
       display: flex;
       gap: 10px;
       align-items: flex-start;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
-      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
     }
-
-    .crew-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.98);
-      border-color: rgba(129, 140, 248, 0.7);
+    .gear-thumb{
+      width: 64px; height: 64px; border-radius: 12px; background:#0b1020; overflow:hidden; flex: 0 0 auto;
+      border:1px solid rgba(148, 163, 184, 0.35);
     }
-
-    .crew-avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      background: radial-gradient(circle at top, #1f2937, #020617);
-      overflow: hidden;
-      flex-shrink: 0;
-      border: 1px solid rgba(148, 163, 184, 0.45);
+    .gear-thumb img{ width:100%; height:100%; object-fit:cover; }
+    .gear-body{ flex:1; min-width:0; }
+    .gear-name{ font-size:13px; font-weight:600; margin-bottom:4px; }
+    .gear-meta{ font-size:11px; color: var(--muted); margin-bottom:6px; }
+    .gear-badges{ display:flex; flex-wrap:wrap; gap:4px; }
+    .gear-badge{
+      font-size:10px; padding:2px 6px; border-radius:999px; border:1px solid rgba(148,163,184,0.6); color:#e5e7eb; background:rgba(15,23,42,0.85);
     }
+    .gear-rate{ font-size:11px; color:#e5e7eb; margin-top:6px; }
 
-    .crew-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .crew-body {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .crew-name {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 1px;
-    }
-
-    .crew-role-line {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 5px;
-    }
-
-    .crew-bio {
-      font-size: 11px;
-      margin-bottom: 6px;
-      color: #e5e7eb;
-    }
-
-    .crew-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-bottom: 4px;
-    }
-
-    .crew-tag {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      color: #e5e7eb;
-      background: rgba(15, 23, 42, 0.85);
-    }
-
-    .crew-links {
-      font-size: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 2px;
-      color: var(--muted);
-    }
-
-    .crew-links a {
-      color: var(--muted);
-      text-decoration: none;
-    }
-
-    .crew-links a:hover {
-      color: #e5e7eb;
-      text-decoration: underline;
-    }
-
-    .placeholder-text {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* crew register / ai stillcut / gear */
+    .placeholder-text { font-size: 11px; color: var(--muted); margin-top: 4px; }
     .info-card {
       background: rgba(15, 23, 42, 0.9);
       border-radius: 16px;
@@ -482,17 +161,12 @@
       font-size: 12px;
       color: #d1d5db;
     }
-
-    .info-card strong {
-      color: #e5e7eb;
-    }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="inner">
 
-      <!-- NAV -->
       <div class="nav-wrap">
         <nav class="nav">
           <div class="nav-logo">FIDUCIA COLLECTIVE</div>
@@ -507,40 +181,24 @@
       </div>
 
       <main id="main">
-        <!-- HERO -->
         <header class="hero">
           <div class="hero-brand">FIDUCIA COLLECTIVE</div>
-
-          <h1 class="hero-title-kr">
-신뢰를
-디자인하는
-프로덕션 플랫폼
-          </h1>
-
-          <div class="hero-sub-title">
-            <span>Director's Market</span>
-          </div>
-
-          <p class="hero-quote">
-"Trust isn't what follows art
-It's where art begins."
-          </p>
+          <h1 class="hero-title-kr">신뢰를\n디자인하는\n프로덕션 플랫폼</h1>
+          <div class="hero-sub-title"><span>Director's Market</span></div>
+          <p class="hero-quote">"Trust isn't what follows art\nIt's where art begins."</p>
         </header>
 
-        <!-- RECENT WORK -->
+        <!-- Recent work -->
         <section>
           <h2 class="section-title">recent work</h2>
           <div id="work-grid" class="work-grid">
-            <p class="placeholder-text">노션에서 Published 체크된 작업들을 불러오는 중입니다.</p>
+            <p class="placeholder-text">노션에서 Published 체크된 작업을 불러오는 중입니다.</p>
           </div>
         </section>
 
-        <!-- ABOUT + AI 스틸컷 CTA -->
+        <!-- About / Stillcut -->
         <section class="about" id="ai-stillcut">
-          <div class="about-title">
-            '<span>Fiducia collective</span>'란?
-          </div>
-
+          <div class="about-title">'<span>Fiducia collective</span>'란?</div>
           <p>
             <span class="about-accent">AI 기반 시각화 기술</span>과<br>
             검증된 감독 네트워크를 결합해<br>
@@ -548,112 +206,92 @@ It's where art begins."
             신뢰 있게 연결하는<br>
             <span class="about-bold">크리에이티브 프로덕션</span>입니다.
           </p>
-
           <p class="about-spaced">
             AI 스틸컷 / 감독 매칭 / 장비 예약을<br>
             한 곳에서.<br>
             당신의 비전을 가장 잘 구현할 팀을<br>
             AI가 연결합니다.
           </p>
-
           <div class="cta-wrapper">
-            <a class="cta-btn" href="#ai-stillcut-reserve">
-              AI 스틸컷 이용해보기
-            </a>
+            <a class="cta-btn" href="#ai-stillcut-reserve">AI 스틸컷 이용해보기</a>
           </div>
-
           <div class="footer-icons">
             <a href="https://instagram.com" target="_blank" aria-label="Instagram">📷</a>
             <a href="tel:01000000000" aria-label="Phone">📱</a>
           </div>
         </section>
 
-        <!-- 장비 예약 -->
+        <!-- Gear -->
         <section id="gear" class="crew-section">
           <h2 class="section-title">gear reservation</h2>
-          <div class="info-card">
-            <p>
-              현재는 장비 정보와 예약 요청을 노션에서 관리하고,<br>
-              이후 장비 DB / 예약 DB를 이용해 이 영역에서<br>
-              <strong>실시간 예약 가능 UI</strong>를 붙일 수 있게 설계되어 있습니다.
-            </p>
+          <div id="gear-grid" class="gear-grid">
+            <p class="placeholder-text">노션에서 장비 목록을 불러오는 중입니다.</p>
+          </div>
+          <div class="info-card" style="margin-top:12px;">
+            장비 예약 요청은 앞으로 이 페이지에서 직접 받거나,
+            노션 폼/카톡 링크로 연결해 Gear Reservation DB에 쌓이게 만들 수 있어요.
           </div>
         </section>
 
-        <!-- 감독/스태프 리스트 -->
+        <!-- Crew -->
         <section id="crew-list" class="crew-section">
           <h2 class="section-title">crew</h2>
-
           <div>
             <div class="crew-group-title">Directors</div>
             <div id="directors-grid" class="crew-grid">
-              <p class="placeholder-text">등록된 Director 정보를 노션에서 불러오는 중입니다.</p>
+              <p class="placeholder-text">Director 불러오는 중...</p>
             </div>
           </div>
-
           <div style="margin-top: 24px;">
             <div class="crew-group-title">Staff</div>
             <div id="staff-grid" class="crew-grid">
-              <p class="placeholder-text">등록된 Staff 정보를 노션에서 불러오는 중입니다.</p>
+              <p class="placeholder-text">Staff 불러오는 중...</p>
             </div>
           </div>
         </section>
 
-        <!-- 감독/스태프 등록 -->
+        <!-- Crew register -->
         <section id="crew-register" class="crew-section">
           <h2 class="section-title">crew register</h2>
           <div class="info-card">
-            <p>
-              감독/스태프 등록은 노션 폼으로 연결하는 방식이 가장 관리가 쉽습니다.<br/>
-              아래 버튼의 링크를 네가 만든 <strong>노션 폼 공유 링크</strong>로 교체해 주세요.
-            </p>
+            감독/스태프 등록은 노션 폼으로 연결하세요.<br>
+            아래 링크를 네 폼 공유 링크로 바꾸면 끝!
             <div class="cta-wrapper" style="margin-top: 14px;">
-              <a class="cta-btn" href="https://www.notion.so/your-form-url" target="_blank">
-                감독/스태프 등록 폼 열기
-              </a>
+              <a class="cta-btn" href="https://www.notion.so/your-form-url" target="_blank">감독/스태프 등록 폼 열기</a>
             </div>
           </div>
         </section>
 
-        <!-- AI 스틸컷 예약 상세 -->
+        <!-- Stillcut reserve info -->
         <section id="ai-stillcut-reserve" class="crew-section">
           <h2 class="section-title">AI stillcut reservation</h2>
           <div class="info-card">
-            <p>
-              이 섹션에는 AI 스틸컷 예약 설명, 레퍼런스 가이드,<br>
-              카카오톡 / 노션 폼 링크 등을 넣을 수 있습니다.<br/><br/>
-              나중에 <strong>AI Stillcut Reservation DB</strong>와 연결해,<br/>
-              여기에 입력한 예약이 자동으로 노션에 쌓이게 만들 수 있어요.
-            </p>
+            AI 스틸컷 예약은 노션 폼/카톡으로 받고,
+            예약 내용이 AI Stillcut Reservation DB에 쌓이도록 연결되어 있습니다.
           </div>
         </section>
       </main>
     </div>
   </div>
 
-  <!-- Notion 데이터 로딩 스크립트 -->
   <script>
-    // Recent Work 불러오기
+    const PLACEHOLDER_IMG = 'https://via.placeholder.com/600x400?text=Stillcut';
+
     async function loadWorks() {
       try {
         const res = await fetch('/.netlify/functions/works');
-        if (!res.ok) {
-          console.error('works fetch failed', res.status);
-          return;
-        }
+        if (!res.ok) return console.error('works fetch failed', res.status);
         const works = await res.json();
 
         const grid = document.getElementById('work-grid');
-        if (!grid) return;
-
         grid.innerHTML = '';
 
-        works.forEach((work) => {
+        works.forEach(work => {
           const card = document.createElement('article');
           card.className = 'work-card';
           card.innerHTML = `
             <div class="work-thumb">
-              <img src="${work.thumbnailUrl || 'https://via.placeholder.com/600x400?text=Stillcut'}" alt="${work.title} 스틸컷" />
+              <img src="${work.thumbnailUrl || PLACEHOLDER_IMG}" alt="${work.title || ''}">
             </div>
             <div class="work-meta">
               <div class="work-title">${work.title || ''}</div>
@@ -666,119 +304,93 @@ It's where art begins."
         });
 
         if (works.length === 0) {
-          grid.innerHTML = '<p class="placeholder-text">아직 Published 체크된 작업이 없습니다.</p>';
+          grid.innerHTML = '<p class="placeholder-text">Published 체크된 작업이 없습니다.</p>';
         }
-      } catch (e) {
-        console.error('works error', e);
-      }
+      } catch (e) { console.error(e); }
     }
 
-    // Crew(Director / Staff) 불러오기
     async function loadCrew() {
       try {
         const res = await fetch('/.netlify/functions/crew');
-        if (!res.ok) {
-          console.error('crew fetch failed', res.status);
-          return;
-        }
+        if (!res.ok) return console.error('crew fetch failed', res.status);
         const crew = await res.json();
 
         const directorsGrid = document.getElementById('directors-grid');
         const staffGrid = document.getElementById('staff-grid');
-        if (!directorsGrid || !staffGrid) return;
-
         directorsGrid.innerHTML = '';
         staffGrid.innerHTML = '';
 
         const directors = crew.filter(c => c.mainRole === 'Director');
         const staff = crew.filter(c => c.mainRole === 'Staff');
 
-        const makeCard = (member) => {
+        const makeCard = (m) => {
           const card = document.createElement('div');
           card.className = 'crew-card';
-
-          const avatar = document.createElement('div');
-          avatar.className = 'crew-avatar';
-          if (member.profileImageUrl) {
-            avatar.innerHTML = `<img src="${member.profileImageUrl}" alt="${member.name}" />`;
-          }
-
-          const body = document.createElement('div');
-          body.className = 'crew-body';
-
-          const rolesText =
-            member.roles && member.roles.length
-              ? member.roles.join(' · ')
-              : member.mainRole;
-
-          body.innerHTML = `
-            <div class="crew-name">${member.name || ''}</div>
-            <div class="crew-role-line">${rolesText || ''}</div>
-            ${member.bio ? `<div class="crew-bio">${member.bio}</div>` : ''}
+          card.innerHTML = `
+            <div class="crew-avatar">${m.profileImageUrl ? `<img src="${m.profileImageUrl}" alt="${m.name}">` : ''}</div>
+            <div class="crew-body">
+              <div class="crew-name">${m.name || ''}</div>
+              <div class="crew-role-line">${(m.roles && m.roles.length) ? m.roles.join(' · ') : (m.mainRole || '')}</div>
+              ${m.bio ? `<div class="crew-bio">${m.bio}</div>` : ''}
+              <div class="crew-tags">
+                ${(m.skills || []).map(s => `<span class="crew-tag">${s}</span>`).join('')}
+              </div>
+              <div class="crew-links">
+                ${m.instagram ? `<a href="${m.instagram}" target="_blank">Instagram</a>` : ''}
+                ${m.email ? `<a href="mailto:${m.email}">${m.email}</a>` : ''}
+                ${m.phone ? `<span>${m.phone}</span>` : ''}
+              </div>
+            </div>
           `;
-
-          const tags = document.createElement('div');
-          tags.className = 'crew-tags';
-          if (member.skills && member.skills.length) {
-            member.skills.forEach(skill => {
-              const tag = document.createElement('span');
-              tag.className = 'crew-tag';
-              tag.textContent = skill;
-              tags.appendChild(tag);
-            });
-          }
-
-          const links = document.createElement('div');
-          links.className = 'crew-links';
-
-          if (member.instagram) {
-            const a = document.createElement('a');
-            a.href = member.instagram;
-            a.target = '_blank';
-            a.textContent = 'Instagram';
-            links.appendChild(a);
-          }
-
-          if (member.email) {
-            const a = document.createElement('a');
-            a.href = 'mailto:' + member.email;
-            a.textContent = member.email;
-            links.appendChild(a);
-          }
-
-          if (member.phone) {
-            const span = document.createElement('span');
-            span.textContent = member.phone;
-            links.appendChild(span);
-          }
-
-          body.appendChild(tags);
-          body.appendChild(links);
-
-          card.appendChild(avatar);
-          card.appendChild(body);
           return card;
         };
 
-        if (directors.length === 0) {
-          directorsGrid.innerHTML = '<p class="placeholder-text">등록된 Director가 아직 없습니다.</p>';
-        } else {
-          directors.forEach(m => directorsGrid.appendChild(makeCard(m)));
-        }
+        if (!directors.length) directorsGrid.innerHTML = '<p class="placeholder-text">Director가 아직 없습니다.</p>';
+        else directors.forEach(m => directorsGrid.appendChild(makeCard(m)));
 
-        if (staff.length === 0) {
-          staffGrid.innerHTML = '<p class="placeholder-text">등록된 Staff가 아직 없습니다.</p>';
-        } else {
-          staff.forEach(m => staffGrid.appendChild(makeCard(m)));
+        if (!staff.length) staffGrid.innerHTML = '<p class="placeholder-text">Staff가 아직 없습니다.</p>';
+        else staff.forEach(m => staffGrid.appendChild(makeCard(m)));
+
+      } catch (e) { console.error(e); }
+    }
+
+    async function loadGear() {
+      try {
+        const res = await fetch('/.netlify/functions/gear');
+        if (!res.ok) return console.error('gear fetch failed', res.status);
+        const gear = await res.json();
+
+        const grid = document.getElementById('gear-grid');
+        grid.innerHTML = '';
+
+        gear.forEach(g => {
+          const card = document.createElement('div');
+          card.className = 'gear-card';
+          card.innerHTML = `
+            <div class="gear-thumb">${g.thumbnailUrl ? `<img src="${g.thumbnailUrl}" alt="${g.name}">` : ''}</div>
+            <div class="gear-body">
+              <div class="gear-name">${g.name || ''}</div>
+              <div class="gear-meta">${g.brandModel || ''}</div>
+              <div class="gear-badges">
+                ${g.category ? `<span class="gear-badge">${g.category}</span>` : ''}
+                ${g.status ? `<span class="gear-badge">${g.status}</span>` : ''}
+              </div>
+              ${g.dayRate ? `<div class="gear-rate">Day rate: ${g.dayRate.toLocaleString()}원</div>` : ''}
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+        if (gear.length === 0) {
+          grid.innerHTML = '<p class="placeholder-text">장비가 아직 없습니다.</p>';
         }
-      } catch (e) {
-        console.error('crew error', e);
-      }
+      } catch(e){ console.error(e); }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       loadWorks();
       loadCrew();
+      loadGear();
     });
   </script>
 </body>
