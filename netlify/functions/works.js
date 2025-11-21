@@ -4,26 +4,13 @@ const { Client } = require("@notionhq/client");
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 const DATABASE_ID = process.env.NOTION_WORKS_DB_ID;
 
-// 노션 property 타입이 뭐든 최대한 텍스트로 뽑아주는 함수
 function getText(prop) {
   if (!prop) return "";
-
-  if (prop.type === "title") {
-    return prop.title?.[0]?.plain_text || "";
-  }
-  if (prop.type === "rich_text") {
-    return prop.rich_text?.[0]?.plain_text || "";
-  }
-  if (prop.type === "select") {
-    return prop.select?.name || "";
-  }
-  if (prop.type === "multi_select") {
-    return (prop.multi_select || []).map(v => v.name).join(", ");
-  }
-  if (prop.type === "relation") {
-    // relation은 이름 대신 id만 있으니 “연결됨” 정도로만 표기
-    return (prop.relation || []).length ? "linked" : "";
-  }
+  if (prop.type === "title") return prop.title?.[0]?.plain_text || "";
+  if (prop.type === "rich_text") return prop.rich_text?.[0]?.plain_text || "";
+  if (prop.type === "select") return prop.select?.name || "";
+  if (prop.type === "multi_select") return (prop.multi_select || []).map(v => v.name).join(", ");
+  if (prop.type === "relation") return (prop.relation || []).length ? "linked" : "";
   return "";
 }
 
@@ -46,7 +33,6 @@ exports.handler = async () => {
 
     const works = response.results.map((page) => {
       const p = page.properties;
-
       return {
         id: page.id,
         title: getText(p.Title),
