@@ -12,34 +12,106 @@
 <link rel="stylesheet" href="style.css" />
 
 <style>
-.topbar{display:flex;align-items:center;gap:10px;margin:4px 0 14px;position:sticky;top:0;backdrop-filter:blur(10px);
-  padding:8px 0;background:linear-gradient(to bottom, rgba(2,3,10,0.9), transparent);z-index:5}
-.back{font-size:12px;color:#e5e7eb;text-decoration:none;padding:6px 10px;border-radius:999px;border:1px solid var(--border-subtle);
-  background:rgba(79,125,255,0.12);font-family:Inter}
-.profile-card{background:rgba(15,23,42,.92);border:1px solid var(--border-subtle);border-radius:18px;padding:14px;display:flex;gap:14px;align-items:flex-start;box-shadow:0 14px 35px rgba(15,23,42,.9)}
-.avatar{width:84px;height:84px;border-radius:999px;overflow:hidden;flex:0 0 auto;border:1px solid rgba(148,163,184,.45);background:#0b1020}
+/* ---- topbar ---- */
+.topbar{
+  display:flex;align-items:center;gap:10px;margin:4px 0 14px;position:sticky;top:0;backdrop-filter:blur(10px);
+  padding:8px 0;background:linear-gradient(to bottom, rgba(2,3,10,0.9), transparent);z-index:5
+}
+.back{
+  font-size:12px;color:#e5e7eb;text-decoration:none;padding:6px 10px;border-radius:999px;border:1px solid var(--border-subtle);
+  background:rgba(79,125,255,0.12);font-family:Inter
+}
+
+/* ---- profile ---- */
+.profile-card{
+  background:rgba(15,23,42,.92);border:1px solid var(--border-subtle);border-radius:18px;padding:14px;
+  display:flex;gap:14px;align-items:flex-start;box-shadow:0 14px 35px rgba(15,23,42,.9)
+}
+.avatar{
+  width:92px;height:92px;border-radius:999px;overflow:hidden;flex:0 0 auto;border:1px solid rgba(148,163,184,.45);background:#0b1020
+}
 .avatar img{width:100%;height:100%;object-fit:cover}
 .profile-body{flex:1;min-width:0}
 .name-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.name{font-size:18px;font-weight:700}
-.verified{font-size:11px;padding:2px 7px;border-radius:999px;color:#bbf7d0;border:1px solid rgba(34,197,94,.5);background:rgba(34,197,94,.15);font-family:Inter}
+.name{font-size:20px;font-weight:800;letter-spacing:0.01em}
+.verified{
+  font-size:11px;padding:2px 7px;border-radius:999px;color:#bbf7d0;border:1px solid rgba(34,197,94,.5);
+  background:rgba(34,197,94,.15);font-family:Inter
+}
+.badge-role{
+  font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid rgba(79,125,255,.55);
+  background:rgba(79,125,255,.12);color:#cbd5f5;font-family:Inter;font-weight:600
+}
 .main-role{font-size:12px;color:var(--muted);margin-top:4px}
 .subline{font-size:12px;margin-top:6px;color:#e5e7eb}
 .bio{font-size:13px;margin-top:10px;color:#e5e7eb;white-space:pre-line}
+
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.tag{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid rgba(148,163,184,.6);color:#e5e7eb;background:rgba(15,23,42,.85)}
-.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:12px;color:var(--muted)}
-.links a{color:#cbd5f5;text-decoration:none}
+.tag{
+  font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid rgba(148,163,184,.6);color:#e5e7eb;background:rgba(15,23,42,.85)
+}
+
+/* ---- stats row ---- */
+.stats{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:10px
+}
+.stat-chip{
+  font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(148,163,184,.55);
+  color:#e5e7eb;background:rgba(2,6,23,.7);font-family:Inter
+}
+
+/* ---- contact ---- */
+.contact-cta{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:12px
+}
+.contact-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;
+  border:1px solid rgba(191,219,254,.35);background:rgba(79,125,255,.15);
+  color:#eef2ff;text-decoration:none;font-size:12px;font-weight:600;font-family:Inter
+}
+.contact-btn strong{font-weight:700}
+.contact-btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+
+/* ---- section ---- */
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;margin-top:26px;margin-bottom:10px
+}
+.section-title{
+  font-size:16px;font-weight:800;font-family:Inter;text-transform:lowercase
+}
+.section-sub{font-size:12px;color:var(--muted)}
+
+/* ---- filters ---- */
+.role-filters{
+  display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px
+}
+.filter-pill{
+  font-size:11px;padding:4px 9px;border-radius:999px;border:1px solid rgba(148,163,184,.55);
+  background:rgba(15,23,42,.85);color:#e5e7eb;cursor:pointer;font-family:Inter
+}
+.filter-pill.is-active{
+  border-color:rgba(79,125,255,.75);background:rgba(79,125,255,.18);color:#fff
+}
+
+/* ---- works ---- */
 .work-grid{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:640px){.work-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.work-card{background:rgba(15,23,42,.9);border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+
+.work-card{
+  background:rgba(15,23,42,.9);border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;display:flex;flex-direction:column
+}
 .work-thumb{position:relative;padding-top:62%;background:#020617}
 .work-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .work-meta{padding:10px 11px}
-.work-title{font-size:13px;font-weight:700}
+.work-title{font-size:13px;font-weight:800}
 .work-sub{font-size:11px;color:var(--muted);margin-top:3px}
 .work-role{font-size:11px;color:#e5e7eb;margin-top:6px;font-family:Inter}
-.error{padding:14px;border:1px solid var(--border-subtle);border-radius:14px;background:rgba(15,23,42,.92);font-size:13px}
+.work-featured{font-size:10px;color:#bfdbfe;font-family:Inter;margin-top:6px}
+
+/* ---- error ---- */
+.error{
+  padding:14px;border:1px solid var(--border-subtle);border-radius:14px;background:rgba(15,23,42,.92);font-size:13px
+}
 </style>
 </head>
 
@@ -55,8 +127,27 @@
     <div class="placeholder-text">불러오는 중...</div>
   </div>
 
+  <!-- 대표작 -->
+  <section id="featured-section" style="display:none;">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">featured works</h2>
+        <div class="section-sub" id="featured-sub"></div>
+      </div>
+    </div>
+    <div id="featured-grid" class="work-grid"></div>
+  </section>
+
+  <!-- 전체 필모 -->
   <section id="works-section" style="display:none;">
-    <h2 class="section-title">filmography</h2>
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">filmography</h2>
+        <div class="section-sub" id="works-sub"></div>
+      </div>
+    </div>
+
+    <div id="role-filters" class="role-filters"></div>
     <div id="works-grid" class="work-grid"></div>
   </section>
 
@@ -66,6 +157,9 @@
 const PLACEHOLDER_IMG='https://via.placeholder.com/600x400?text=Work';
 const id=new URLSearchParams(location.search).get('id');
 
+let ALL_WORKS = [];
+let ACTIVE_ROLE = 'ALL';
+
 async function fetchJSON(url){
   const res=await fetch(url);
   const data=await res.json();
@@ -73,45 +167,130 @@ async function fetchJSON(url){
   return data;
 }
 
-function renderProfile(m){
+function renderProfile(m, totalWorks){
+  const isDirector = m.mainRole === 'Director';
+
   profile-root.innerHTML=`
     <div class="avatar">${m.profileImageUrl?`<img src="${m.profileImageUrl}" alt="${m.name}">`:''}</div>
     <div class="profile-body">
       <div class="name-wrap">
         <div class="name">${m.name||''}</div>
         ${m.verified?`<div class="verified">Verified</div>`:''}
+        ${isDirector?`<div class="badge-role">Director</div>`:''}
       </div>
+
       <div class="main-role">${m.mainRole||''}</div>
       <div class="subline">${(m.roles||[]).join(' · ')}</div>
+
       ${m.bio?`<div class="bio">${m.bio}</div>`:''}
-      <div class="tags">${(m.skills||[]).map(s=>`<span class="tag">${s}</span>`).join('')}</div>
-      <div class="links">
-        ${m.instagram?`<a href="${m.instagram}" target="_blank">Instagram</a>`:''}
-        ${m.email?`<a href="mailto:${m.email}">${m.email}</a>`:''}
-        ${m.phone?`<span>${m.phone}</span>`:''}
+
+      <div class="tags">
+        ${(m.skills||[]).map(s=>`<span class="tag">${s}</span>`).join('')}
+      </div>
+
+      <div class="stats">
+        <span class="stat-chip">Works: ${totalWorks}</span>
+        ${m.verified?`<span class="stat-chip">Verified</span>`:''}
+        ${(m.roles||[]).slice(0,2).map(r=>`<span class="stat-chip">${r}</span>`).join('')}
+      </div>
+
+      <div class="contact-cta">
+        ${m.instagram?`<a class="contact-btn" href="${m.instagram}" target="_blank">📷 <strong>Instagram</strong></a>`:''}
+        ${m.email?`<a class="contact-btn" href="mailto:${m.email}">✉️ <strong>Email</strong></a>`:''}
+        ${m.phone?`<a class="contact-btn" href="tel:${m.phone}">📞 <strong>Call</strong></a>`:''}
       </div>
     </div>`;
 }
 
+function makeWorkCard(w, {featured=false}={}){
+  const card=document.createElement('article');
+  card.className='work-card';
+  card.innerHTML=`
+    <div class="work-thumb">
+      <img src="${w.thumbnailUrl||PLACEHOLDER_IMG}" alt="${w.title||''}">
+    </div>
+    <div class="work-meta">
+      <div class="work-title">${w.title||''}</div>
+      <div class="work-sub">${w.subTitle||''}</div>
+      <div class="work-role">${w.roleLabel||''} ${w.roleName||''}</div>
+      ${featured ? `<div class="work-featured">★ Featured</div>` : ``}
+    </div>`;
+  return card;
+}
+
+// 대표작 정렬 규칙
+// 1) Featured true 우선
+// 2) Sort 숫자 오름차순
+// 3) Date 최신순(있는 경우)
+// 4) 그냥 원본 순서
+function sortWorksForFeatured(list){
+  return [...list].sort((a,b)=>{
+    const fa = !!a.featured;
+    const fb = !!b.featured;
+    if(fa!==fb) return fb-fa;
+
+    const sa = (typeof a.sort === 'number') ? a.sort : null;
+    const sb = (typeof b.sort === 'number') ? b.sort : null;
+    if(sa!=null && sb!=null && sa!==sb) return sa-sb;
+    if(sa!=null && sb==null) return -1;
+    if(sa==null && sb!=null) return 1;
+
+    const da = a.date ? new Date(a.date).getTime() : 0;
+    const db = b.date ? new Date(b.date).getTime() : 0;
+    if(da!==db) return db-da;
+
+    return 0;
+  });
+}
+
+function renderFeatured(works){
+  const featured = sortWorksForFeatured(works).slice(0,3);
+  if(!featured.length) return;
+
+  featured-grid.innerHTML='';
+  featured.forEach(w=>featured-grid.appendChild(makeWorkCard(w,{featured:true})));
+
+  featured-sub.textContent = `대표작 ${featured.length}개`;
+  featured-section.style.display='block';
+}
+
+function buildRoleFilters(works){
+  const roleSet = new Set();
+  works.forEach(w=>{
+    if(w.roleLabel) roleSet.add(w.roleLabel);
+  });
+  const roles = ['ALL', ...Array.from(roleSet)];
+
+  role-filters.innerHTML='';
+  roles.forEach(role=>{
+    const btn=document.createElement('button');
+    btn.className='filter-pill' + (role===ACTIVE_ROLE?' is-active':'');
+    btn.textContent = role==='ALL' ? '전체' : role;
+    btn.addEventListener('click', ()=>{
+      ACTIVE_ROLE = role;
+      buildRoleFilters(ALL_WORKS);
+      renderWorks(ALL_WORKS);
+    });
+    role-filters.appendChild(btn);
+  });
+}
+
 function renderWorks(works){
-  works-section.style.display='block';
+  const filtered = (ACTIVE_ROLE==='ALL')
+    ? works
+    : works.filter(w=>w.roleLabel===ACTIVE_ROLE);
+
   works-grid.innerHTML='';
-  if(!works.length){
-    works-grid.innerHTML='<div class="placeholder-text">연결된 작품이 아직 없어요.</div>';
+
+  if(!filtered.length){
+    works-grid.innerHTML='<div class="placeholder-text">해당 역할 작품이 아직 없어요.</div>';
     return;
   }
-  works.forEach(w=>{
-    const card=document.createElement('article');
-    card.className='work-card';
-    card.innerHTML=`
-      <div class="work-thumb"><img src="${w.thumbnailUrl||PLACEHOLDER_IMG}" alt="${w.title||''}"></div>
-      <div class="work-meta">
-        <div class="work-title">${w.title||''}</div>
-        <div class="work-sub">${w.subTitle||''}</div>
-        <div class="work-role">${w.roleLabel||''} ${w.roleName||''}</div>
-      </div>`;
-    works-grid.appendChild(card);
-  });
+
+  filtered.forEach(w=>works-grid.appendChild(makeWorkCard(w)));
+
+  works-sub.textContent = `총 ${works.length}개`;
+  works-section.style.display='block';
 }
 
 async function init(){
@@ -126,11 +305,25 @@ async function init(){
       profile-root.innerHTML='<div class="error">해당 크루를 찾을 수 없어요.</div>';
       return;
     }
-    renderProfile(me);
 
     const works=await fetchJSON('/.netlify/functions/works');
+    // works.js에서 crewIds 내려오는 구조 기준
     const myWorks=(works||[]).filter(w=>(w.crewIds||[]).includes(id));
-    renderWorks(myWorks);
+
+    // myWorks에 Featured/Sort/Date 같은 필드가 있다면 자동 인식
+    // (works.js에서 내려오게 해두면 더 정확해짐)
+    ALL_WORKS = myWorks.map(w=>({
+      ...w,
+      featured: !!w.featured,   // optional
+      sort: (typeof w.sort === 'number') ? w.sort : null, // optional
+      date: w.date || null      // optional
+    }));
+
+    renderProfile(me, ALL_WORKS.length);
+    renderFeatured(ALL_WORKS);
+    buildRoleFilters(ALL_WORKS);
+    renderWorks(ALL_WORKS);
+
   }catch(e){
     profile-root.innerHTML=`<div class="error">데이터 로드 실패: ${e.message}</div>`;
   }
