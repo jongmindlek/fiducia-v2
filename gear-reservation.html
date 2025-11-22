@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="./styles.css"/>
+  <title>Gear Reservation</title>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">FIDUCIA COLLECTIVE</div>
+      <div class="nav-links">
+        <a class="tab" href="./index.html">메인</a>
+        <a class="tab active" href="./gear.html">장비 예약</a>
+        <a class="tab" href="./crew.html">감독/스태프 리스트</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container section">
+    <h2 style="margin:0 0 12px">gear reservation</h2>
+
+    <div class="card">
+      <div class="row">
+        <input id="name" class="input" placeholder="이름" style="flex:1;min-width:160px"/>
+        <input id="phone" class="input" placeholder="연락처" style="flex:1;min-width:160px"/>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <input id="from" type="date" class="input"/>
+        <input id="to" type="date" class="input"/>
+      </div>
+      <textarea id="note" class="input" rows="4" placeholder="요청사항" style="margin-top:8px"></textarea>
+
+      <div class="row" style="justify-content:flex-end;margin-top:10px">
+        <button id="submit" class="cta" style="border:none;cursor:pointer">예약하기</button>
+      </div>
+      <div id="msg" class="small" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card section">
+      <p>장비 예약 요청을 여기서 바로 입력하면 Gear Reservation DB로 자동 저장됩니다.</p>
+    </div>
+  </main>
+
+  <script type="module">
+    const params = new URLSearchParams(location.search);
+    const gearId = params.get("gearId");
+
+    const $ = (id)=>document.querySelector(id);
+    const msg = $("#msg");
+
+    $("#submit").onclick = async ()=>{
+      msg.textContent="전송 중...";
+      const payload = {
+        gearId,
+        name: $("#name").value.trim(),
+        phone: $("#phone").value.trim(),
+        from: $("#from").value,
+        to: $("#to").value,
+        note: $("#note").value.trim()
+      };
+      try{
+        const res = await fetch("/api/gear-reservation",{
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+        const out = await res.json();
+        if(res.ok){
+          msg.textContent="예약 요청 완료!";
+        }else{
+          msg.textContent=out.message || "예약 실패";
+        }
+      }catch(e){
+        msg.textContent="네트워크 오류";
+      }
+    };
+  </script>
+</body>
+</html>
