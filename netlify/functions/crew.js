@@ -1,69 +1,73 @@
-// netlify/functions/crew.js
 const { Client } = require("@notionhq/client");
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
-const DATABASE_ID = process.env.NOTION_CREW_DB_ID;
+const CREW_DB_ID = process.env.NOTION_CREW_DB_ID;
 
-exports.handler = async () => {
-  try {
-    const response = await notion.databases.query({
-      database_id: DATABASE_ID,
-      sorts: [{ property: "Sort", direction: "ascending" }],
+function pickText(prop){
+  if(!prop) return "";
+  if(prop.type==="title") return prop.title?.[0]?.plain_text || "";
+  if(prop.type==="rich_text") return prop.rich_text?.[0]?.plain_text || "";
+  if(prop.type==="select") return prop.select?.name || "";
+  if(prop.type==="multi_select") return (prop.multi_select||[]).map(x=>x.name);
+  if(prop.type==="url") return prop.url || "";
+  if(prop.type==="checkbox") return !!prop.checkbox;
+  return "";
+}
+function pickFileUrl(prop){
+  if(!prop || prop.type!=="files") return "";
+  const f = prop.files?.[0];
+  if(!f) return "";
+  return f.type==="external" ? f.external.url : f.file.url;
+}
+
+exports.handler = async (event) => {
+  try{
+    const id = event.queryStringParameters?.id;
+
+    if(id){
+      const page = await notion.pages.retrieve({ page_id: id });
+      const p = page.properties;
+      const crew = {
+        id: page.id,
+        name: pickText(p.Name || p.이름),
+        mainRole: pickText(p.MainRole),
+        roles: pickText(p.Roles) || [],
+        skills: pickText(p.Skills) || [],
+        bio: pickText(p.Bio),
+        instagram: pickText(p.Instagram),
+        phone: pickText(p.Phone),
+        email: pickText(p.Email),
+        profileImageUrl: pickFileUrl(p.ProfileImage),
+        verified: pickText(p.Verified)
+      };
+      return { statusCode:200, body: JSON.stringify(crew) };
+    }
+
+    const resp = await notion.databases.query({
+      database_id: CREW_DB_ID,
+      sorts:[{property:"Sort", direction:"ascending"}],
+      filter:{ property:"Published", checkbox:{ equals:true } }
     });
 
-    const crew = response.results.map((page) => {
+    const crews = resp.results.map(page=>{
       const p = page.properties;
-
-      const name = p.Name?.title?.[0]?.plain_text || "";
-      const mainRole = p.MainRole?.select?.name || "";
-      const roles = (p.Roles?.multi_select || []).map((o) => o.name);
-      const skills = (p.Skills?.multi_select || []).map((o) => o.name);
-      const bio = p.Bio?.rich_text?.[0]?.plain_text || "";
-
-      const instagram = p.Instagram?.url || "";
-      const phone = p.Phone?.phone_number || "";
-      const email = p.Email?.email || "";
-
-      let profileImageUrl = "";
-      if (p.ProfileImage?.files?.[0]) {
-        const file = p.ProfileImage.files[0];
-        profileImageUrl = file.file?.url || file.external?.url || "";
-      }
-
-      const verified = p.Verified?.checkbox || false;
-
       return {
         id: page.id,
-        name,
-        mainRole,
-        roles,
-        skills,
-        bio,
-        instagram,
-        phone,
-        email,
-        profileImageUrl,
-        verified,
+        name: pickText(p.Name || p.이름),
+        mainRole: pickText(p.MainRole),
+        roles: pickText(p.Roles) || [],
+        skills: pickText(p.Skills) || [],
+        bio: pickText(p.Bio),
+        instagram: pickText(p.Instagram),
+        phone: pickText(p.Phone),
+        email: pickText(p.Email),
+        profileImageUrl: pickFileUrl(p.ProfileImage),
+        verified: pickText(p.Verified)
       };
     });
 
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(crew),
-    };
-  } catch (error) {
-    console.error("Notion crew error:", error);
-    return {
-      statusCode: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({
-        message: "Notion crew fetch error",
-        details: error?.body || error?.message,
-      }),
-    };
+    return { statusCode:200, body: JSON.stringify(crews) };
+  }catch(err){
+    return { statusCode:500, body: JSON.stringify({ message:"Notion crew fetch error", details:String(err) }) };
   }
 };
