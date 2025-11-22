@@ -1,106 +1,100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<title>Fiducia Collective | Director's Market</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" />
-<link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="./styles.css"/>
+  <title>Fiducia Collective</title>
 </head>
-
 <body>
-<div class="page"><div class="inner">
-
-  <div class="nav-wrap">
-    <nav class="nav">
-      <div class="nav-logo">FIDUCIA COLLECTIVE</div>
-      <div class="nav-menu">
-        <a href="index.html" class="is-active">메인</a>
-        <a href="stillcut.html">AI 스틸컷(예약)</a>
-        <a href="gear.html">장비 예약</a>
-        <a href="crew-list.html">감독/스태프 리스트</a>
-        <a href="register.html">감독/스태프 등록</a>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">FIDUCIA COLLECTIVE</div>
+      <div class="nav-links">
+        <a class="tab active" href="./index.html">메인</a>
+        <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" href="./gear.html">장비 예약</a>
+        <a class="tab" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
       </div>
-    </nav>
-  </div>
+    </div>
+  </nav>
 
-  <main>
-    <header class="hero">
-      <div class="hero-brand">FIDUCIA COLLECTIVE</div>
-      <h1 class="hero-title-kr">신뢰를<br>디자인하는<br>프로덕션 플랫폼</h1>
-      <div class="hero-sub-title"><span>Director's Market</span></div>
-      <p class="hero-quote">"Trust isn't what follows art<br>It's where art begins."</p>
-    </header>
+  <header class="hero container">
+    <h1>신뢰를<br/>디자인하는<br/>프로덕션 플랫폼</h1>
+    <div class="sub">Trust isn't what follows art. It's where art begins.</div>
+    <a class="cta" href="./crew.html">Director's Market</a>
+  </header>
 
-    <section>
-      <h2 class="section-title">recent work</h2>
-      <div id="work-grid" class="work-grid">
-        <p class="placeholder-text">노션에서 Published 체크된 작업을 불러오는 중입니다.</p>
-      </div>
-    </section>
+  <main class="container section">
+    <div class="grid">
+      <section class="card" style="grid-column: span 12;">
+        <h3>recent work</h3>
+        <p>노션에서 Published 체크된 작업을 불러옵니다.</p>
+        <div id="works" class="list" style="margin-top:12px"></div>
+        <div id="worksEmpty" class="small" style="display:none;margin-top:8px">표시할 작업이 아직 없어요.</div>
+      </section>
 
-    <section class="about">
-      <div class="about-title">'<span>Fiducia collective</span>'란?</div>
-      <p>
-        <span class="about-accent">AI 기반 시각화 기술</span>과<br>
-        검증된 감독 네트워크를 결합해<br>
-        영상 기획 과정 부담은 줄이고<br>
-        신뢰 있게 연결하는<br>
-        <span class="about-bold">크리에이티브 프로덕션</span>입니다.
-      </p>
-      <p class="about-spaced">
-        AI 스틸컷 / 감독 매칭 / 장비 예약을 한 곳에서.<br>
-        당신의 비전을 가장 잘 구현할 팀을 AI가 연결합니다.
-      </p>
-      <div class="cta-wrapper">
-        <a class="cta-btn" href="stillcut.html">AI 스틸컷 이용해보기</a>
-      </div>
-      <div class="footer-icons">
-        <a href="https://instagram.com" target="_blank" aria-label="Instagram">📷</a>
-        <a href="tel:01000000000" aria-label="Phone">📱</a>
-      </div>
-    </section>
+      <section class="card" style="grid-column: span 12;">
+        <h3>'Fiducia collective'란?</h3>
+        <p>
+          AI 기반 시각화 기술과 검증된 감독 네트워크를 결합해<br/>
+          영상 기획 부담을 줄이고, 신뢰 있게 연결하는<br/>
+          크리에이티브 프로덕션입니다.
+        </p>
+      </section>
+    </div>
   </main>
 
-</div></div>
+  <footer class="footer">
+    <div class="container row" style="justify-content:space-between">
+      <div>© Fiducia Collective</div>
+      <div class="row">
+        <span>Instagram</span>
+        <span>Contact</span>
+      </div>
+    </div>
+  </footer>
 
-<script>
-const PLACEHOLDER_IMG = 'https://via.placeholder.com/600x400?text=Stillcut';
+  <script type="module">
+    const worksEl = document.querySelector("#works");
+    const emptyEl = document.querySelector("#worksEmpty");
 
-async function loadWorks(){
-  try{
-    const res = await fetch('/.netlify/functions/works');
-    const works = await res.json();
-    const grid = document.getElementById('work-grid');
-    grid.innerHTML='';
+    const thumb = (url) => url
+      ? `<img src="${url}" alt="thumbnail" loading="lazy"/>`
+      : `<div class="thumb">no image</div>`;
 
-    (works||[]).forEach(work=>{
-      const card=document.createElement('article');
-      card.className='work-card';
-      card.innerHTML=`
-        <div class="work-thumb">
-          <img src="${work.thumbnailUrl||PLACEHOLDER_IMG}" alt="${work.title||''}">
-        </div>
-        <div class="work-meta">
-          <div class="work-title">${work.title||''}</div>
-          <div class="work-sub">${work.subTitle||''}</div>
-          <div class="work-role-label">${work.roleLabel||''}</div>
-          <div class="work-role-name">${work.roleName||''}</div>
-        </div>`;
-      grid.appendChild(card);
-    });
-
-    if(!works || works.length===0){
-      grid.innerHTML='<p class="placeholder-text">Published 체크된 작업이 없습니다.</p>';
+    async function loadWorks(){
+      worksEl.innerHTML = "";
+      try{
+        const res = await fetch("/api/works");
+        const works = await res.json();
+        if(!Array.isArray(works) || works.length===0){
+          emptyEl.style.display="block";
+          return;
+        }
+        emptyEl.style.display="none";
+        works.forEach(w=>{
+          const card = document.createElement("a");
+          card.className="card person";
+          card.href = w.url || "#";
+          card.innerHTML = `
+            <div class="thumb">${thumb(w.thumbnailUrl)}</div>
+            <div class="name">${w.title || "Untitled"}</div>
+            <div class="small">${w.subTitle || ""}</div>
+            <div class="tags">
+              ${w.roleLabel ? `<span class="tag">${w.roleLabel}</span>`:""}
+              ${w.roleName ? `<span class="tag">${w.roleName}</span>`:""}
+            </div>
+          `;
+          worksEl.appendChild(card);
+        });
+      }catch(e){
+        emptyEl.style.display="block";
+        emptyEl.textContent="recent work 불러오기 실패";
+      }
     }
-  }catch(e){console.error(e);}
-}
-
-document.addEventListener('DOMContentLoaded', loadWorks);
-</script>
+    loadWorks();
+  </script>
 </body>
 </html>
