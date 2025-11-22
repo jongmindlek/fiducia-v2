@@ -1,226 +1,160 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>Crew Detail | Fiducia Collective</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Fonts (index랑 동일) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" />
-
-  <style>
-    :root {
-      --bg: #02030a;
-      --text: #ffffff;
-      --muted: #9ca3af;
-      --accent: #4f7dff;
-      --border-subtle: rgba(255,255,255,0.08);
-      --card: rgba(15,23,42,0.92);
-      --radius: 18px;
-      --max-width: 980px;
-    }
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body{
-      background: radial-gradient(circle at top, #1b2640 0, #02030a 52%);
-      color: var(--text);
-      font-family: 'Pretendard', Inter, system-ui, sans-serif;
-      line-height:1.5;
-    }
-    .page{min-height:100vh;padding:16px 16px 80px;display:flex;justify-content:center;}
-    .inner{width:100%;max-width:var(--max-width);}
-
-    .topbar{
-      display:flex;align-items:center;gap:10px;margin:4px 0 14px;
-      position:sticky;top:0;backdrop-filter:blur(10px);
-      padding:8px 0;background:linear-gradient(to bottom, rgba(2,3,10,0.9), transparent);
-      z-index:5;
-    }
-    .back{
-      font-size:12px;color:#e5e7eb;text-decoration:none;padding:6px 10px;border-radius:999px;
-      border:1px solid var(--border-subtle);background:rgba(79,125,255,0.12);
-      font-family:Inter,system-ui,sans-serif;
-    }
-    .brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-family:Inter;}
-
-    .profile-card{
-      background:var(--card);border:1px solid var(--border-subtle);border-radius:var(--radius);
-      padding:14px;display:flex;gap:14px;align-items:flex-start;
-      box-shadow:0 14px 35px rgba(15,23,42,0.9);
-    }
-    .avatar{
-      width:84px;height:84px;border-radius:999px;overflow:hidden;flex:0 0 auto;
-      border:1px solid rgba(148,163,184,0.45);background:#0b1020;
-    }
-    .avatar img{width:100%;height:100%;object-fit:cover;}
-    .profile-body{flex:1;min-width:0;}
-    .name-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-    .name{font-size:18px;font-weight:700;}
-    .verified{
-      font-size:11px;padding:2px 7px;border-radius:999px;color:#bbf7d0;
-      border:1px solid rgba(34,197,94,0.5);background:rgba(34,197,94,0.15);
-      font-family:Inter;
-    }
-    .main-role{font-size:12px;color:var(--muted);margin-top:4px;}
-    .subline{font-size:12px;margin-top:6px;color:#e5e7eb;}
-    .bio{font-size:13px;margin-top:10px;color:#e5e7eb;white-space:pre-line;}
-
-    .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
-    .tag{
-      font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid rgba(148,163,184,0.6);
-      color:#e5e7eb;background:rgba(15,23,42,0.85);
-    }
-
-    .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:12px;color:var(--muted);}
-    .links a{color:#cbd5f5;text-decoration:none;}
-
-    .section-title{
-      font-size:16px;font-weight:700;margin:26px 0 12px;font-family:Inter;text-transform:lowercase;
-    }
-
-    .work-grid{display:grid;grid-template-columns:1fr;gap:14px;}
-    @media(min-width:640px){.work-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
-    .work-card{
-      background:rgba(15,23,42,0.9);border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;
-      display:flex;flex-direction:column;
-    }
-    .work-thumb{position:relative;padding-top:62%;background:#020617;}
-    .work-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-    .work-meta{padding:10px 11px;}
-    .work-title{font-size:13px;font-weight:700;}
-    .work-sub{font-size:11px;color:var(--muted);margin-top:3px;}
-    .work-role{font-size:11px;color:#e5e7eb;margin-top:6px;font-family:Inter;}
-    .placeholder{font-size:12px;color:var(--muted);}
-
-    .error{padding:14px;border:1px solid var(--border-subtle);border-radius:14px;background:var(--card);font-size:13px;}
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="./styles.css"/>
+  <title>Crew | Fiducia</title>
 </head>
 <body>
-  <div class="page">
-    <div class="inner">
-
-      <div class="topbar">
-        <a class="back" href="index.html">← 메인으로</a>
-        <div class="brand">FIDUCIA COLLECTIVE</div>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">FIDUCIA COLLECTIVE</div>
+      <div class="nav-links">
+        <a class="tab" href="./index.html">메인</a>
+        <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" href="./gear.html">장비 예약</a>
+        <a class="tab active" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
       </div>
-
-      <div id="profile-root" class="profile-card">
-        <div class="placeholder">불러오는 중...</div>
-      </div>
-
-      <section id="works-section" style="display:none;">
-        <h2 class="section-title">filmography</h2>
-        <div id="works-grid" class="work-grid"></div>
-      </section>
-
     </div>
-  </div>
+  </nav>
 
-  <script>
-    const PLACEHOLDER_IMG = 'https://via.placeholder.com/600x400?text=Work';
+  <main class="container section">
+    <h2 style="margin:0 0 12px">crew</h2>
 
-    function getQueryId(){
-      const p = new URLSearchParams(location.search);
-      return p.get('id');
-    }
+    <div class="card">
+      <div class="row">
+        <input id="q" class="input" placeholder="이름/키워드 검색" style="flex:1;min-width:180px"/>
+        <select id="skill" style="min-width:120px">
+          <option value="">Skill 전체</option>
+          <option>Film</option>
+          <option>Music Video</option>
+          <option>Commercial</option>
+          <option>Wedding</option>
+        </select>
+        <select id="role" style="min-width:120px">
+          <option value="">Role 전체</option>
+          <option>Cinematography</option>
+          <option>Lighting</option>
+          <option>Sound</option>
+          <option>Editing</option>
+          <option>Art</option>
+          <option>Production</option>
+          <option>Directing</option>
+        </select>
+        <label class="row small" style="gap:6px">
+          <input id="verified" type="checkbox"/>
+          Verified만
+        </label>
+      </div>
+    </div>
 
-    async function fetchJSON(url){
-      const res = await fetch(url);
-      const data = await res.json();
-      if(!res.ok) throw new Error(data.details || data.message || res.statusText);
-      return data;
-    }
+    <div class="section">
+      <h3>Directors</h3>
+      <div id="directors" class="list"></div>
+      <div id="directorsEmpty" class="small" style="display:none;margin-top:8px">Director 불러오는 중...</div>
+    </div>
 
-    function renderProfile(m){
-      const root = document.getElementById('profile-root');
-      root.innerHTML = `
-        <div class="avatar">${m.profileImageUrl ? `<img src="${m.profileImageUrl}" alt="${m.name}">` : ''}</div>
-        <div class="profile-body">
-          <div class="name-wrap">
-            <div class="name">${m.name || ''}</div>
-            ${m.verified ? `<div class="verified">Verified</div>` : ''}
-          </div>
-          <div class="main-role">${m.mainRole || ''}</div>
-          <div class="subline">${(m.roles||[]).join(' · ')}</div>
+    <div class="section">
+      <h3>Staff</h3>
+      <div id="staff" class="list"></div>
+      <div id="staffEmpty" class="small" style="display:none;margin-top:8px">Staff 불러오는 중...</div>
+    </div>
 
-          ${m.bio ? `<div class="bio">${m.bio}</div>` : ''}
+    <div id="register" class="section">
+      <h3>crew register</h3>
+      <div class="card center">
+        <p>감독/스태프 등록은 노션 폼으로 연결하는 방식이 관리가 가장 쉽습니다.<br/>
+        아래 버튼 링크를 네 노션 폼 공유 링크로 교체해줘.</p>
+        <a class="cta" id="crewFormLink" href="https://notionforms.io/" target="_blank" rel="noreferrer">
+          감독/스태프 등록 폼 열기
+        </a>
+      </div>
+    </div>
+  </main>
 
-          <div class="tags">
-            ${(m.skills||[]).map(s=>`<span class="tag">${s}</span>`).join('')}
-          </div>
+  <script type="module">
+    const qs = (id)=>document.querySelector(id);
+    const qEl = qs("#q");
+    const skillEl = qs("#skill");
+    const roleEl = qs("#role");
+    const verEl = qs("#verified");
 
-          <div class="links">
-            ${m.instagram ? `<a href="${m.instagram}" target="_blank">Instagram</a>` : ''}
-            ${m.email ? `<a href="mailto:${m.email}">${m.email}</a>` : ''}
-            ${m.phone ? `<span>${m.phone}</span>` : ''}
-          </div>
+    const dirList = qs("#directors");
+    const stfList = qs("#staff");
+    const dirEmpty = qs("#directorsEmpty");
+    const stfEmpty = qs("#staffEmpty");
+
+    let crews = [];
+
+    const safeThumb = (url)=> url
+      ? `<img src="${url}" alt="profile" loading="lazy"/>`
+      : `<div class="thumb">no image</div>`;
+
+    function card(c){
+      const a = document.createElement("a");
+      a.className="card person";
+      a.href = `./crew-detail.html?id=${encodeURIComponent(c.id)}`;
+      a.innerHTML = `
+        <div class="thumb">${safeThumb(c.profileImageUrl)}</div>
+        <div class="row" style="justify-content:space-between">
+          <div class="name">${c.name || "No name"}</div>
+          ${c.verified ? `<span class="badge verified">Verified</span>`:""}
         </div>
+        <div class="small">${(c.roles||[]).join(" · ")}</div>
+        <div class="tags">
+          ${(c.skills||[]).map(s=>`<span class="tag">${s}</span>`).join("")}
+        </div>
+        <p class="small" style="margin-top:6px">${c.bio || ""}</p>
       `;
+      return a;
     }
 
-    function renderWorks(works){
-      const section = document.getElementById('works-section');
-      const grid = document.getElementById('works-grid');
-      grid.innerHTML = '';
+    function applyFilter(list){
+      const q = qEl.value.trim().toLowerCase();
+      const skill = skillEl.value;
+      const role = roleEl.value;
+      const ver = verEl.checked;
 
-      if(!works.length){
-        grid.innerHTML = `<div class="placeholder">연결된 작품이 아직 없어요.</div>`;
-        section.style.display = 'block';
-        return;
-      }
-
-      works.forEach(w=>{
-        const card = document.createElement('article');
-        card.className = 'work-card';
-        card.innerHTML = `
-          <div class="work-thumb">
-            <img src="${w.thumbnailUrl || PLACEHOLDER_IMG}" alt="${w.title||''}">
-          </div>
-          <div class="work-meta">
-            <div class="work-title">${w.title||''}</div>
-            <div class="work-sub">${w.subTitle||''}</div>
-            <div class="work-role">${w.roleLabel||''} ${w.roleName||''}</div>
-          </div>
-        `;
-        grid.appendChild(card);
+      return list.filter(c=>{
+        if(ver && !c.verified) return false;
+        if(skill && !(c.skills||[]).includes(skill)) return false;
+        if(role && !(c.roles||[]).includes(role)) return false;
+        if(!q) return true;
+        const hay = [
+          c.name, c.bio, c.mainRole,
+          ...(c.roles||[]), ...(c.skills||[])
+        ].join(" ").toLowerCase();
+        return hay.includes(q);
       });
-
-      section.style.display = 'block';
     }
 
-    async function init(){
-      const id = getQueryId();
-      if(!id){
-        document.getElementById('profile-root').innerHTML =
-          `<div class="error">잘못된 접근이에요. id가 없습니다.</div>`;
-        return;
-      }
+    function render(){
+      dirList.innerHTML=""; stfList.innerHTML="";
+      const filtered = applyFilter(crews);
+      const directors = filtered.filter(c=>c.mainRole==="director");
+      const staff = filtered.filter(c=>c.mainRole==="staff");
 
+      if(directors.length===0){dirEmpty.style.display="block";dirEmpty.textContent="표시할 Director가 없어요.";}
+      else{dirEmpty.style.display="none"; directors.forEach(c=>dirList.appendChild(card(c)));}
+
+      if(staff.length===0){stfEmpty.style.display="block";stfEmpty.textContent="표시할 Staff가 없어요.";}
+      else{stfEmpty.style.display="none"; staff.forEach(c=>stfList.appendChild(card(c))); }
+    }
+
+    async function load(){
+      dirEmpty.style.display="block"; stfEmpty.style.display="block";
       try{
-        const crew = await fetchJSON('/.netlify/functions/crew');
-        const me = crew.find(c => c.id === id);
-        if(!me){
-          document.getElementById('profile-root').innerHTML =
-            `<div class="error">해당 크루를 찾을 수 없습니다.</div>`;
-          return;
-        }
-
-        renderProfile(me);
-
-        // works에 crewIds가 내려오면 자동 필모 표시
-        const works = await fetchJSON('/.netlify/functions/works');
-        const myWorks = works.filter(w => (w.crewIds||[]).includes(id));
-        renderWorks(myWorks);
-
-      }catch(e){
-        document.getElementById('profile-root').innerHTML =
-          `<div class="error">데이터 로드 실패: ${e.message}</div>`;
-      }
+        const res = await fetch("/api/crew");
+        crews = await res.json();
+        if(!Array.isArray(crews)) crews=[];
+      }catch(e){ crews=[]; }
+      render();
     }
 
-    document.addEventListener('DOMContentLoaded', init);
+    [qEl, skillEl, roleEl, verEl].forEach(el=>el.addEventListener("input", render));
+    load();
   </script>
 </body>
 </html>
