@@ -160,17 +160,18 @@ const id=new URLSearchParams(location.search).get('id');
 let ALL_WORKS = [];
 let ACTIVE_ROLE = 'ALL';
 
+// 안전한 fetch JSON
 async function fetchJSON(url){
   const res=await fetch(url);
-  const data=await res.json();
+  const data=await res.json().catch(()=> ({}));
   if(!res.ok) throw new Error(data.details||data.message||res.statusText);
   return data;
 }
 
 function renderProfile(m, totalWorks){
-  const isDirector = m.mainRole === 'Director';
+  const isDirector = (m.mainRole||'').toLowerCase() === 'director';
 
-  profile-root.innerHTML=`
+  document.getElementById('profile-root').innerHTML=`
     <div class="avatar">${m.profileImageUrl?`<img src="${m.profileImageUrl}" alt="${m.name}">`:''}</div>
     <div class="profile-body">
       <div class="name-wrap">
@@ -219,10 +220,9 @@ function makeWorkCard(w, {featured=false}={}){
 }
 
 // 대표작 정렬 규칙
-// 1) Featured true 우선
-// 2) Sort 숫자 오름차순
-// 3) Date 최신순(있는 경우)
-// 4) 그냥 원본 순서
+// 1) featured(true) 우선
+// 2) sort 숫자 오름차순
+// 3) date 최신순
 function sortWorksForFeatured(list){
   return [...list].sort((a,b)=>{
     const fa = !!a.featured;
@@ -247,11 +247,12 @@ function renderFeatured(works){
   const featured = sortWorksForFeatured(works).slice(0,3);
   if(!featured.length) return;
 
-  featured-grid.innerHTML='';
-  featured.forEach(w=>featured-grid.appendChild(makeWorkCard(w,{featured:true})));
+  const grid = document.getElementById('featured-grid');
+  grid.innerHTML='';
+  featured.forEach(w=>grid.appendChild(makeWorkCard(w,{featured:true})));
 
-  featured-sub.textContent = `대표작 ${featured.length}개`;
-  featured-section.style.display='block';
+  document.getElementById('featured-sub').textContent = `대표작 ${featured.length}개`;
+  document.getElementById('featured-section').style.display='block';
 }
 
 function buildRoleFilters(works){
@@ -261,7 +262,8 @@ function buildRoleFilters(works){
   });
   const roles = ['ALL', ...Array.from(roleSet)];
 
-  role-filters.innerHTML='';
+  const wrap = document.getElementById('role-filters');
+  wrap.innerHTML='';
   roles.forEach(role=>{
     const btn=document.createElement('button');
     btn.className='filter-pill' + (role===ACTIVE_ROLE?' is-active':'');
@@ -271,7 +273,7 @@ function buildRoleFilters(works){
       buildRoleFilters(ALL_WORKS);
       renderWorks(ALL_WORKS);
     });
-    role-filters.appendChild(btn);
+    wrap.appendChild(btn);
   });
 }
 
@@ -280,43 +282,44 @@ function renderWorks(works){
     ? works
     : works.filter(w=>w.roleLabel===ACTIVE_ROLE);
 
-  works-grid.innerHTML='';
+  const grid = document.getElementById('works-grid');
+  grid.innerHTML='';
 
   if(!filtered.length){
-    works-grid.innerHTML='<div class="placeholder-text">해당 역할 작품이 아직 없어요.</div>';
+    grid.innerHTML='<div class="placeholder-text">해당 역할 작품이 아직 없어요.</div>';
     return;
   }
 
-  filtered.forEach(w=>works-grid.appendChild(makeWorkCard(w)));
+  filtered.forEach(w=>grid.appendChild(makeWorkCard(w)));
 
-  works-sub.textContent = `총 ${works.length}개`;
-  works-section.style.display='block';
+  document.getElementById('works-sub').textContent = `총 ${works.length}개`;
+  document.getElementById('works-section').style.display='block';
 }
 
 async function init(){
   if(!id){
-    profile-root.innerHTML='<div class="error">id가 없어요.</div>';
+    document.getElementById('profile-root').innerHTML='<div class="error">id가 없어요.</div>';
     return;
   }
   try{
     const crew=await fetchJSON('/.netlify/functions/crew');
     const me=crew.find(c=>c.id===id);
     if(!me){
-      profile-root.innerHTML='<div class="error">해당 크루를 찾을 수 없어요.</div>';
+      document.getElementById('profile-root').innerHTML='<div class="error">해당 크루를 찾을 수 없어요.</div>';
       return;
     }
 
     const works=await fetchJSON('/.netlify/functions/works');
+
     // works.js에서 crewIds 내려오는 구조 기준
     const myWorks=(works||[]).filter(w=>(w.crewIds||[]).includes(id));
 
-    // myWorks에 Featured/Sort/Date 같은 필드가 있다면 자동 인식
-    // (works.js에서 내려오게 해두면 더 정확해짐)
+    // optional 필드 지원(featured/sort/date)
     ALL_WORKS = myWorks.map(w=>({
       ...w,
-      featured: !!w.featured,   // optional
-      sort: (typeof w.sort === 'number') ? w.sort : null, // optional
-      date: w.date || null      // optional
+      featured: !!w.featured,
+      sort: (typeof w.sort === 'number') ? w.sort : null,
+      date: w.date || null
     }));
 
     renderProfile(me, ALL_WORKS.length);
@@ -325,11 +328,11 @@ async function init(){
     renderWorks(ALL_WORKS);
 
   }catch(e){
-    profile-root.innerHTML=`<div class="error">데이터 로드 실패: ${e.message}</div>`;
+    document.getElementById('profile-root').innerHTML=
+      `<div class="error">데이터 로드 실패: ${e.message}</div>`;
   }
 }
 document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
-
