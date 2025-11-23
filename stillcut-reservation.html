@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <link rel="stylesheet" href="./style.css"/>
-  <title>AI Stillcut Reservation | Fiducia</title>
+  <title>AI Stillcut Reservation Form</title>
 </head>
 <body>
   <nav class="nav">
@@ -21,104 +21,92 @@
   </nav>
 
   <main class="container section">
-    <h1 style="margin-top:24px">AI Stillcut Reservation</h1>
+    <section class="card" style="grid-column: span 12;">
+      <h2>AI 스틸컷 예약 폼</h2>
+      <p class="small">아래 정보를 작성하면 노션 <b>AI Stillcut Reservation DB</b>로 자동 저장됩니다.</p>
 
-    <section class="card" style="margin-top:12px">
-      <form id="form" class="grid" style="gap:12px">
+      <form id="stillcutForm" class="form" style="margin-top:14px; display:grid; gap:12px;">
 
-        <!-- 이름 -->
-        <div style="grid-column: span 12;">
-          <label class="small">이름 *</label>
-          <input class="input" name="name" required />
+        <!-- 연락처 -->
+        <div class="form-row">
+          <label>예약자 이름 *</label>
+          <input name="clientName" required placeholder="이름"/>
         </div>
 
-        <!-- 연락처 / 이메일 -->
-        <div style="grid-column: span 6;">
-          <label class="small">연락처 *</label>
-          <input class="input" name="phone" required />
-        </div>
-
-        <div style="grid-column: span 6;">
-          <label class="small">이메일</label>
-          <input class="input" name="email" type="email" />
-        </div>
-
-        <!-- 프로젝트 제목 -->
-        <div style="grid-column: span 12;">
-          <label class="small">프로젝트 제목 *</label>
-          <input class="input" name="projectTitle" required />
-        </div>
-
-        <!-- 영상 타입 -->
-        <div style="grid-column: span 6;">
-          <label class="small">영상 타입 *</label>
-          <select class="select" name="videoType" required>
-            <option value="">선택</option>
-            <option>Film</option>
-            <option>Music Video</option>
-            <option>Commercial</option>
-            <option>Wedding</option>
-            <option>Other</option>
-          </select>
+        <div class="form-row">
+          <label>카카오톡 ID/연락처 *</label>
+          <input name="clientKakao" required placeholder="카톡 아이디 또는 전화번호"/>
         </div>
 
         <!-- 러닝타임 -->
-        <div style="grid-column: span 6;">
-          <label class="small">러닝타임</label>
-          <input class="input" name="runtime" placeholder="ex) 30초 / 3분 / 장편" />
+        <div class="form-row">
+          <label>러닝타임(분) *</label>
+          <input name="runtimeMin" type="number" min="1" required placeholder="예: 30"/>
+          <div class="small">숫자만 입력</div>
         </div>
 
-        <!-- 예산 -->
-        <div style="grid-column: span 6;">
-          <label class="small">예산 범위</label>
-          <select class="select" name="budgetRange">
+        <!-- 영상 타입 -->
+        <div class="form-row">
+          <label>영상 타입 *</label>
+          <select name="videoType" required>
             <option value="">선택</option>
-            <option value="50만원 ~ 100만원">50만원 ~ 100만원</option>
-            <option value="100만원 ~ 200만원">100만원 ~ 200만원</option>
-            <option value="200만원 ~ 300만원">200만원 ~ 300만원</option>
-            <option value="300만원 이상">300만원 이상</option>
+            <option>영화</option>
+            <option>뮤비</option>
+            <option>웨딩</option>
+            <option>광고</option>
+            <option>기타</option>
           </select>
         </div>
 
-        <!-- 희망촬영일 -->
-        <div style="grid-column: span 6;">
-          <label class="small">희망 촬영 날짜</label>
-          <input class="input" name="desiredShootDate" type="date" />
+        <!-- 예산 범위 -->
+        <div class="form-row">
+          <label>예산 범위 *</label>
+          <select name="budgetRange" required>
+            <option value="">선택</option>
+            <option>50만원 ~ 100만원</option>
+            <option>100만원 ~ 200만원</option>
+            <option>200만원 ~ 300만원</option>
+            <option>300만원 이상</option>
+          </select>
+        </div>
+
+        <!-- 희망 촬영 날짜 -->
+        <div class="form-row">
+          <label>희망 촬영 날짜 *</label>
+          <input name="shootDate" type="date" required />
         </div>
 
         <!-- 촬영 장소 -->
-        <div style="grid-column: span 12;">
-          <label class="small">촬영 장소</label>
-          <input class="input" name="location" placeholder="ex) 서울 / 부산 / OO스튜디오" />
+        <div class="form-row">
+          <label>촬영 장소 *</label>
+          <input name="location" required placeholder="예: 부산 / 서울 강남 / 실내 스튜디오 등"/>
         </div>
 
         <!-- 레퍼런스 링크 -->
-        <div style="grid-column: span 12;">
-          <label class="small">레퍼런스 링크 (드라이브/유튜브/핀터레스트 등)</label>
-          <input class="input" name="referenceUrl" placeholder="https://..." />
+        <div class="form-row">
+          <label>레퍼런스 링크</label>
+          <input name="referenceUrl" type="url" placeholder="드라이브/유튜브/핀터레스트 등 URL"/>
         </div>
 
-        <!-- 이미지 파일 -->
-        <div style="grid-column: span 12;">
-          <label class="small">이미지 파일 (최대 5개)</label>
-          <input class="input" id="imageFiles" name="imageFiles" type="file" accept="image/*" multiple />
-          <div id="fileHint" class="small" style="margin-top:6px;opacity:.8">
-            ※ 파일은 메타 정보만 저장됩니다. 실제 파일은 카카오톡/드라이브 링크로 전달 부탁드립니다.
+        <!-- 이미지 파일(메타만 저장) -->
+        <div class="form-row">
+          <label>이미지 파일 (최대 5개)</label>
+          <input id="imageFiles" name="imageFiles" type="file" accept="image/*" multiple />
+          <div id="fileHint" class="small" style="margin-top:4px; opacity:.8;">
+            파일은 메타정보만 저장됩니다. 원본은 카톡/드라이브 링크로 전달 부탁!
           </div>
-          <div id="fileList" class="small" style="margin-top:6px"></div>
         </div>
 
-        <!-- 요청 내용 -->
-        <div style="grid-column: span 12;">
-          <label class="small">요청 내용 *</label>
-          <textarea class="textarea" name="message" rows="6" required></textarea>
+        <!-- 상세 요청 -->
+        <div class="form-row">
+          <label>요청 내용 *</label>
+          <textarea name="request" required rows="5" placeholder="원하시는 분위기/장면/캐릭터/참고사항 등"></textarea>
         </div>
 
-        <!-- 버튼/상태 -->
-        <div style="grid-column: span 12;" class="row" style="gap:10px">
-          <button class="cta" type="submit">예약 제출</button>
-          <span id="status" class="small"></span>
-        </div>
+        <button id="submitBtn" class="cta" type="submit" style="width:100%; margin-top:6px;">
+          예약 제출
+        </button>
+        <div id="status" class="small" style="margin-top:8px;"></div>
       </form>
     </section>
   </main>
@@ -134,49 +122,56 @@
   </footer>
 
   <script type="module">
-    const form = document.querySelector("#form");
-    const status = document.querySelector("#status");
-    const imageFilesEl = document.querySelector("#imageFiles");
-    const fileListEl = document.querySelector("#fileList");
+    const form = document.querySelector("#stillcutForm");
+    const statusEl = document.querySelector("#status");
+    const submitBtn = document.querySelector("#submitBtn");
+    const fileInput = document.querySelector("#imageFiles");
 
-    let fileMeta = [];
-
-    imageFilesEl.addEventListener("change", () => {
-      const files = Array.from(imageFilesEl.files || []).slice(0, 5);
-      fileMeta = files.map(f => ({
+    function getFileMeta(files){
+      const arr = Array.from(files || []).slice(0,5);
+      return arr.map(f => ({
         name: f.name,
         size: f.size,
         type: f.type
       }));
-      fileListEl.innerHTML = files.length
-        ? files.map(f => `• ${f.name} (${Math.round(f.size/1024)}KB)`).join("<br/>")
-        : "";
-    });
+    }
 
     form.addEventListener("submit", async (e)=>{
       e.preventDefault();
-      status.textContent = "전송 중...";
+      statusEl.textContent = "";
+      submitBtn.disabled = true;
 
       const fd = new FormData(form);
-      const payload = Object.fromEntries(fd.entries());
-      payload.imageFiles = fileMeta;
+      const payload = {
+        clientName: fd.get("clientName")?.trim(),
+        clientKakao: fd.get("clientKakao")?.trim(),
+        runtimeMin: Number(fd.get("runtimeMin")),
+        videoType: fd.get("videoType"),
+        budgetRange: fd.get("budgetRange"),
+        shootDate: fd.get("shootDate"),
+        location: fd.get("location")?.trim(),
+        referenceUrl: fd.get("referenceUrl")?.trim() || "",
+        imageFiles: getFileMeta(fileInput.files),
+        request: fd.get("request")?.trim(),
+      };
 
       try{
-        const res = await fetch("/api/stillcut-reserve",{
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
+        const res = await fetch("/api/stillcut", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
           body: JSON.stringify(payload)
         });
-
         const data = await res.json();
-        if(!res.ok) throw new Error(data.message || "예약 실패");
 
-        status.textContent = "예약 완료! 곧 연락드릴게요.";
+        if(!res.ok){
+          throw new Error(data?.message || "예약 실패");
+        }
+        statusEl.textContent = "예약 완료! 곧 카카오톡으로 연락드릴게요.";
         form.reset();
-        fileListEl.innerHTML="";
-        fileMeta=[];
       }catch(err){
-        status.textContent = "예약 실패: " + err.message;
+        statusEl.textContent = "예약 실패: " + err.message;
+      }finally{
+        submitBtn.disabled = false;
       }
     });
   </script>
