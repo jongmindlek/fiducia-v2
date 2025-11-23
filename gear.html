@@ -3,66 +3,87 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
- <link rel="stylesheet" href="./style.css"/>
+  <link rel="stylesheet" href="./style.css"/>
   <title>Gear | Fiducia</title>
 </head>
 <body>
+
   <nav class="nav">
     <div class="container nav-inner">
-      <div class="brand">FIDUCIA COLLECTIVE</div>
+      <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
       <div class="nav-links">
-        <a class="tab" href="./index.html">메인</a>
-        <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
-        <a class="tab active" href="./gear.html">장비 예약</a>
-        <a class="tab" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" data-path="index.html" href="./index.html">메인</a>
+        <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
+        <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
       </div>
     </div>
   </nav>
 
   <main class="container section">
-    <h2 style="margin:0 0 12px">gear reservation</h2>
-    <div id="gearList" class="list"></div>
-    <div id="gearEmpty" class="small" style="display:none;margin-top:6px">장비를 불러오는 중...</div>
+    <h2 style="margin-top:12px">gear reservation</h2>
+
+    <section class="card" style="margin-top:14px">
+      <div id="gearList" class="list"></div>
+      <div id="gearEmpty" class="small" style="display:none;margin-top:6px">장비 없음</div>
+    </section>
+
+    <section class="card" style="margin-top:18px">
+      <p class="small">장비 예약 요청은 여기서 바로 입력하면 Gear Reservation DB로 자동 저장됩니다.</p>
+      <a href="./gear-reservation.html" class="cta" style="margin-top:10px;display:inline-block">예약하기</a>
+    </section>
   </main>
+
+  <script>
+    (function () {
+      const tabs = document.querySelectorAll(".nav .tab");
+      const path = location.pathname.split("/").pop() || "index.html";
+      const hash = location.hash || "";
+      tabs.forEach(a => a.classList.remove("active"));
+      if (path === "crew.html" && hash === "#register") {
+        const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
+        if (regTab) regTab.classList.add("active");
+        return;
+      }
+      const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
+      if (activeTab) activeTab.classList.add("active");
+    })();
+  </script>
 
   <script type="module">
     const listEl = document.querySelector("#gearList");
     const emptyEl = document.querySelector("#gearEmpty");
 
-    const safeThumb = (url)=> url
-      ? `<img src="${url}" alt="gear" loading="lazy"/>`
-      : `<div class="thumb">no image</div>`;
-
     async function load(){
-      emptyEl.style.display="block";
       try{
         const res = await fetch("/api/gear");
-        const gears = await res.json();
-        listEl.innerHTML="";
-        if(!Array.isArray(gears) || gears.length===0){
-          emptyEl.textContent="표시할 장비가 없어요.";
-          return;
-        }
+        const data = await res.json();
+        const gear = Array.isArray(data)?data:[];
+        listEl.innerHTML = "";
+        if(gear.length===0){ emptyEl.style.display="block"; return; }
         emptyEl.style.display="none";
-        gears.forEach(g=>{
-          const card = document.createElement("div");
-          card.className="card person";
-          card.innerHTML=`
-            <div class="thumb">${safeThumb(g.thumbnailUrl)}</div>
-            <div class="name">${g.brandModel || g.name || "Gear"}</div>
-            <div class="small">${g.category || ""} · ${g.status || ""}</div>
-            <div class="row" style="justify-content:space-between; margin-top:8px">
-              <div class="small">Day rate: ${g.dayRate ?? "-"}</div>
-              <a class="action-btn" href="./gear-reservation.html?gearId=${encodeURIComponent(g.id)}">예약하기</a>
+
+        gear.forEach(g=>{
+          const div = document.createElement("div");
+          div.className="card person";
+          div.innerHTML = `
+            <div class="name">${g.name || g.brandModel || "Unnamed gear"}</div>
+            <div class="small">${g.category || ""}</div>
+            <div class="tags">
+              ${g.dayRate?`<span class="tag">${g.dayRate} / day</span>`:""}
+              ${g.status?`<span class="tag">${g.status}</span>`:""}
             </div>
           `;
-          listEl.appendChild(card);
+          listEl.appendChild(div);
         });
       }catch(e){
+        emptyEl.style.display="block";
         emptyEl.textContent="장비 불러오기 실패";
       }
     }
     load();
   </script>
+
 </body>
 </html>
