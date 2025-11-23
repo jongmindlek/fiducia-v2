@@ -3,26 +3,6 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/api/crew"
-  to = "/.netlify/functions/crew"
-  status = 200
-
-[[redirects]]
-  from = "/api/gear"
-  to = "/.netlify/functions/gear"
-  status = 200
-
-[[redirects]]
-  from = "/api/works"
-  to = "/.netlify/functions/works"
-  status = 200
-
-[[redirects]]
-  from = "/api/gear-reservation"
-  to = "/.netlify/functions/gearReservation"
-  status = 200
-
-[[redirects]]
-  from = "/api/stillcut-reservation"
-  to = "/.netlify/functions/stillcutReservation"
+  from = "/api/stillcut"
+  to = "/.netlify/functions/stillcut"
   status = 200
