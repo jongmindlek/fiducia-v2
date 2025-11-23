@@ -4,62 +4,52 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <link rel="stylesheet" href="./style.css"/>
-  <title>AI Stillcut</title>
+  <title>AI Stillcut Reservation | Fiducia</title>
 </head>
-
 <body>
-<nav class="nav">
-  <div class="container nav-inner">
-    <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
 
-    <div class="nav-links">
-      <a class="tab" data-path="index.html" href="./index.html">메인</a>
-      <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
-      <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
-      <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
-      <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
+      <div class="nav-links">
+        <a class="tab" data-path="index.html" href="./index.html">메인</a>
+        <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
+        <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
+      </div>
     </div>
-  </div>
-</nav>
-
-<script>
-  // 현재 페이지에 맞는 탭 active 자동 처리
-  (function () {
-    const tabs = document.querySelectorAll(".nav .tab");
-    const path = location.pathname.split("/").pop() || "index.html";
-    const hash = location.hash || "";
-
-    tabs.forEach(a => a.classList.remove("active"));
-
-    // 1) hash가 #register면 그 탭 우선 활성화
-    if (path === "crew.html" && hash === "#register") {
-      const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
-      if (regTab) regTab.classList.add("active");
-      return;
-    }
-
-    // 2) 그 외는 파일명 기준으로 활성화
-    const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
-    if (activeTab) activeTab.classList.add("active");
-  })();
-</script>
+  </nav>
 
   <main class="container section">
-    <h2 style="margin:0 0 12px">AI 스틸컷 예약</h2>
+    <h2 style="margin-top:12px">ai stillcut reservation</h2>
 
-    <div class="card">
-      <p style="line-height:1.6;">
-        Ai 스틸컷 가이드, 설명, 워크플로우 적는 영역입니다.<br/>
-        <br/>
-        아래 버튼을 누르면 실제 예약 폼(stillcut-reservation.html)으로 이동합니다.
+    <section class="card" style="margin-top:16px">
+      <p class="small">
+        AI 스틸컷 예약 설명 / 레퍼런스 가이드 / 카톡 링크 등을 넣는 섹션.
       </p>
 
-      <!-- **중요: 이동 버튼 이걸로 고정** -->
-      <a class="cta" href="./stillcut-reservation.html">
+      <a class="cta" href="./stillcut-reservation.html" style="margin-top:14px;display:inline-block">
         AI 스틸컷 이용 해보기
       </a>
-    </div>
-
+    </section>
   </main>
+
+  <script>
+    (function () {
+      const tabs = document.querySelectorAll(".nav .tab");
+      const path = location.pathname.split("/").pop() || "index.html";
+      const hash = location.hash || "";
+      tabs.forEach(a => a.classList.remove("active"));
+      if (path === "crew.html" && hash === "#register") {
+        const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
+        if (regTab) regTab.classList.add("active");
+        return;
+      }
+      const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
+      if (activeTab) activeTab.classList.add("active");
+    })();
+  </script>
+
 </body>
 </html>
