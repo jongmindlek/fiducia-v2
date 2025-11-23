@@ -1,44 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<title>Crew Register</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" />
-<link rel="stylesheet" href="./style.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="./style.css"/>
+  <title>Crew Register | Fiducia</title>
 </head>
-
 <body>
-<div class="page"><div class="inner">
 
-  <div class="nav-wrap">
-    <nav class="nav">
-      <div class="nav-logo">FIDUCIA COLLECTIVE</div>
-      <div class="nav-menu">
-        <a href="index.html">메인</a>
-        <a href="stillcut.html">AI 스틸컷(예약)</a>
-        <a href="gear.html">장비 예약</a>
-        <a href="crew-list.html">감독/스태프 리스트</a>
-        <a href="register.html" class="is-active">감독/스태프 등록</a>
-      </div>
-    </nav>
-  </div>
-
-  <main>
-    <h2 class="section-title" style="margin-top:20px;">crew register</h2>
-    <div class="info-card">
-      감독/스태프 등록은 노션 폼으로 연결하세요.<br>
-      아래 링크를 네 폼 공유 링크로 바꾸면 끝!
-      <div class="cta-wrapper" style="margin-top: 14px;">
-        <a class="cta-btn" href="https://www.notion.so/your-form-url" target="_blank">감독/스태프 등록 폼 열기</a>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
+      <div class="nav-links">
+        <a class="tab" data-path="index.html" href="./index.html">메인</a>
+        <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
+        <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
       </div>
     </div>
+  </nav>
+
+  <main class="container section">
+    <h2 style="margin-top:12px">crew register</h2>
+
+    <section class="card" style="margin-top:14px">
+      <form id="form" class="grid" style="gap:10px">
+        <input class="input" name="name" placeholder="이름" required />
+        <select class="select" name="mainRole" required>
+          <option value="">MainRole 선택</option>
+          <option value="director">director</option>
+          <option value="staff">staff</option>
+        </select>
+
+        <input class="input" name="roles" placeholder="Roles (쉼표로 구분)" />
+        <input class="input" name="skills" placeholder="Skills (쉼표로 구분)" />
+        <input class="input" name="instagram" placeholder="Instagram URL" />
+        <input class="input" name="phone" placeholder="Phone" />
+        <input class="input" name="email" placeholder="Email" />
+        <textarea class="input" name="bio" placeholder="Bio" rows="4"></textarea>
+
+        <button class="cta" type="submit">등록 요청</button>
+        <div id="msg" class="small"></div>
+      </form>
+    </section>
   </main>
 
-</div></div>
+  <script>
+    (function () {
+      const tabs = document.querySelectorAll(".nav .tab");
+      const path = location.pathname.split("/").pop() || "index.html";
+      const hash = location.hash || "";
+      tabs.forEach(a => a.classList.remove("active"));
+      if (path === "crew.html" && hash === "#register") {
+        const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
+        if (regTab) regTab.classList.add("active");
+        return;
+      }
+      const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
+      if (activeTab) activeTab.classList.add("active");
+    })();
+  </script>
+
+  <script type="module">
+    const form = document.querySelector("#form");
+    const msg = document.querySelector("#msg");
+
+    form.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      msg.textContent="전송중...";
+      const fd = new FormData(form);
+
+      const body = {
+        name: fd.get("name"),
+        mainRole: fd.get("mainRole"),
+        roles: (fd.get("roles")||"").split(",").map(s=>s.trim()).filter(Boolean),
+        skills: (fd.get("skills")||"").split(",").map(s=>s.trim()).filter(Boolean),
+        instagram: fd.get("instagram")||"",
+        phone: fd.get("phone")||"",
+        email: fd.get("email")||"",
+        bio: fd.get("bio")||""
+      };
+
+      try{
+        const res = await fetch("/api/crew-register", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify(body)
+        });
+        if(!res.ok) throw new Error();
+        msg.textContent="등록 요청 완료!";
+        form.reset();
+      }catch(err){
+        msg.textContent="등록 요청 실패";
+      }
+    });
+  </script>
+
 </body>
 </html>
