@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <!-- 파일명이 style.css 인지 styles.css 인지 꼭 맞춰줘! -->
   <link rel="stylesheet" href="./style.css"/>
   <title>AI Stillcut Reservation | Fiducia Collective</title>
 </head>
@@ -16,45 +15,147 @@
         <a class="tab active" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
         <a class="tab" href="./gear.html">장비 예약</a>
         <a class="tab" href="./crew.html">감독/스태프 리스트</a>
-        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
       </div>
     </div>
   </nav>
 
   <main class="container section">
-    <div class="grid">
-      <section class="card" style="grid-column: span 12;">
-        <h2>ai stillcut reservation</h2>
-        <p class="small" style="margin-top:8px">
-          AI 스틸컷 예약을 위한 간단한 정보 입력 페이지입니다.  
-          러닝타임 / 영상타입 / 예산 / 희망 촬영일/장소 / 레퍼런스 / 이미지 파일 등을 입력하면
-          노션 <b>AI Stillcut Reservation DB</b>로 저장됩니다.
-        </p>
+    <h2>ai stillcut reservation</h2>
 
-        <div style="margin-top:14px">
-          <a class="cta" href="./stillcut-reservation.html">AI 스틸컷 예약하기</a>
-        </div>
-      </section>
+    <section class="card">
+      <form id="form" class="grid" style="gap:12px">
+        <label class="grid" style="grid-column: span 12;">
+          프로젝트명 *
+          <input class="input" name="projectTitle" required/>
+        </label>
 
-      <section class="card" style="grid-column: span 12;">
-        <h3>안내</h3>
-        <ul class="small" style="line-height:1.7">
-          <li>이미지 파일은 “메타정보(파일명/용량)”만 저장됩니다.</li>
-          <li>실제 원본 파일은 카카오톡/드라이브 링크로 전달해주세요.</li>
-          <li>예약 후 확인 연락은 카카오톡으로 드립니다.</li>
-        </ul>
-      </section>
-    </div>
+        <label class="grid" style="grid-column: span 6;">
+          연락처(전화) *
+          <input class="input" name="phone" required/>
+        </label>
+
+        <label class="grid" style="grid-column: span 6;">
+          이메일 *
+          <input class="input" type="email" name="email" required/>
+        </label>
+
+        <label class="grid" style="grid-column: span 6;">
+          영상 타입 *
+          <select class="select" name="videoType" required>
+            <option value="">선택</option>
+            <option>Wedding</option>
+            <option>Music Video</option>
+            <option>Commercial</option>
+            <option>Film</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <label class="grid" style="grid-column: span 6;">
+          러닝타임 *
+          <input class="input" name="runtime" placeholder="예: 30s / 1min / 3min" required/>
+        </label>
+
+        <label class="grid" style="grid-column: span 6;">
+          예산 범위 *
+          <select class="select" name="budget" required>
+            <option value="">선택</option>
+            <option>50만원 ~ 100만원</option>
+            <option>100만원 ~ 200만원</option>
+            <option>200만원 ~ 300만원</option>
+            <option>300만원 이상</option>
+          </select>
+        </label>
+
+        <label class="grid" style="grid-column: span 6;">
+          희망 촬영 날짜 *
+          <input class="input" type="date" name="shootDate" required/>
+        </label>
+
+        <label class="grid" style="grid-column: span 12;">
+          촬영 장소 *
+          <input class="input" name="location" required/>
+        </label>
+
+        <label class="grid" style="grid-column: span 12;">
+          레퍼런스 링크 (드라이브/유튜브/핀터레스트 등)
+          <input class="input" name="referenceLink" placeholder="https://"/>
+        </label>
+
+        <label class="grid" style="grid-column: span 12;">
+          이미지 파일 (최대 5개)
+          <input class="input" type="file" name="images" accept="image/*" multiple/>
+          <div class="small" style="margin-top:6px">
+            * 파일은 **메타정보(파일명)**만 노션에 저장됩니다.  
+            원본은 카톡/드라이브 링크로 전달 부탁!
+          </div>
+          <div id="filesPreview" class="small" style="margin-top:6px"></div>
+        </label>
+
+        <label class="grid" style="grid-column: span 12;">
+          요청 내용 *
+          <textarea class="textarea" name="message" rows="5" required></textarea>
+        </label>
+
+        <button class="cta" style="grid-column: span 12;" type="submit">
+          예약 제출
+        </button>
+
+        <div id="status" class="small" style="grid-column: span 12;"></div>
+      </form>
+    </section>
   </main>
 
-  <footer class="footer">
-    <div class="container row" style="justify-content:space-between">
-      <div>© Fiducia Collective</div>
-      <div class="row">
-        <span>Instagram</span>
-        <span>Contact</span>
-      </div>
-    </div>
-  </footer>
+  <script type="module">
+    const form = document.querySelector("#form");
+    const statusEl = document.querySelector("#status");
+    const filesPreview = document.querySelector("#filesPreview");
+    const fileInput = form.images;
+
+    fileInput.addEventListener("change", () => {
+      const files = [...fileInput.files].slice(0,5);
+      filesPreview.textContent = files.map(f=>`${f.name} (${Math.round(f.size/1024)}KB)`).join(" / ");
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.textContent = "보내는 중...";
+
+      const fd = new FormData(form);
+      const files = [...fileInput.files].slice(0,5);
+      const imagesMeta = files.map(f=>f.name).join(", ");
+
+      const payload = {
+        title: fd.get("projectTitle"),
+        projectTitle: fd.get("projectTitle"),
+        phone: fd.get("phone"),
+        email: fd.get("email"),
+        videoType: fd.get("videoType"),
+        runtime: fd.get("runtime"),
+        budget: fd.get("budget"),
+        shootDate: fd.get("shootDate"),
+        location: fd.get("location"),
+        referenceLink: fd.get("referenceLink"),
+        imagesMeta,
+        message: fd.get("message"),
+      };
+
+      try {
+        const res = await fetch("/api/stillcut", {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json?.details || "submit failed");
+
+        statusEl.textContent = "예약 완료! 곧 카톡으로 안내드릴게요.";
+        form.reset();
+        filesPreview.textContent = "";
+      } catch (err) {
+        statusEl.textContent = "예약 실패: " + err.message;
+      }
+    });
+  </script>
 </body>
 </html>
