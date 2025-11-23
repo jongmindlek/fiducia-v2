@@ -4,52 +4,52 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <link rel="stylesheet" href="./style.css"/>
-  <title>AI Stillcut Reservation | Fiducia</title>
+  <title>AI Stillcut | Fiducia Collective</title>
 </head>
 <body>
-
   <nav class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
+      <div class="brand">FIDUCIA COLLECTIVE</div>
       <div class="nav-links">
-        <a class="tab" data-path="index.html" href="./index.html">메인</a>
-        <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
-        <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
-        <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
-        <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
+        <a class="tab" href="./index.html">메인</a>
+        <a class="tab active" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" href="./gear.html">장비 예약</a>
+        <a class="tab" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
       </div>
     </div>
   </nav>
 
   <main class="container section">
-    <h2 style="margin-top:12px">ai stillcut reservation</h2>
+    <h1>ai stillcut reservation</h1>
 
-    <section class="card" style="margin-top:16px">
-      <p class="small">
+    <section class="card" style="margin-top:12px">
+      <p>
         AI 스틸컷 예약 설명 / 레퍼런스 가이드 / 카톡 링크 등을 넣는 섹션.
       </p>
-
-      <a class="cta" href="./stillcut-reservation.html" style="margin-top:14px;display:inline-block">
-        AI 스틸컷 이용 해보기
+      <a class="cta" href="./stillcut-reservation.html">
+        AI 스틸컷 예약하기
       </a>
+    </section>
+
+    <section class="card" style="margin-top:14px">
+      <h3>진행 방식</h3>
+      <ul class="small" style="line-height:1.7">
+        <li>1) 예약 폼 작성</li>
+        <li>2) 노션 <b>AI Stillcut Reservation DB</b>에 자동 저장</li>
+        <li>3) 확인 후 카톡/메일로 안내</li>
+      </ul>
     </section>
   </main>
 
-  <script>
-    (function () {
-      const tabs = document.querySelectorAll(".nav .tab");
-      const path = location.pathname.split("/").pop() || "index.html";
-      const hash = location.hash || "";
-      tabs.forEach(a => a.classList.remove("active"));
-      if (path === "crew.html" && hash === "#register") {
-        const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
-        if (regTab) regTab.classList.add("active");
-        return;
-      }
-      const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
-      if (activeTab) activeTab.classList.add("active");
-    })();
-  </script>
-
+  <footer class="footer">
+    <div class="container row" style="justify-content:space-between">
+      <div>© Fiducia Collective</div>
+      <div class="row">
+        <span>Instagram</span>
+        <span>Contact</span>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
