@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <!-- 파일명이 style.css 인지 styles.css 인지 꼭 맞춰줘! -->
   <link rel="stylesheet" href="./style.css"/>
-  <title>AI Stillcut | Fiducia Collective</title>
+  <title>AI Stillcut Reservation | Fiducia Collective</title>
 </head>
 <body>
   <nav class="nav">
@@ -21,25 +22,29 @@
   </nav>
 
   <main class="container section">
-    <h1>ai stillcut reservation</h1>
+    <div class="grid">
+      <section class="card" style="grid-column: span 12;">
+        <h2>ai stillcut reservation</h2>
+        <p class="small" style="margin-top:8px">
+          AI 스틸컷 예약을 위한 간단한 정보 입력 페이지입니다.  
+          러닝타임 / 영상타입 / 예산 / 희망 촬영일/장소 / 레퍼런스 / 이미지 파일 등을 입력하면
+          노션 <b>AI Stillcut Reservation DB</b>로 저장됩니다.
+        </p>
 
-    <section class="card" style="margin-top:12px">
-      <p>
-        AI 스틸컷 예약 설명 / 레퍼런스 가이드 / 카톡 링크 등을 넣는 섹션.
-      </p>
-      <a class="cta" href="./stillcut-reservation.html">
-        AI 스틸컷 예약하기
-      </a>
-    </section>
+        <div style="margin-top:14px">
+          <a class="cta" href="./stillcut-reservation.html">AI 스틸컷 예약하기</a>
+        </div>
+      </section>
 
-    <section class="card" style="margin-top:14px">
-      <h3>진행 방식</h3>
-      <ul class="small" style="line-height:1.7">
-        <li>1) 예약 폼 작성</li>
-        <li>2) 노션 <b>AI Stillcut Reservation DB</b>에 자동 저장</li>
-        <li>3) 확인 후 카톡/메일로 안내</li>
-      </ul>
-    </section>
+      <section class="card" style="grid-column: span 12;">
+        <h3>안내</h3>
+        <ul class="small" style="line-height:1.7">
+          <li>이미지 파일은 “메타정보(파일명/용량)”만 저장됩니다.</li>
+          <li>실제 원본 파일은 카카오톡/드라이브 링크로 전달해주세요.</li>
+          <li>예약 후 확인 연락은 카카오톡으로 드립니다.</li>
+        </ul>
+      </section>
+    </div>
   </main>
 
   <footer class="footer">
