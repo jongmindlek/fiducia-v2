@@ -3,38 +3,48 @@ const { Client } = require("@notionhq/client");
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
-const CREW_DB_ID =
-  process.env.CREW_DB_ID ||
-  process.env.NOTION_CREW_DB_ID ||
-  process.env.CREW_DATABASE_ID;
+const CREW_DB_ID = process.env.NOTION_CREW_DB_ID;
+
+function getTitle(prop) {
+  if (!prop?.title) return "";
+  return prop.title.map(t => t.plain_text).join("");
+}
 
 function getText(prop) {
-  if (!prop) return "";
-  if (prop.type === "title") return prop.title?.[0]?.plain_text || "";
-  if (prop.type === "rich_text") return prop.rich_text?.[0]?.plain_text || "";
-  if (prop.type === "url") return prop.url || "";
-  if (prop.type === "email") return prop.email || "";
-  if (prop.type === "phone_number") return prop.phone_number || "";
-  return "";
+  if (!prop?.rich_text) return "";
+  return prop.rich_text.map(t => t.plain_text).join("");
 }
-function getMulti(prop) {
-  if (!prop || prop.type !== "multi_select") return [];
-  return prop.multi_select.map((x) => x.name);
-}
+
 function getSelect(prop) {
-  if (!prop || prop.type !== "select") return "";
-  return prop.select?.name || "";
+  return prop?.select?.name || "";
 }
+
+function getMulti(prop) {
+  return (prop?.multi_select || []).map(x => x.name);
+}
+
+function getUrl(prop) {
+  return prop?.url || "";
+}
+
+function getPhone(prop) {
+  return prop?.phone_number || "";
+}
+
+function getEmail(prop) {
+  return prop?.email || "";
+}
+
 function getCheckbox(prop) {
-  if (!prop || prop.type !== "checkbox") return false;
-  return !!prop.checkbox;
+  return !!prop?.checkbox;
 }
-function getFilesUrl(prop) {
-  if (!prop || prop.type !== "files") return "";
-  const file = prop.files?.[0];
-  if (!file) return "";
-  if (file.type === "external") return file.external.url;
-  if (file.type === "file") return file.file.url;
+
+function getFiles(prop) {
+  const files = prop?.files || [];
+  if (!files.length) return "";
+  const f = files[0];
+  if (f.type === "external") return f.external.url;
+  if (f.type === "file") return f.file.url;
   return "";
 }
 
@@ -43,78 +53,44 @@ exports.handler = async () => {
     if (!CREW_DB_ID) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ message: "CREW_DB_ID is missing" }),
+        body: JSON.stringify({ message: "Missing NOTION_CREW_DB_ID" }),
       };
     }
 
-    const query = await notion.databases.query({
+    const res = await notion.databases.query({
       database_id: CREW_DB_ID,
-      // ✅ Published 필터 제거
-      sorts: [{ property: "Sort", direction: "ascending" }],
+      sorts: [{ property: "Name", direction: "ascending" }],
     });
 
-    const items = query.results.map((page) => {
+    const items = res.results.map(page => {
       const p = page.properties;
-
-      const name =
-        getText(p.Name) || getText(p.이름) || getText(p.Title) || "";
-
-      const mainRole =
-        getSelect(p.MainRole) ||
-        getSelect(p.mainRole) ||
-        getSelect(p.Role) ||
-        getSelect(p.메인역할) ||
-        "";
-
-      const roles =
-        getMulti(p.Roles) || getMulti(p.roles) || getMulti(p.역할) || [];
-
-      const skills =
-        getMulti(p.Skills) || getMulti(p.skills) || getMulti(p.스킬) || [];
-
-      const bio =
-        getText(p.Bio) || getText(p.bio) || getText(p.소개) || "";
-
-      const instagram =
-        getText(p.Instagram) || getText(p.instagram) || "";
-
-      const phone =
-        getText(p.Phone) || getText(p.phone) || "";
-
-      const email =
-        getText(p.Email) || getText(p.email) || "";
-
-      const profileImageUrl =
-        getFilesUrl(p.ProfileImage) ||
-        getFilesUrl(p.ProfileImageUrl) ||
-        getFilesUrl(p.profileImage) ||
-        "";
-
-      const verified =
-        getCheckbox(p.Verified) || getCheckbox(p.verified) || false;
 
       return {
         id: page.id,
-        name,
-        mainRole,
-        roles,
-        skills,
-        bio,
-        instagram,
-        phone,
-        email,
-        profileImageUrl,
-        verified,
+        name: getTitle(p["Name"]),
+        mainRole: getSelect(p["MainRole"]),
+        roles: getMulti(p["Roles"]),
+        skills: getMulti(p["Skills"]),
+        bio: getText(p["Bio"]),
+        instagram: getUrl(p["Instagram"]) || getText(p["Instagram"]),
+        phone: getPhone(p["Phone"]),
+        email: getEmail(p["Email"]),
+        profileImageUrl: getFiles(p["ProfileImage"]),
+        verified: getCheckbox(p["Verified"]),
       };
     });
 
-    return { statusCode: 200, body: JSON.stringify(items) };
+    return {
+      statusCode: 200,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(items),
+    };
   } catch (err) {
     return {
       statusCode: 500,
       body: JSON.stringify({
         message: "Notion crew fetch error",
-        details: err.message,
+        details: err?.message || String(err),
       }),
     };
   }
