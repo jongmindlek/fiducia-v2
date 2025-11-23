@@ -3,19 +3,20 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<link rel="stylesheet" href="./style.css"/>
+  <link rel="stylesheet" href="./style.css"/>
   <title>Fiducia Collective</title>
 </head>
 <body>
+
   <nav class="nav">
     <div class="container nav-inner">
-      <div class="brand">FIDUCIA COLLECTIVE</div>
+      <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
       <div class="nav-links">
-        <a class="tab active" href="./index.html">메인</a>
-        <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
-        <a class="tab" href="./gear.html">장비 예약</a>
-        <a class="tab" href="./crew.html">감독/스태프 리스트</a>
-        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
+        <a class="tab" data-path="index.html" href="./index.html">메인</a>
+        <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
+        <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
       </div>
     </div>
   </nav>
@@ -50,11 +51,29 @@
     <div class="container row" style="justify-content:space-between">
       <div>© Fiducia Collective</div>
       <div class="row">
-        <span>Instagram</span>
-        <span>Contact</span>
+        <a href="#" class="small">Instagram</a>
+        <a href="#" class="small">Contact</a>
       </div>
     </div>
   </footer>
+
+  <script>
+    // nav active 자동
+    (function () {
+      const tabs = document.querySelectorAll(".nav .tab");
+      const path = location.pathname.split("/").pop() || "index.html";
+      const hash = location.hash || "";
+
+      tabs.forEach(a => a.classList.remove("active"));
+      if (path === "crew.html" && hash === "#register") {
+        const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
+        if (regTab) regTab.classList.add("active");
+        return;
+      }
+      const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
+      if (activeTab) activeTab.classList.add("active");
+    })();
+  </script>
 
   <script type="module">
     const worksEl = document.querySelector("#works");
@@ -69,15 +88,19 @@
       try{
         const res = await fetch("/api/works");
         const works = await res.json();
+
         if(!Array.isArray(works) || works.length===0){
           emptyEl.style.display="block";
           return;
         }
         emptyEl.style.display="none";
+
         works.forEach(w=>{
           const card = document.createElement("a");
           card.className="card person";
           card.href = w.url || "#";
+          card.target = "_blank";
+          card.rel = "noopener noreferrer";
           card.innerHTML = `
             <div class="thumb">${thumb(w.thumbnailUrl)}</div>
             <div class="name">${w.title || "Untitled"}</div>
