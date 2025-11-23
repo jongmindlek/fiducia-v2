@@ -1,30 +1,59 @@
-// gearReservation.js
+// netlify/functions/stillcut-reserve.js
 const { Client } = require("@notionhq/client");
+
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
-const RES_DB_ID = process.env.NOTION_GEAR_RES_DB_ID;
+
+const STILL_DB_ID =
+  process.env.AI_STILLCUT_DB_ID ||
+  process.env.STILLCUT_RESERVATION_DB_ID ||
+  process.env.STILLCUT_DB_ID;
 
 exports.handler = async (event) => {
-  if(event.httpMethod!=="POST"){
-    return { statusCode:405, body:"Method Not Allowed" };
-  }
-  try{
-    const data = JSON.parse(event.body||"{}");
+  try {
+    if (event.httpMethod !== "POST") {
+      return { statusCode: 405, body: "Method Not Allowed" };
+    }
+    if (!STILL_DB_ID) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: "STILLCUT_DB_ID is missing" }),
+      };
+    }
+
+    const body = JSON.parse(event.body || "{}");
+    const { name, phone, email, projectTitle, referenceUrl, message } = body;
+
+    if (!name || !phone || !projectTitle || !message) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: "필수 항목 누락" }),
+      };
+    }
 
     await notion.pages.create({
-      parent:{ database_id: RES_DB_ID },
-      properties:{
-        Title:{ title:[{ text:{ content: data.name || "Gear Reservation" } }] },
-        Name:{ rich_text:[{ text:{ content: data.name||"" } }] },
-        Phone:{ rich_text:[{ text:{ content: data.phone||"" } }] },
-        From:{ date: data.from ? { start: data.from } : null },
-        To:{ date: data.to ? { start: data.to } : null },
-        Note:{ rich_text:[{ text:{ content: data.note||"" } }] },
-        GearIds: data.gearId ? { relation:[{ id:data.gearId }] } : { relation:[] }
-      }
+      parent: { database_id: STILL_DB_ID },
+      properties: {
+        Name: { title: [{ text: { content: name } }] },
+        Phone: { phone_number: phone },
+        Email: email ? { email } : undefined,
+        ProjectTitle: { rich_text: [{ text: { content: projectTitle } }] },
+        ReferenceUrl: referenceUrl ? { url: referenceUrl } : undefined,
+        Message: { rich_text: [{ text: { content: message } }] },
+        Status: { select: { name: "Requested" } }, // DB에 Status select 있으면 자동 세팅
+      },
     });
 
-    return { statusCode:200, body: JSON.stringify({ ok:true }) };
-  }catch(err){
-    return { statusCode:500, body: JSON.stringify({ message:"Gear reservation error", details:String(err) }) };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ ok: true }),
+    };
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "Notion stillcut reservation error",
+        details: err.message,
+      }),
+    };
   }
 };
