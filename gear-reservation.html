@@ -4,78 +4,78 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <link rel="stylesheet" href="./style.css"/>
-  <title>Gear Reservation</title>
+  <title>Gear Reservation | Fiducia</title>
 </head>
 <body>
+
   <nav class="nav">
     <div class="container nav-inner">
-      <div class="brand">FIDUCIA COLLECTIVE</div>
+      <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
       <div class="nav-links">
-        <a class="tab" href="./index.html">메인</a>
-        <a class="tab active" href="./gear.html">장비 예약</a>
-        <a class="tab" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" data-path="index.html" href="./index.html">메인</a>
+        <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
+        <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
       </div>
     </div>
   </nav>
 
   <main class="container section">
-    <h2 style="margin:0 0 12px">gear reservation</h2>
+    <h2 style="margin-top:12px">Gear Reservation Form</h2>
 
-    <div class="card">
-      <div class="row">
-        <input id="name" class="input" placeholder="이름" style="flex:1;min-width:160px"/>
-        <input id="phone" class="input" placeholder="연락처" style="flex:1;min-width:160px"/>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <input id="from" type="date" class="input"/>
-        <input id="to" type="date" class="input"/>
-      </div>
-      <textarea id="note" class="input" rows="4" placeholder="요청사항" style="margin-top:8px"></textarea>
-
-      <div class="row" style="justify-content:flex-end;margin-top:10px">
-        <button id="submit" class="cta" style="border:none;cursor:pointer">예약하기</button>
-      </div>
-      <div id="msg" class="small" style="margin-top:8px"></div>
-    </div>
-
-    <div class="card section">
-      <p>장비 예약 요청을 여기서 바로 입력하면 Gear Reservation DB로 자동 저장됩니다.</p>
-    </div>
+    <section class="card" style="margin-top:14px">
+      <form id="form" class="grid" style="gap:10px">
+        <input class="input" name="name" placeholder="예약자 이름" required />
+        <input class="input" name="phone" placeholder="연락처" />
+        <input class="input" name="gearName" placeholder="장비 이름" required />
+        <input class="input" name="date" placeholder="사용 날짜/기간" />
+        <textarea class="input" name="note" placeholder="요청사항" rows="4"></textarea>
+        <button class="cta" type="submit">예약 요청 보내기</button>
+        <div id="msg" class="small"></div>
+      </form>
+    </section>
   </main>
 
+  <script>
+    (function () {
+      const tabs = document.querySelectorAll(".nav .tab");
+      const path = location.pathname.split("/").pop() || "index.html";
+      const hash = location.hash || "";
+      tabs.forEach(a => a.classList.remove("active"));
+      if (path === "crew.html" && hash === "#register") {
+        const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
+        if (regTab) regTab.classList.add("active");
+        return;
+      }
+      const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
+      if (activeTab) activeTab.classList.add("active");
+    })();
+  </script>
+
   <script type="module">
-    const params = new URLSearchParams(location.search);
-    const gearId = params.get("gearId");
+    const form = document.querySelector("#form");
+    const msg = document.querySelector("#msg");
 
-    const $ = (id)=>document.querySelector(id);
-    const msg = $("#msg");
+    form.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      msg.textContent="전송중...";
+      const body = Object.fromEntries(new FormData(form).entries());
 
-    $("#submit").onclick = async ()=>{
-      msg.textContent="전송 중...";
-      const payload = {
-        gearId,
-        name: $("#name").value.trim(),
-        phone: $("#phone").value.trim(),
-        from: $("#from").value,
-        to: $("#to").value,
-        note: $("#note").value.trim()
-      };
       try{
-        const res = await fetch("/api/gear-reservation",{
+        const res = await fetch("/api/gear-reserve", {
           method:"POST",
           headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(body)
         });
-        const out = await res.json();
-        if(res.ok){
-          msg.textContent="예약 요청 완료!";
-        }else{
-          msg.textContent=out.message || "예약 실패";
-        }
-      }catch(e){
-        msg.textContent="네트워크 오류";
+        if(!res.ok) throw new Error();
+        msg.textContent="예약 요청 완료!";
+        form.reset();
+      }catch(err){
+        msg.textContent="예약 요청 실패";
       }
-    };
+    });
   </script>
+
 </body>
 </html>
