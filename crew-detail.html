@@ -8,16 +8,40 @@
 </head>
 <body>
   <nav class="nav">
-    <div class="container nav-inner">
-      <div class="brand">FIDUCIA COLLECTIVE</div>
-      <div class="nav-links">
-        <a class="tab" href="./index.html">메인</a>
-        <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
-        <a class="tab" href="./gear.html">장비 예약</a>
-        <a class="tab active" href="./crew.html">감독/스태프 리스트</a>
-      </div>
+  <div class="container nav-inner">
+    <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
+
+    <div class="nav-links">
+      <a class="tab" data-path="index.html" href="./index.html">메인</a>
+      <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+      <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
+      <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
+      <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
     </div>
-  </nav>
+  </div>
+</nav>
+
+<script>
+  // 현재 페이지에 맞는 탭 active 자동 처리
+  (function () {
+    const tabs = document.querySelectorAll(".nav .tab");
+    const path = location.pathname.split("/").pop() || "index.html";
+    const hash = location.hash || "";
+
+    tabs.forEach(a => a.classList.remove("active"));
+
+    // 1) hash가 #register면 그 탭 우선 활성화
+    if (path === "crew.html" && hash === "#register") {
+      const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
+      if (regTab) regTab.classList.add("active");
+      return;
+    }
+
+    // 2) 그 외는 파일명 기준으로 활성화
+    const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
+    if (activeTab) activeTab.classList.add("active");
+  })();
+</script>
 
   <main class="container section">
     <a class="small" href="./crew.html">← 목록으로</a>
