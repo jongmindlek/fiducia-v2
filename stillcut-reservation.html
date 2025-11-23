@@ -4,47 +4,104 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <link rel="stylesheet" href="./style.css"/>
-  <title>Stillcut Reserve Form | Fiducia</title>
+  <title>Stillcut Reservation | Fiducia Collective</title>
 </head>
 <body>
-
   <nav class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
+      <div class="brand">FIDUCIA COLLECTIVE</div>
       <div class="nav-links">
-        <a class="tab" data-path="index.html" href="./index.html">메인</a>
-        <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
-        <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
-        <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
-        <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
+        <a class="tab" href="./index.html">메인</a>
+        <a class="tab active" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" href="./gear.html">장비 예약</a>
+        <a class="tab" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
       </div>
     </div>
   </nav>
 
   <main class="container section">
-    <h2 style="margin-top:12px">AI Stillcut Reservation</h2>
+    <h1>AI Stillcut Reservation</h1>
 
-    <section class="card" style="margin-top:16px">
-      <p class="small">여기에 AI 스틸컷 예약 폼을 붙일 예정입니다.</p>
-      <p class="small">지금은 안내페이지로만 열어둡니다.</p>
+    <section class="card" style="margin-top:12px">
+      <form id="form" class="grid" style="gap:10px">
+        <div style="grid-column: span 12;">
+          <label class="small">이름*</label>
+          <input class="input" name="name" required/>
+        </div>
+
+        <div style="grid-column: span 6;">
+          <label class="small">연락처*</label>
+          <input class="input" name="phone" required/>
+        </div>
+
+        <div style="grid-column: span 6;">
+          <label class="small">이메일</label>
+          <input class="input" name="email" type="email"/>
+        </div>
+
+        <div style="grid-column: span 12;">
+          <label class="small">프로젝트 제목*</label>
+          <input class="input" name="projectTitle" required/>
+        </div>
+
+        <div style="grid-column: span 12;">
+          <label class="small">레퍼런스 링크 (구글드라이브/유튜브/이미지 URL 등)</label>
+          <input class="input" name="referenceUrl" placeholder="https://..."/>
+        </div>
+
+        <div style="grid-column: span 12;">
+          <label class="small">요청 내용*</label>
+          <textarea class="textarea" name="message" rows="6" required></textarea>
+        </div>
+
+        <div style="grid-column: span 12;" class="row">
+          <button class="cta" type="submit">예약 제출</button>
+          <span id="status" class="small"></span>
+        </div>
+      </form>
     </section>
   </main>
 
-  <script>
-    (function () {
-      const tabs = document.querySelectorAll(".nav .tab");
-      const path = location.pathname.split("/").pop() || "index.html";
-      const hash = location.hash || "";
-      tabs.forEach(a => a.classList.remove("active"));
-      if (path === "crew.html" && hash === "#register") {
-        const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
-        if (regTab) regTab.classList.add("active");
-        return;
-      }
-      const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
-      if (activeTab) activeTab.classList.add("active");
-    })();
-  </script>
+  <footer class="footer">
+    <div class="container row" style="justify-content:space-between">
+      <div>© Fiducia Collective</div>
+      <div class="row">
+        <span>Instagram</span>
+        <span>Contact</span>
+      </div>
+    </div>
+  </footer>
 
+  <script type="module">
+    const form = document.querySelector("#form");
+    const status = document.querySelector("#status");
+
+    form.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      status.textContent = "전송 중...";
+
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+
+      try{
+        const res = await fetch("/api/stillcut-reserve",{
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if(!res.ok){
+          throw new Error(data.message || "예약 실패");
+        }
+
+        status.textContent = "예약 완료! 곧 연락드릴게요.";
+        form.reset();
+      }catch(err){
+        status.textContent = "예약 실패: " + err.message;
+      }
+    });
+  </script>
 </body>
 </html>
