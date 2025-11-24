@@ -1,63 +1,53 @@
-const { Client } = require("@notionhq/client");
+import { Client } from "@notionhq/client";
 
-exports.handler = async () => {
+const notion = new Client({ auth: process.env.NOTION_TOKEN });
+
+const CREW_DB_ID = process.env.CREW_DB_ID;
+
+export const handler = async () => {
   try {
-    const notion = new Client({ auth: process.env.NOTION_TOKEN });
-    const database_id = process.env.CREW_DB_ID;
-
-    // ✅ Published 필터 제거: DB에 Published 속성이 없어서 에러났던 부분
     const res = await notion.databases.query({
-      database_id
-      // filter 없음 = 전체 가져오기
+      database_id: CREW_DB_ID,
+      filter: {
+        property: "Published",   // ✅ Crew DB에 이 체크박스가 꼭 있어야 함
+        checkbox: { equals: true }
+      },
+      sorts: [{ property: "Name", direction: "ascending" }]
     });
 
-    const crew = res.results.map(page => {
-      const p = page.properties || {};
+    const people = res.results.map(page => {
+      const props = page.properties;
 
-      const getText = (key) =>
-        (p[key]?.title?.[0]?.plain_text) ||
-        (p[key]?.rich_text?.[0]?.plain_text) ||
+      const getText = (p) =>
+        p?.title?.[0]?.plain_text ||
+        p?.rich_text?.[0]?.plain_text ||
         "";
-
-      const getMulti = (key) =>
-        (p[key]?.multi_select || []).map(x=>x.name);
-
-      const getSelect = (key) =>
-        p[key]?.select?.name || "";
-
-      const getCheckbox = (key) =>
-        !!p[key]?.checkbox;
-
-      const getFiles = (key) =>
-        (p[key]?.files || [])
-          .map(f => f?.file?.url || f?.external?.url)
-          .filter(Boolean)[0] || "";
 
       return {
         id: page.id,
-        name: getText("Name") || getText("이름"),
-        bio: getText("Bio") || getText("소개"),
-        instagram: getText("Instagram"),
-        phone: getText("Phone"),
-        email: getText("Email"),
-        mainRole: (getSelect("MainRole") || getSelect("Role") || "").toLowerCase(),
-        roles: getMulti("Roles"),
-        skills: getMulti("Skills"),
-        profileImageUrl: getFiles("ProfileImage") || getFiles("profileImageUrl"),
-        verified: getCheckbox("Verified") || getCheckbox("verified") || false
+        name: getText(props.Name),
+        mainRole: props.MainRole?.select?.name?.toLowerCase() || "",
+        roles: props.Roles?.multi_select?.map(x=>x.name) || [],
+        skills: props.Skills?.multi_select?.map(x=>x.name) || [],
+        bio: getText(props.Bio),
+        instagram: props.Instagram?.url || "",
+        phone: props.Phone?.phone_number || "",
+        email: props.Email?.email || "",
+        profileImageUrl: props.ProfileImageUrl?.url || "",
+        verified: props.Verified?.checkbox || false,
       };
     });
 
     return {
       statusCode: 200,
       headers: { "Content-Type":"application/json" },
-      body: JSON.stringify(crew)
+      body: JSON.stringify(people)
     };
-  } catch (e) {
+  } catch (err) {
     return {
       statusCode: 500,
       headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ message:"Notion crew fetch error", details:e.message })
+      body: JSON.stringify({ message:"Notion crew fetch error", details: err.message })
     };
   }
 };
