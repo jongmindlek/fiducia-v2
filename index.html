@@ -10,13 +10,15 @@
 
   <nav class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="./index.html">FIDUCIA COLLECTIVE</a>
+      <div class="brand">
+        <img src="/mnt/data/2DB68B72-078E-4BBD-B3EF-C2810A77E226.jpeg" alt="Fiducia Collective logo">
+      </div>
       <div class="nav-links">
-        <a class="tab" data-path="index.html" href="./index.html">메인</a>
-        <a class="tab" data-path="ai-stillcut.html" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
-        <a class="tab" data-path="gear.html" href="./gear.html">장비 예약</a>
-        <a class="tab" data-path="crew.html" href="./crew.html">감독/스태프 리스트</a>
-        <a class="tab" data-path="crew.html#register" href="./crew.html#register">감독/스태프 등록</a>
+        <a class="tab active" href="./index.html">메인</a>
+        <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" href="./gear.html">장비 예약</a>
+        <a class="tab" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
       </div>
     </div>
   </nav>
@@ -31,17 +33,18 @@
     <div class="grid">
       <section class="card" style="grid-column: span 12;">
         <h3>recent work</h3>
-        <p>노션에서 Published 체크된 작업을 불러옵니다.</p>
+        <p class="small">노션에서 Published 체크된 작업을 불러옵니다.</p>
         <div id="works" class="list" style="margin-top:12px"></div>
         <div id="worksEmpty" class="small" style="display:none;margin-top:8px">표시할 작업이 아직 없어요.</div>
       </section>
 
       <section class="card" style="grid-column: span 12;">
         <h3>'Fiducia collective'란?</h3>
-        <p>
+        <p class="small">
           AI 기반 시각화 기술과 검증된 감독 네트워크를 결합해<br/>
           영상 기획 부담을 줄이고, 신뢰 있게 연결하는<br/>
-          크리에이티브 프로덕션입니다.
+          크리에이티브 프로덕션입니다.<br/><br/>
+          AI 스틸컷 / 감독 매칭 / 장비 예약을 한 곳에서.
         </p>
       </section>
     </div>
@@ -51,29 +54,11 @@
     <div class="container row" style="justify-content:space-between">
       <div>© Fiducia Collective</div>
       <div class="row">
-        <a href="#" class="small">Instagram</a>
-        <a href="#" class="small">Contact</a>
+        <span>Instagram</span>
+        <span>Contact</span>
       </div>
     </div>
   </footer>
-
-  <script>
-    // nav active 자동
-    (function () {
-      const tabs = document.querySelectorAll(".nav .tab");
-      const path = location.pathname.split("/").pop() || "index.html";
-      const hash = location.hash || "";
-
-      tabs.forEach(a => a.classList.remove("active"));
-      if (path === "crew.html" && hash === "#register") {
-        const regTab = document.querySelector('.nav .tab[data-path="crew.html#register"]');
-        if (regTab) regTab.classList.add("active");
-        return;
-      }
-      const activeTab = document.querySelector(`.nav .tab[data-path="${path}"]`);
-      if (activeTab) activeTab.classList.add("active");
-    })();
-  </script>
 
   <script type="module">
     const worksEl = document.querySelector("#works");
@@ -88,19 +73,15 @@
       try{
         const res = await fetch("/api/works");
         const works = await res.json();
-
         if(!Array.isArray(works) || works.length===0){
           emptyEl.style.display="block";
           return;
         }
         emptyEl.style.display="none";
-
         works.forEach(w=>{
           const card = document.createElement("a");
           card.className="card person";
           card.href = w.url || "#";
-          card.target = "_blank";
-          card.rel = "noopener noreferrer";
           card.innerHTML = `
             <div class="thumb">${thumb(w.thumbnailUrl)}</div>
             <div class="name">${w.title || "Untitled"}</div>
