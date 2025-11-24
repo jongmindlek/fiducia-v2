@@ -1,75 +1,185 @@
-<form id="stillcutForm" class="form-grid">
-
-  <div class="form-group">
-    <label>프로젝트명 *</label>
-    <input type="text" id="projectTitle" required/>
-  </div>
-
-  <div class="form-group">
-    <label>이메일 *</label>
-    <input type="email" id="email" required/>
-  </div>
-
-  <div class="form-group">
-    <label>연락처(전화) *</label>
-    <input type="text" id="phone" required/>
-  </div>
-
-  <div class="form-group">
-    <label>영상 타입 *</label>
-    <select id="videoType" required>
-      <option value="">선택</option>
-      <option value="웨딩">웨딩</option>
-      <option value="뮤직비디오">뮤직비디오</option>
-      <option value="광고">광고</option>
-      <option value="영화">영화</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label>러닝타임 *</label>
-    <input type="text" id="runtime" placeholder="예: 30초 / 1분" required/>
-  </div>
-
-  <div class="form-group">
-    <label>예산 범위 *</label>
-    <select id="budget" required>
-      <option value="">선택</option>
-      <option value="50~100">50만원 ~ 100만원</option>
-      <option value="100~200">100만원 ~ 200만원</option>
-      <option value="200~300">200만원 ~ 300만원</option>
-      <option value="300+">300만원 이상</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label>희망 촬영 날짜 *</label>
-    <input type="date" id="shootDate" required/>
-  </div>
-
-  <div class="form-group">
-    <label>촬영 장소 *</label>
-    <input type="text" id="location" required/>
-  </div>
-
-  <div class="form-group">
-    <label>레퍼런스 링크</label>
-    <input type="text" id="referenceLink" placeholder="드라이브/유튜브/핀터레스트 등"/>
-  </div>
-
-  <div class="form-group">
-    <label>이미지 파일 (최대 5개)</label>
-    <div class="file-wrapper">
-      <input type="file" id="images" multiple accept="image/*"/>
-      <small>* 실제 파일은 저장되지 않고 메타 정보만 기록됩니다.</small>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="./style.css"/>
+  <title>AI Stillcut Reservation | Fiducia Collective</title>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">FIDUCIA COLLECTIVE</div>
+      <div class="nav-links">
+        <a class="tab" href="./index.html">메인</a>
+        <a class="tab active" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" href="./gear.html">장비 예약</a>
+        <a class="tab" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
+      </div>
     </div>
-  </div>
+  </nav>
 
-  <div class="form-group" style="grid-column: span 2;">
-    <label>요청 내용 *</label>
-    <textarea id="message" rows="5" required></textarea>
-  </div>
+  <main class="container section">
+    <h2 style="margin-bottom:12px;">ai stillcut reservation</h2>
 
-  <button type="submit" class="submit-btn">예약 제출</button>
+    <section class="card soft" style="margin-bottom:12px;">
+      <p class="muted">
+        AI 스틸컷 제작/예약을 위한 정보 입력 폼입니다.  
+        이미지 파일은 Notion에 <b>메타(파일명/용량)</b>만 저장되고,
+        원본은 카톡/드라이브 링크로 전달 부탁!
+      </p>
+    </section>
 
-</form>
+    <section class="card">
+      <form id="form" class="form">
+
+        <div class="field full">
+          <label class="label">프로젝트명 *</label>
+          <input name="projectTitle" class="input" required placeholder="예) 웨딩 하이라이트 / 브랜드 필름"/>
+        </div>
+
+        <div class="field">
+          <label class="label">이메일 *</label>
+          <input name="email" type="email" class="input" required placeholder="abc@email.com"/>
+        </div>
+
+        <div class="field">
+          <label class="label">연락처(전화) *</label>
+          <input name="phone" class="input" required placeholder="010-0000-0000"/>
+        </div>
+
+        <div class="field">
+          <label class="label">영상 타입 *</label>
+          <select name="videoType" required>
+            <option value="">선택</option>
+            <option>웨딩</option>
+            <option>뮤직비디오</option>
+            <option>광고/커머셜</option>
+            <option>브랜디드/다큐</option>
+            <option>기타</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label">러닝타임 *</label>
+          <input name="runtime" class="input" required placeholder="예) 30초 / 3분 / 10분"/>
+        </div>
+
+        <div class="field">
+          <label class="label">예산 범위 *</label>
+          <select name="budget" required>
+            <option value="">선택</option>
+            <option>50만원 ~ 100만원</option>
+            <option>100만원 ~ 200만원</option>
+            <option>200만원 ~ 300만원</option>
+            <option>300만원 이상</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label">희망 촬영 날짜 *</label>
+          <input name="shootDate" type="date" class="input" required/>
+        </div>
+
+        <div class="field">
+          <label class="label">촬영 장소 *</label>
+          <input name="location" class="input" required placeholder="예) 부산 / 서울 강남 / 제주"/>
+        </div>
+
+        <div class="field full">
+          <label class="label">레퍼런스 링크 (드라이브/유튜브/핀터레스트 등)</label>
+          <input name="referenceLink" type="url" class="input" placeholder="https://..."/>
+        </div>
+
+        <div class="field full">
+          <label class="label">이미지 파일 (최대 5개)</label>
+          <input name="images" type="file" class="input" accept="image/*" multiple/>
+          <div id="fileInfo" class="small" style="margin-top:6px;"></div>
+          <div class="help" style="margin-top:4px;">
+            * 실제 파일은 저장되지 않고 메타 정보만 기록됩니다.
+          </div>
+        </div>
+
+        <div class="field full">
+          <label class="label">요청 내용 *</label>
+          <textarea name="message" rows="5" class="input" required
+            placeholder="필름룩 / 톤레퍼런스 / 원하는 분위기 / 필수 컷 등"></textarea>
+        </div>
+
+        <div class="field full">
+          <button id="submitBtn" class="btn" type="submit">예약 제출</button>
+          <div id="status" class="small" style="margin-top:8px;"></div>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container row" style="justify-content:space-between">
+      <div>© Fiducia Collective</div>
+      <div class="row">
+        <span>Instagram</span>
+        <span>Contact</span>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    const form = document.querySelector("#form");
+    const submitBtn = document.querySelector("#submitBtn");
+    const statusEl = document.querySelector("#status");
+    const fileInfo = document.querySelector("#fileInfo");
+    const imagesInput = form.elements["images"];
+
+    imagesInput.addEventListener("change", ()=>{
+      const files=[...imagesInput.files||[]].slice(0,5);
+      const html = files.length
+        ? files.map(f=>`• ${f.name} (${Math.round(f.size/1024)}KB)`).join("<br/>")
+        : "선택된 파일 없음";
+      fileInfo.innerHTML = html;
+    });
+
+    form.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      statusEl.textContent="";
+      submitBtn.disabled=true;
+
+      const fd = new FormData(form);
+      const files=[...imagesInput.files||[]].slice(0,5);
+
+      const payload = {
+        projectTitle: fd.get("projectTitle"),
+        email: fd.get("email"),
+        phone: fd.get("phone"),
+        videoType: fd.get("videoType"),
+        runtime: fd.get("runtime"),
+        budget: fd.get("budget"),
+        shootDate: fd.get("shootDate"),
+        location: fd.get("location"),
+        referenceLink: fd.get("referenceLink"),
+        message: fd.get("message"),
+        images: files.map(f=>({ name:f.name, size:f.size, type:f.type }))
+      };
+
+      try{
+        const res = await fetch("/api/stillcut", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+        const out = await res.json();
+        if(!res.ok) throw new Error(out?.message || "submit fail");
+
+        statusEl.textContent="예약 완료! 곧 연락드릴게요.";
+        form.reset();
+        fileInfo.textContent="";
+      }catch(err){
+        statusEl.textContent="예약 실패: " + err.message;
+      }finally{
+        submitBtn.disabled=false;
+      }
+    });
+  </script>
+</body>
+</html>
