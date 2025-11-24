@@ -1,219 +1,282 @@
-/* -------------------- 기본 폰트 & 리셋 -------------------- */
-@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap');
+/* =========================
+   Fiducia Collective v2
+   style.css (FULL)
+   ========================= */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Pretendard", sans-serif;
+:root{
+  --bg: #05070d;
+  --bg-soft: #0b1020;
+  --card: rgba(13,18,35,0.9);
+  --card-soft: rgba(10,14,28,0.75);
+  --line: rgba(255,255,255,0.08);
+  --line-strong: rgba(255,255,255,0.14);
+  --text: #e7ecf7;
+  --muted: rgba(231,236,247,0.65);
+  --muted2: rgba(231,236,247,0.45);
+  --accent: #2f5bff;
+  --accent-soft: rgba(47,91,255,0.18);
+  --accent-strong: rgba(47,91,255,0.9);
+  --radius-xl: 22px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --shadow: 0 10px 30px rgba(0,0,0,0.45);
+  --maxw: 1100px;
+  --pad: 18px;
+  font-synthesis: none;
+  text-rendering: geometricPrecision;
 }
 
-html, body {
-  background: #0d0f16;
-  color: #ffffff;
-  line-height: 1.5;
+*{box-sizing:border-box; margin:0; padding:0;}
+html, body{height:100%;}
+body{
+  font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Pretendard",
+               "Noto Sans KR", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 600px at 80% -10%, #0c1b4a, transparent 60%),
+    radial-gradient(900px 500px at -10% 10%, #0b1230, transparent 55%),
+    linear-gradient(180deg, #05070d 0%, #070b16 60%, #05070d 100%);
+  line-height:1.5;
 }
 
-/* -------------------- 컨테이너 -------------------- */
-.container {
-  width: 90%;
-  max-width: 1100px;
-  margin: auto;
+/* ====== Layout ====== */
+.container{
+  width:100%;
+  max-width: var(--maxw);
+  margin:0 auto;
+  padding:0 var(--pad);
+}
+.section{padding:28px 0;}
+.grid{
+  display:grid;
+  grid-template-columns: repeat(12, minmax(0,1fr));
+  gap:14px;
+}
+.row{display:flex; align-items:center; gap:10px;}
+.small{font-size:12px; color:var(--muted2);}
+.muted{color:var(--muted);}
+
+/* ====== Cards ====== */
+.card{
+  background: var(--card);
+  border:1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding:16px;
+  box-shadow: var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+.card.soft{
+  background: var(--card-soft);
+}
+.card h2, .card h3{
+  font-weight:700; letter-spacing:0.2px;
+}
+.card h3{font-size:18px; margin-bottom:8px;}
+.card p{color:var(--muted); font-size:14px;}
+
+.list{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:12px;
+}
+@media (max-width: 900px){
+  .list{grid-template-columns: repeat(2, minmax(0,1fr));}
+}
+@media (max-width: 560px){
+  .list{grid-template-columns: 1fr;}
 }
 
-/* -------------------- 네비게이션 -------------------- */
-.nav {
-  width: 100%;
-  padding: 20px 0;
-  background: #0f111a;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+/* ====== Nav ====== */
+.nav{
+  position: sticky; top:0; z-index:50;
+  background: rgba(5,7,13,0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0;
+  gap:12px;
+}
+.brand{
+  font-weight:800;
+  letter-spacing: 2px;
+  font-size:12px;
+  opacity:.9;
+  white-space:nowrap;
+}
+.nav-links{
+  display:flex; align-items:center; gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.tab{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:8px 12px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  color:var(--text);
+  text-decoration:none;
+  font-size:13px;
+  background: rgba(255,255,255,0.02);
+  transition:.2s ease;
+  white-space:nowrap;
+}
+.tab:hover{border-color:var(--line-strong); transform:translateY(-1px);}
+.tab.active{
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 3px var(--accent-soft) inset;
 }
 
-.nav-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* 모바일에서 네비가 세로로 길어지던 문제 해결 */
+@media (max-width: 560px){
+  .nav-inner{align-items:flex-start;}
+  .brand{font-size:11px;}
+  .nav-links{justify-content:flex-start;}
+  .tab{
+    font-size:12px;
+    padding:7px 10px;
+  }
 }
 
-.brand {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 1px;
+/* ====== Hero ====== */
+.hero{
+  padding:48px 0 20px;
+}
+.hero h1{
+  font-size:46px;
+  line-height:1.12;
+  font-weight:900;
+  letter-spacing:-0.6px;
+}
+.hero .sub{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:14px;
+}
+.cta{
+  margin-top:16px;
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:12px 18px;
+  border-radius:999px;
+  background: linear-gradient(180deg,#2f5bff,#2047ea);
+  color:white; text-decoration:none; font-weight:700;
+  box-shadow: 0 8px 30px rgba(47,91,255,0.45);
+}
+.cta:active{transform:translateY(1px);}
+
+@media (max-width:560px){
+  .hero h1{font-size:36px;}
 }
 
-.nav-links {
-  display: flex;
-  gap: 12px;
+/* ====== Person / Work cards ====== */
+.person{
+  display:flex; flex-direction:column;
+  text-decoration:none; color:inherit;
+  gap:8px;
 }
-
-.tab {
-  padding: 10px 18px;
-  border-radius: 20px;
+.thumb{
+  width:100%;
+  aspect-ratio:16/9;
   background: rgba(255,255,255,0.05);
-  color: #aaa;
-  font-size: 14px;
-  text-decoration: none;
-  transition: 0.2s;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--muted2); font-size:12px;
+}
+.thumb img{
+  width:100%; height:100%; object-fit:cover;
+  display:block;
+}
+.name{
+  font-weight:800; font-size:16px;
+}
+.tags{display:flex; flex-wrap:wrap; gap:6px;}
+.tag{
+  font-size:11px; padding:4px 8px;
+  border:1px solid var(--line);
+  border-radius:999px; color:var(--muted);
+  background: rgba(255,255,255,0.03);
 }
 
-.tab:hover {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
+/* ====== Filters ====== */
+.filters{
+  display:grid;
+  grid-template-columns: 1.3fr 0.9fr 0.9fr;
+  gap:8px;
+}
+@media (max-width: 760px){
+  .filters{grid-template-columns: 1fr;}
+}
+.input, select, textarea{
+  width:100%;
+  background: rgba(5,8,18,0.9);
+  border:1px solid var(--line);
+  color:var(--text);
+  padding:12px 12px;
+  border-radius:14px;
+  outline:none;
+  font-size:14px;
+}
+.input::placeholder, textarea::placeholder{color:var(--muted2);}
+.input:focus, select:focus, textarea:focus{
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.checkline{display:flex; align-items:center; gap:8px; margin-top:8px;}
+.checkline input{width:18px; height:18px;}
+
+/* ====== Forms ====== */
+.form{
+  display:grid;
+  grid-template-columns: repeat(12, minmax(0,1fr));
+  gap:10px;
+}
+.field{grid-column: span 6; display:flex; flex-direction:column; gap:6px;}
+.field.full{grid-column: span 12;}
+.label{
+  font-size:13px; color:var(--muted);
+}
+.help{
+  font-size:12px; color:var(--muted2);
 }
 
-.tab.active {
-  background: #1a2dff;
-  color: #fff;
-  border: 1px solid #3d54ff;
+@media (max-width: 760px){
+  .field{grid-column: span 12;}
 }
 
-/* -------------------- 히어로 섹션 -------------------- */
-.hero {
-  padding: 60px 0 40px;
+.btn{
+  width:100%;
+  padding:14px 16px;
+  border-radius:999px;
+  border:1px solid var(--accent-strong);
+  background: linear-gradient(180deg,#1e2d6b,#0e1536);
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+  transition:.15s ease;
+}
+.btn:hover{
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.btn:disabled{
+  opacity:.6; cursor:not-allowed;
 }
 
-.hero h1 {
-  font-size: 42px;
-  font-weight: 700;
-  margin-bottom: 10px;
+.notice{
+  font-size:13px; color:var(--muted);
+  background: rgba(255,255,255,0.03);
+  border:1px dashed var(--line);
+  padding:10px 12px;
+  border-radius:12px;
 }
 
-.hero .sub {
-  color: #9aa0b5;
-  margin-bottom: 20px;
-}
-
-.cta {
-  display: inline-block;
-  padding: 12px 22px;
-  background: #1a2dff;
-  border-radius: 25px;
-  text-decoration: none;
-  font-weight: 500;
-  color: #fff;
-  border: 1px solid #4862ff;
-}
-
-/* -------------------- 카드 UI -------------------- */
-.card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-.card h3 {
-  margin-bottom: 12px;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
-}
-
-.person {
-  text-decoration: none;
-  color: #fff;
-}
-
-.person .thumb img {
-  width: 100%;
-  height: 160px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.person .name {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.small {
-  color: #b0b6c6;
-  font-size: 13px;
-}
-
-/* -------------------- 태그 -------------------- */
-.tag {
-  display: inline-block;
-  padding: 4px 10px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 6px;
-  margin-right: 6px;
-  font-size: 12px;
-}
-
-/* -------------------- 폼 요소 -------------------- */
-label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 12px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 8px;
-  font-size: 15px;
-  color: #fff;
-  margin-bottom: 16px;
-}
-
-textarea {
-  height: 130px;
-  resize: none;
-}
-
-button {
-  width: 100%;
-  padding: 14px;
-  background: #1a2dff;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-button:hover {
-  background: #3042ff;
-}
-
-/* -------------------- 이미지 파일 리스트 -------------------- */
-.file-preview {
-  font-size: 14px;
-  color: #c7cce2;
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-
-/* -------------------- 푸터 -------------------- */
-.footer {
-  margin-top: 60px;
-  padding: 30px 0;
-  background: rgba(255,255,255,0.04);
-}
-
-.footer .row {
-  display: flex;
-  gap: 20px;
-}
-
-.footer span {
-  cursor: pointer;
-  font-size: 14px;
-  color: #c5c8d7;
-}
-
-.footer span:hover {
-  color: #fff;
+.footer{
+  margin-top:28px;
+  border-top:1px solid var(--line);
+  padding:18px 0 28px;
+  color:var(--muted);
+  font-size:13px;
 }
