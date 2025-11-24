@@ -1,9 +1,11 @@
-import { Client } from "@notionhq/client";
+const { Client } = require("@notionhq/client");
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
-const STILL_DB_ID = process.env.STILL_DB_ID;
 
-export const handler = async (event) => {
+// 안전하게 둘 다 지원(혹시 env 이름 다르게 넣었을 때 대비)
+const DB_ID = process.env.STILLCUT_DB_ID || process.env.STILL_DB_ID;
+
+exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
@@ -11,49 +13,70 @@ export const handler = async (event) => {
   try {
     const data = JSON.parse(event.body || "{}");
 
-    const imagesMeta = safeJSON(data.imagesMeta, []);
+    const imagesMeta = Array.isArray(data.images)
+      ? data.images
+          .slice(0,5)
+          .map(f => `${f.name} (${Math.round(f.size/1024)}KB)`)
+          .join(", ")
+      : "";
 
-    const properties = {
-      "ProjectTitle": { title: [{ text: { content: data.projectTitle || "Untitled" } }] },
-      "Phone": { phone_number: data.phone || "" },
-      "Email": { email: data.email || "" },
-      "Video Type": data.videoType ? { select: { name: data.videoType } } : undefined,
-      "Runtime": data.runtime ? { number: Number(data.runtime) } : undefined,
-      "Budget": data.budget ? { select: { name: data.budget } } : undefined,
-      "Shoot Date": data.shootDate ? { date: { start: data.shootDate } } : undefined,
-      "Location": data.location ? { rich_text: [{ text: { content: data.location } }] } : undefined,
-      "Reference Link": data.referenceLink ? { url: data.referenceLink } : undefined,
-      "Images": imagesMeta.length
-        ? { rich_text: [{ text: { content: imagesMeta.map(x=>x.name).join(", ") } }] }
-        : { rich_text: [] },
+    const props = {
+      "ProjectTitle": {
+        title: [{ text: { content: data.projectTitle || "AI Stillcut" } }]
+      },
+      "Phone": data.phone
+        ? { phone_number: data.phone }
+        : undefined,
+      "Email": data.email
+        ? { email: data.email }
+        : undefined,
+      "Video Type": data.videoType
+        ? { select: { name: data.videoType } }
+        : undefined,
+      "Runtime": data.runtime
+        ? { rich_text: [{ text: { content: String(data.runtime) } }] }
+        : undefined,
+      "Budget": data.budgetRange
+        ? { select: { name: data.budgetRange } }
+        : undefined,
+      "Shoot Date": data.shootDate
+        ? { date: { start: data.shootDate } }
+        : undefined,
+      "Location": data.location
+        ? { rich_text: [{ text: { content: data.location } }] }
+        : undefined,
+      "Reference Link": data.referenceLink
+        ? { url: data.referenceLink }
+        : undefined,
+      "Images": imagesMeta
+        ? { rich_text: [{ text: { content: imagesMeta } }] }
+        : undefined,
       "Message": data.message
         ? { rich_text: [{ text: { content: data.message } }] }
-        : { rich_text: [] },
+        : undefined,
       "Status": { select: { name: "New" } }
     };
 
-    // undefined 제거
-    Object.keys(properties).forEach(k => properties[k] === undefined && delete properties[k]);
+    Object.keys(props).forEach(k => props[k] === undefined && delete props[k]);
 
     await notion.pages.create({
-      parent: { database_id: STILL_DB_ID },
-      properties
+      parent: { database_id: DB_ID },
+      properties: props
     });
 
     return {
       statusCode: 200,
       headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ ok:true })
+      body: JSON.stringify({ ok: true })
     };
-  } catch (err) {
+  } catch (e) {
     return {
       statusCode: 500,
       headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ message:"Notion stillcut fetch error", details: err.message })
+      body: JSON.stringify({
+        message: "Notion stillcut error",
+        details: e.message
+      })
     };
   }
 };
-
-function safeJSON(str, fallback){
-  try { return JSON.parse(str); } catch { return fallback; }
-}
