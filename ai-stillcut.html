@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link rel="stylesheet" href="./style.css"/>
+  <link rel="stylesheet" href="./styles.css"/>
   <title>AI Stillcut Reservation | Fiducia Collective</title>
 </head>
 <body>
-
   <nav class="nav">
     <div class="container nav-inner">
-      <div class="brand">
-        <img src="/mnt/data/2DB68B72-078E-4BBD-B3EF-C2810A77E226.jpeg" alt="Fiducia Collective logo">
-      </div>
+      <a class="brand" href="./index.html">
+        <span class="brand-top">Fiducia</span>
+        <span class="brand-bottom">COLLECTIVE</span>
+      </a>
       <div class="nav-links">
         <a class="tab" href="./index.html">메인</a>
         <a class="tab active" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
@@ -24,128 +24,115 @@
   </nav>
 
   <main class="container section">
+    <h1 class="page-title">ai stillcut reservation</h1>
+
     <section class="card">
-      <h3>ai stillcut reservation</h3>
       <p class="small">
-        AI 스틸컷 예약 설명 / 레퍼런스 가이드 / 카톡 링크 등 넣는 섹션.
+        AI 스틸컷 예약을 위한 핵심 정보만 빠르게 받습니다.<br/>
+        이미지 파일은 메타정보(파일명/개수)만 저장되고,
+        원본은 카톡/드라이브 링크로 전달 부탁!
       </p>
     </section>
 
-    <section class="card" style="margin-top:14px">
-      <h3>예약 폼</h3>
+    <form id="form" class="card form-card">
+      <div class="form-grid">
+        <label>
+          프로젝트명 *
+          <input name="projectTitle" required class="input" placeholder="프로젝트명"/>
+        </label>
+        <label>
+          연락처(전화) *
+          <input name="phone" required class="input" placeholder="010-0000-0000"/>
+        </label>
+        <label>
+          이메일 *
+          <input name="email" type="email" required class="input" placeholder="email@example.com"/>
+        </label>
 
-      <form id="form" class="form" style="margin-top:8px">
-        <div class="form-grid">
-          <div>
-            <label>프로젝트명 *</label>
-            <input name="projectTitle" required placeholder="예) 웨딩 하이라이트"/>
-          </div>
-          <div>
-            <label>이메일 *</label>
-            <input name="email" type="email" required placeholder="you@email.com"/>
-          </div>
-        </div>
+        <label>
+          영상 타입 *
+          <select name="videoType" required class="input">
+            <option value="">선택</option>
+            <option>웨딩</option>
+            <option>뮤직비디오</option>
+            <option>광고/브랜디드</option>
+            <option>영화/단편</option>
+            <option>기타</option>
+          </select>
+        </label>
 
-        <div class="form-grid">
-          <div>
-            <label>연락처(전화) *</label>
-            <input name="phone" required placeholder="010-0000-0000"/>
-          </div>
-          <div>
-            <label>러닝타임 *</label>
-            <input name="runtime" required placeholder="예) 30초 / 1분 / 3분"/>
-          </div>
-        </div>
+        <label>
+          러닝타임(분) *
+          <input name="runtime" type="number" min="1" required class="input" placeholder="예: 3"/>
+        </label>
 
-        <div class="form-grid">
-          <div>
-            <label>영상 타입 *</label>
-            <select name="videoType" required>
-              <option value="">선택</option>
-              <option>웨딩</option>
-              <option>뮤직비디오</option>
-              <option>광고/브랜딩</option>
-              <option>행사/기록</option>
-              <option>기타</option>
-            </select>
-          </div>
+        <label>
+          예산 범위 *
+          <select name="budget" required class="input">
+            <option value="">선택</option>
+            <option>50만원 ~ 100만원</option>
+            <option>100만원 ~ 200만원</option>
+            <option>200만원 ~ 300만원</option>
+            <option>300만원 이상</option>
+          </select>
+        </label>
 
-          <div>
-            <label>예산 범위 *</label>
-            <select name="budget" required>
-              <option value="">선택</option>
-              <option>50만원 ~ 100만원</option>
-              <option>100만원 ~ 200만원</option>
-              <option>200만원 ~ 300만원</option>
-              <option>300만원 이상</option>
-            </select>
-          </div>
-        </div>
+        <label>
+          희망 촬영 날짜 *
+          <input name="shootDate" type="date" required class="input"/>
+        </label>
 
-        <div class="form-grid">
-          <div>
-            <label>희망 촬영 날짜 *</label>
-            <input name="shootDate" type="date" required/>
-          </div>
-          <div>
-            <label>촬영 장소 *</label>
-            <input name="location" required placeholder="예) 부산 / 서울 / 제주"/>
-          </div>
-        </div>
+        <label>
+          촬영 장소 *
+          <input name="location" required class="input" placeholder="예: 부산 / 서울 등"/>
+        </label>
 
-        <div>
-          <label>레퍼런스 링크 (드라이브/유튜브/핀터레스트 등)</label>
-          <input name="referenceLink" placeholder="https://..."/>
-        </div>
+        <label style="grid-column:1/-1">
+          레퍼런스 링크 (드라이브/유튜브/핀터레스트 등)
+          <input name="referenceLink" class="input" placeholder="https://..."/>
+        </label>
 
-        <div>
-          <label>이미지 파일 (최대 5개)</label>
-          <input name="images" type="file" accept="image/*" multiple/>
-          <div class="small" style="margin-top:6px">
-            * 파일은 메타 정보만 저장됩니다. 원본은 카톡/드라이브 링크로 전달 부탁!
-          </div>
-          <ul id="fileList" class="small" style="margin:6px 0 0 0; padding-left:16px"></ul>
-        </div>
+        <label style="grid-column:1/-1">
+          이미지 파일 (최대 5개)
+          <input id="images" name="images" type="file" multiple accept="image/*" class="input"/>
+          <div id="imagesHelp" class="small" style="margin-top:6px"></div>
+        </label>
 
-        <div>
-          <label>요청 내용 *</label>
-          <textarea name="message" required placeholder="원하는 분위기 / 참고 사항 등"></textarea>
-        </div>
+        <label style="grid-column:1/-1">
+          요청 내용 *
+          <textarea name="message" required class="input textarea" rows="5" placeholder="원하는 분위기, 참고사항 등"></textarea>
+        </label>
+      </div>
 
-        <div class="form-actions">
-          <button class="btn primary" type="submit">예약 제출</button>
-          <button class="btn ghost" type="reset">초기화</button>
-        </div>
-
-        <div id="status" class="small" style="margin-top:8px"></div>
-      </form>
-    </section>
+      <button class="cta wide" type="submit">예약 제출</button>
+      <div id="status" class="small" style="margin-top:10px"></div>
+    </form>
   </main>
 
   <script type="module">
     const form = document.querySelector("#form");
     const statusEl = document.querySelector("#status");
-    const imagesInput = form.elements.images;
-    const fileList = document.querySelector("#fileList");
+    const imagesInput = document.querySelector("#images");
+    const imagesHelp = document.querySelector("#imagesHelp");
 
     imagesInput.addEventListener("change", ()=>{
-      fileList.innerHTML="";
-      [...imagesInput.files].slice(0,5).forEach(f=>{
-        const li=document.createElement("li");
-        li.textContent=`${f.name} (${Math.round(f.size/1024)}KB)`;
-        fileList.appendChild(li);
-      });
+      const files = [...imagesInput.files].slice(0,5);
+      if(imagesInput.files.length > 5){
+        imagesHelp.textContent = "이미지는 최대 5개까지! 초과분은 자동 제외됨.";
+      } else {
+        imagesHelp.textContent = files.length ? `${files.length}장 선택됨` : "";
+      }
     });
 
     form.addEventListener("submit", async (e)=>{
       e.preventDefault();
-      statusEl.textContent="전송 중...";
+      statusEl.textContent = "전송 중...";
 
       const fd = new FormData(form);
       const files = [...imagesInput.files].slice(0,5);
-      // 파일은 업로드하지 않고 이름만 text로 저장
+      const fileMeta = files.map(f=>({name:f.name, size:f.size, type:f.type}));
       fd.delete("images");
-      fd.set("imagesMeta", files.map(f=>f.name).join(", "));
+      fd.append("imagesMeta", JSON.stringify(fileMeta));
 
       const payload = Object.fromEntries(fd.entries());
 
@@ -156,12 +143,12 @@
           body: JSON.stringify(payload)
         });
         const out = await res.json();
-        if(!res.ok) throw new Error(out?.message || "submit fail");
-        statusEl.textContent="예약 완료! 확인 후 카톡/메일로 연락드릴게요.";
+        if(!res.ok) throw new Error(out?.message || "예약 실패");
+        statusEl.textContent = "예약 완료! 확인 후 연락드릴게요.";
         form.reset();
-        fileList.innerHTML="";
+        imagesHelp.textContent="";
       }catch(err){
-        statusEl.textContent="예약 실패: Notion stillcut fetch error";
+        statusEl.textContent = "예약 실패: " + err.message;
       }
     });
   </script>
