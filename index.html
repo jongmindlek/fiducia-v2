@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link rel="stylesheet" href="./styles.css"/>
+  <link rel="stylesheet" href="./style.css"/>
   <title>Fiducia Collective</title>
 </head>
 <body>
   <nav class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="./index.html" aria-label="Fiducia Collective">
-        <span class="brand-top">Fiducia</span>
-        <span class="brand-bottom">COLLECTIVE</span>
+      <a class="brand" href="./index.html" aria-label="Fiducia Collective 홈">
+        <div class="brand-title">Fiducia</div>
+        <div class="brand-sub">COLLECTIVE</div>
       </a>
       <div class="nav-links">
         <a class="tab active" href="./index.html">메인</a>
@@ -23,13 +23,7 @@
     </div>
   </nav>
 
-  <header class="hero container">
-    <!-- 메인 중앙 텍스트 로고 -->
-    <div class="hero-logo" aria-hidden="true">
-      <div class="hero-logo-top">Fiducia</div>
-      <div class="hero-logo-bottom">COLLECTIVE</div>
-    </div>
-
+  <header class="hero container hero-center">
     <h1 class="hero-title">신뢰를<br/>디자인하는<br/>프로덕션 플랫폼</h1>
     <div class="sub">Trust isn't what follows art. It's where art begins.</div>
     <a class="cta" href="./crew.html">Director's Market</a>
@@ -44,7 +38,7 @@
         <div id="worksEmpty" class="small" style="display:none;margin-top:8px">표시할 작업이 아직 없어요.</div>
       </section>
 
-      <section class="card" style="grid-column: span 12;">
+      <section class="card hero-center" style="grid-column: span 12;">
         <h3>'Fiducia collective'란?</h3>
         <p>
           AI 기반 시각화 기술과 검증된 감독 네트워크를 결합해<br/>
@@ -59,8 +53,8 @@
     <div class="container row" style="justify-content:space-between">
       <div>© Fiducia Collective</div>
       <div class="row">
-        <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-        <a href="mailto:hello@fiducia.com">Contact</a>
+        <a class="small" href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+        <span class="small">Contact: DM 주세요</span>
       </div>
     </div>
   </footer>
@@ -71,22 +65,25 @@
 
     const thumb = (url) => url
       ? `<img src="${url}" alt="thumbnail" loading="lazy"/>`
-      : `<div class="thumb noimg">no image</div>`;
+      : `<div class="thumb"><span class="small">no image</span></div>`;
 
     async function loadWorks(){
       worksEl.innerHTML = "";
       try{
         const res = await fetch("/api/works");
-        const works = await res.json();
-        if(!Array.isArray(works) || works.length===0){
+        const data = await res.json();
+        const works = Array.isArray(data) ? data : [];
+        if(works.length===0){
           emptyEl.style.display="block";
           return;
         }
         emptyEl.style.display="none";
         works.forEach(w=>{
           const card = document.createElement("a");
-          card.className="card person";
+          card.className="person";
           card.href = w.url || "#";
+          card.target = "_blank";
+          card.rel = "noreferrer";
           card.innerHTML = `
             <div class="thumb">${thumb(w.thumbnailUrl)}</div>
             <div class="name">${w.title || "Untitled"}</div>
