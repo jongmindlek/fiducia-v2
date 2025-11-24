@@ -1,82 +1,79 @@
-const { Client } = require("@notionhq/client");
+// ===============================
+//  AI STILLCUT RESERVATION JS
+// ===============================
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
+console.log("stillcut.js loaded");
 
-// 안전하게 둘 다 지원(혹시 env 이름 다르게 넣었을 때 대비)
-const DB_ID = process.env.STILLCUT_DB_ID || process.env.STILL_DB_ID;
+// 폼 요소들
+const form = document.querySelector("#form");
+const statusEl = document.querySelector("#status");
+const imagesInput = document.querySelector("#images");
+const fileNamesEl = document.querySelector("#fileNames");
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+// -------------------------------
+// 이미지 선택 시 메타정보 업데이트
+// -------------------------------
+imagesInput.addEventListener("change", () => {
+  const files = [...imagesInput.files].slice(0, 5);
+
+  fileNamesEl.innerHTML = files
+    .map((f) => `• ${f.name} (${Math.round(f.size / 1024)}KB)`)
+    .join("<br/>");
+
+  if (imagesInput.files.length > 5) {
+    statusEl.textContent = "이미지는 최대 5개까지 선택 가능해요.";
+  } else {
+    statusEl.textContent = "";
   }
+});
+
+// -------------------------------
+// 폼 제출 처리
+// -------------------------------
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  statusEl.textContent = "예약 전송 중...";
+
+  const fd = new FormData(form);
+  const files = [...imagesInput.files].slice(0, 5);
+
+  // JSON 형태로 변환
+  const payload = {
+    projectTitle: fd.get("projectTitle"),
+    phone: fd.get("phone"),
+    email: fd.get("email"),
+    videoType: fd.get("videoType"),
+    runtime: fd.get("runtime"),
+    budgetRange: fd.get("budgetRange"),
+    shootDate: fd.get("shootDate"),
+    location: fd.get("location"),
+    referenceLink: fd.get("referenceLink"),
+    message: fd.get("message"),
+    images: files.map((f) => ({
+      name: f.name,
+      size: f.size,
+      type: f.type,
+    })),
+  };
 
   try {
-    const data = JSON.parse(event.body || "{}");
-
-    const imagesMeta = Array.isArray(data.images)
-      ? data.images
-          .slice(0,5)
-          .map(f => `${f.name} (${Math.round(f.size/1024)}KB)`)
-          .join(", ")
-      : "";
-
-    const props = {
-      "ProjectTitle": {
-        title: [{ text: { content: data.projectTitle || "AI Stillcut" } }]
-      },
-      "Phone": data.phone
-        ? { phone_number: data.phone }
-        : undefined,
-      "Email": data.email
-        ? { email: data.email }
-        : undefined,
-      "Video Type": data.videoType
-        ? { select: { name: data.videoType } }
-        : undefined,
-      "Runtime": data.runtime
-        ? { rich_text: [{ text: { content: String(data.runtime) } }] }
-        : undefined,
-      "Budget": data.budgetRange
-        ? { select: { name: data.budgetRange } }
-        : undefined,
-      "Shoot Date": data.shootDate
-        ? { date: { start: data.shootDate } }
-        : undefined,
-      "Location": data.location
-        ? { rich_text: [{ text: { content: data.location } }] }
-        : undefined,
-      "Reference Link": data.referenceLink
-        ? { url: data.referenceLink }
-        : undefined,
-      "Images": imagesMeta
-        ? { rich_text: [{ text: { content: imagesMeta } }] }
-        : undefined,
-      "Message": data.message
-        ? { rich_text: [{ text: { content: data.message } }] }
-        : undefined,
-      "Status": { select: { name: "New" } }
-    };
-
-    Object.keys(props).forEach(k => props[k] === undefined && delete props[k]);
-
-    await notion.pages.create({
-      parent: { database_id: DB_ID },
-      properties: props
+    const res = await fetch("/api/stillcut-reservation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
 
-    return {
-      statusCode: 200,
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ ok: true })
-    };
-  } catch (e) {
-    return {
-      statusCode: 500,
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({
-        message: "Notion stillcut error",
-        details: e.message
-      })
-    };
+    const out = await res.json();
+
+    if (!res.ok) throw new Error(out?.message || "예약 실패");
+
+    // 성공 UI 처리
+    statusEl.textContent = "예약 완료! 확인 후 연락드릴게요.";
+
+    form.reset();
+    imagesInput.value = "";
+    fileNamesEl.innerHTML = "";
+  } catch (err) {
+    statusEl.textContent = "예약 실패: " + err.message;
   }
-};
+});
