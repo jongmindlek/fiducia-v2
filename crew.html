@@ -15,53 +15,72 @@
         <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
         <a class="tab" href="./gear.html">장비 예약</a>
         <a class="tab active" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
       </div>
     </div>
   </nav>
 
   <main class="container section">
-    <h2>crew</h2>
+    <h2 style="margin-bottom:12px;">crew</h2>
 
-    <section class="card" style="margin-top:12px">
-      <div class="row" style="gap:8px; flex-wrap:wrap">
-        <input id="q" class="input" placeholder="이름/키워드 검색" style="flex:1; min-width:160px"/>
-        <select id="skillSel" class="select">
+    <section class="card soft" style="grid-column: span 12; margin-bottom:12px;">
+      <div class="filters">
+        <input id="q" class="input" placeholder="이름/키워드 검색"/>
+        <select id="skill">
           <option value="">Skill 전체</option>
         </select>
-        <select id="roleSel" class="select">
+        <select id="role">
           <option value="">Role 전체</option>
-          <option value="director">director</option>
-          <option value="staff">staff</option>
         </select>
-        <label class="row small" style="gap:6px">
-          <input id="verifiedOnly" type="checkbox"/>
-          Verified만
-        </label>
       </div>
+
+      <label class="checkline">
+        <input id="onlyVerified" type="checkbox"/>
+        <span>Verified만</span>
+      </label>
     </section>
 
-    <section class="section">
+    <section class="card" style="margin-bottom:12px;">
       <h3>Directors</h3>
       <div id="directors" class="list"></div>
-      <div id="directorsEmpty" class="small" style="display:none">Director 없음</div>
+      <div id="directorsEmpty" class="small" style="margin-top:8px; display:none;">Director 없음</div>
     </section>
 
-    <section class="section">
+    <section class="card">
       <h3>Staff</h3>
       <div id="staff" class="list"></div>
-      <div id="staffEmpty" class="small" style="display:none">Staff 없음</div>
+      <div id="staffEmpty" class="small" style="margin-top:8px; display:none;">Staff 없음</div>
     </section>
 
-    <section class="section card" id="register">
+    <section id="register" class="card soft" style="margin-top:14px;">
       <h3>crew register</h3>
-      <p class="small">
-        감독/스태프 등록은 먼저 정보 접수 → 카톡으로 면접 조율 → 승인 후 등록되는 방식입니다.
+      <p class="muted">
+        감독/스태프 등록은 <b>면접 후 “Verified” 처리된 분만</b> 리스트에 노출됩니다.<br/>
+        아래 버튼으로 지원 정보를 <b>개인 카톡</b>으로 보내주세요.
       </p>
-      <a class="cta" href="https://open.kakao.com/o/여기에너링크" target="_blank">
-        내 카톡으로 정보 보내기
+
+      <!-- TODO: 여기 카카오톡 링크만 네 개인 링크로 교체 -->
+      <a class="btn" style="display:inline-flex;align-items:center;justify-content:center;margin-top:12px;text-decoration:none;"
+         href="https://open.kakao.com/o/여기네링크"
+         target="_blank" rel="noreferrer">
+        카톡으로 지원정보 보내기
       </a>
+
+      <div class="notice" style="margin-top:10px;">
+        보내야 할 정보: 이름 / 역할(감독 or 스태프) / 스킬 / 포폴 링크 / 연락처 / 간단 소개
+      </div>
     </section>
   </main>
+
+  <footer class="footer">
+    <div class="container row" style="justify-content:space-between">
+      <div>© Fiducia Collective</div>
+      <div class="row">
+        <span>Instagram</span>
+        <span>Contact</span>
+      </div>
+    </div>
+  </footer>
 
   <script type="module">
     const directorsEl = document.querySelector("#directors");
@@ -70,76 +89,122 @@
     const staffEmpty = document.querySelector("#staffEmpty");
 
     const qEl = document.querySelector("#q");
-    const skillSel = document.querySelector("#skillSel");
-    const roleSel = document.querySelector("#roleSel");
-    const verifiedOnly = document.querySelector("#verifiedOnly");
+    const skillEl = document.querySelector("#skill");
+    const roleEl = document.querySelector("#role");
+    const onlyVerifiedEl = document.querySelector("#onlyVerified");
 
-    let data = [];
+    let crews = [];
 
-    function cardHTML(p){
-      const img = p.profileImageUrl
-        ? `<img src="${p.profileImageUrl}" alt="" loading="lazy"/>`
-        : `<div class="thumb">no image</div>`;
+    const thumb = (url) => url
+      ? `<img src="${url}" alt="thumbnail" loading="lazy"/>`
+      : `<div class="thumb">no image</div>`;
 
-      return `
-        <a class="card person" href="./crew-detail.html?id=${p.id}">
-          <div class="thumb">${img}</div>
-          <div class="name">${p.name || "Unnamed"}</div>
-          <div class="small">${p.bio || ""}</div>
-          <div class="tags">
-            ${p.roles.map(r => `<span class="tag">${r}</span>`).join("")}
-            ${p.skills.map(s => `<span class="tag">${s}</span>`).join("")}
-            ${p.verified ? `<span class="tag">Verified</span>` : ""}
-          </div>
-        </a>
-      `;
+    function uniq(list){ return [...new Set(list.filter(Boolean))]; }
+
+    function fillOptions(){
+      const skills = uniq(crews.flatMap(c => c.skills || []));
+      const roles = uniq(crews.flatMap(c => c.roles || []));
+      skills.forEach(s=>{
+        const opt=document.createElement("option");
+        opt.value=s; opt.textContent=s;
+        skillEl.appendChild(opt);
+      });
+      roles.forEach(r=>{
+        const opt=document.createElement("option");
+        opt.value=r; opt.textContent=r;
+        roleEl.appendChild(opt);
+      });
     }
 
-    function render(){
-      const q = qEl.value.trim().toLowerCase();
-      const sk = skillSel.value;
-      const rl = roleSel.value;
-      const ver = verifiedOnly.checked;
+    function applyFilter(){
+      const q = (qEl.value||"").toLowerCase().trim();
+      const skill = skillEl.value;
+      const role = roleEl.value;
+      const onlyVerified = onlyVerifiedEl.checked;
 
-      const filtered = data.filter(p=>{
-        if (q && !(p.name||"").toLowerCase().includes(q) && !(p.bio||"").toLowerCase().includes(q)) return false;
-        if (sk && !p.skills.includes(sk)) return false;
-        if (rl && p.mainRole !== rl) return false;
-        if (ver && !p.verified) return false;
+      const filtered = crews.filter(c=>{
+        const name = (c.name||"").toLowerCase();
+        const bio = (c.bio||"").toLowerCase();
+        const kws = [name,bio,(c.skills||[]).join(" ").toLowerCase(),(c.roles||[]).join(" ").toLowerCase()].join(" ");
+
+        if(q && !kws.includes(q)) return false;
+        if(skill && !(c.skills||[]).includes(skill)) return false;
+        if(role && !(c.roles||[]).includes(role)) return false;
+        if(onlyVerified && !c.verified) return false;
         return true;
       });
 
-      const dirs = filtered.filter(x=>x.mainRole==="director");
-      const stf  = filtered.filter(x=>x.mainRole==="staff");
-
-      directorsEl.innerHTML = dirs.map(cardHTML).join("");
-      staffEl.innerHTML = stf.map(cardHTML).join("");
-
-      directorsEmpty.style.display = dirs.length ? "none" : "block";
-      staffEmpty.style.display = stf.length ? "none" : "block";
+      render(filtered);
     }
 
-    async function load(){
-      const res = await fetch("/api/crew");
-      data = await res.json();
+    function render(list){
+      directorsEl.innerHTML = "";
+      staffEl.innerHTML = "";
 
-      // skill 옵션 채우기
-      const allSkills = [...new Set(data.flatMap(x => x.skills || []))].sort();
-      allSkills.forEach(s=>{
-        const opt = document.createElement("option");
-        opt.value = s; opt.textContent = s;
-        skillSel.appendChild(opt);
+      const directors = list.filter(c=>c.mainRole==="director");
+      const staff = list.filter(c=>c.mainRole==="staff");
+
+      directorsEmpty.style.display = directors.length? "none":"block";
+      staffEmpty.style.display = staff.length? "none":"block";
+
+      directors.forEach(c=>{
+        const a=document.createElement("a");
+        a.className="card person";
+        a.href=`./crew-detail.html?id=${encodeURIComponent(c.id)}`;
+        a.innerHTML=`
+          <div class="thumb">${thumb(c.profileImageUrl)}</div>
+          <div class="name">${c.name||"Unnamed"}</div>
+          <div class="small">${c.bio||""}</div>
+          <div class="tags">
+            ${(c.roles||[]).map(r=>`<span class="tag">${r}</span>`).join("")}
+            ${(c.skills||[]).map(s=>`<span class="tag">${s}</span>`).join("")}
+            ${c.verified?`<span class="tag">Verified</span>`:""}
+          </div>
+        `;
+        directorsEl.appendChild(a);
       });
 
-      render();
+      staff.forEach(c=>{
+        const a=document.createElement("a");
+        a.className="card person";
+        a.href=`./crew-detail.html?id=${encodeURIComponent(c.id)}`;
+        a.innerHTML=`
+          <div class="thumb">${thumb(c.profileImageUrl)}</div>
+          <div class="name">${c.name||"Unnamed"}</div>
+          <div class="small">${c.bio||""}</div>
+          <div class="tags">
+            ${(c.roles||[]).map(r=>`<span class="tag">${r}</span>`).join("")}
+            ${(c.skills||[]).map(s=>`<span class="tag">${s}</span>`).join("")}
+            ${c.verified?`<span class="tag">Verified</span>`:""}
+          </div>
+        `;
+        staffEl.appendChild(a);
+      });
     }
 
-    [qEl, skillSel, roleSel, verifiedOnly].forEach(el=>{
-      el.addEventListener("input", render);
-      el.addEventListener("change", render);
+    async function loadCrew(){
+      try{
+        const res= await fetch("/api/crew");
+        crews = await res.json();
+        if(!Array.isArray(crews)) crews=[];
+        fillOptions();
+        applyFilter();
+      }catch(e){
+        directorsEmpty.style.display="block";
+        staffEmpty.style.display="block";
+        directorsEmpty.textContent="crew 불러오기 실패";
+        staffEmpty.textContent="crew 불러오기 실패";
+      }
+    }
+
+    ["input","change"].forEach(ev=>{
+      qEl.addEventListener(ev, applyFilter);
+      skillEl.addEventListener(ev, applyFilter);
+      roleEl.addEventListener(ev, applyFilter);
+      onlyVerifiedEl.addEventListener(ev, applyFilter);
     });
 
-    load();
+    loadCrew();
   </script>
 </body>
 </html>
