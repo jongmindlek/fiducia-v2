@@ -1,125 +1,101 @@
 // netlify/functions/crew.js
-import fetch from "node-fetch";
+const { Client } = require("@notionhq/client");
 
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const CREW_DB_ID = process.env.NOTION_CREW_DB_ID;
+const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const CREW_DB_ID = process.env.CREW_DB_ID;
 
-function prop(page, name) {
-  return page.properties?.[name];
+// 안전하게 노션 property 읽기
+function getTitle(prop) {
+  if (!prop || prop.type !== "title") return "";
+  return prop.title.map(t => t.plain_text).join("");
+}
+function getRichText(prop) {
+  if (!prop || prop.type !== "rich_text") return "";
+  return prop.rich_text.map(t => t.plain_text).join("");
+}
+function getSelect(prop) {
+  if (!prop || prop.type !== "select") return "";
+  return prop.select ? prop.select.name : "";
+}
+function getMultiSelect(prop) {
+  if (!prop || prop.type !== "multi_select") return [];
+  return prop.multi_select.map(s => s.name);
+}
+function getCheckbox(prop) {
+  if (!prop || prop.type !== "checkbox") return false;
+  return !!prop.checkbox;
+}
+function getUrl(prop) {
+  if (!prop || prop.type !== "url") return "";
+  return prop.url || "";
+}
+function getEmail(prop) {
+  if (!prop || prop.type !== "email") return "";
+  return prop.email || "";
+}
+function getPhone(prop) {
+  if (!prop || prop.type !== "phone_number") return "";
+  return prop.phone_number || "";
 }
 
-function textProp(page, name) {
-  const p = prop(page, name);
-  if (!p) return "";
-  if (p.type === "title") return p.title?.[0]?.plain_text || "";
-  if (p.type === "rich_text") return p.rich_text?.[0]?.plain_text || "";
-  return "";
-}
-
-function multiSelectProp(page, name) {
-  const p = prop(page, name);
-  if (!p || p.type !== "multi_select") return [];
-  return p.multi_select.map(x => x.name);
-}
-
-function selectProp(page, name) {
-  const p = prop(page, name);
-  if (!p || p.type !== "select") return "";
-  return p.select?.name || "";
-}
-
-function checkboxProp(page, name) {
-  const p = prop(page, name);
-  if (!p || p.type !== "checkbox") return false;
-  return !!p.checkbox;
-}
-
-function urlProp(page, name) {
-  const p = prop(page, name);
-  if (!p || p.type !== "url") return "";
-  return p.url || "";
-}
-
-function filesProp(page, name) {
-  const p = prop(page, name);
-  if (!p || p.type !== "files") return "";
-  const f = p.files?.[0];
-  if (!f) return "";
-  if (f.type === "external") return f.external?.url || "";
-  if (f.type === "file") return f.file?.url || "";
-  return "";
-}
-
-export const handler = async () => {
+exports.handler = async (event) => {
   try {
-    if (!NOTION_TOKEN || !CREW_DB_ID) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          message: "Missing NOTION_TOKEN or NOTION_CREW_DB_ID",
-        }),
+    if (event.httpMethod !== "GET") {
+      return { statusCode: 405, body: "Method Not Allowed" };
+    }
+
+    const url = new URL(event.rawUrl);
+    const verifiedOnly = url.searchParams.get("verifiedOnly") === "1";
+
+    // ✅ Published 같은 존재 불확실한 필터 절대 쓰지 않음
+    const queryPayload = {
+      database_id: CREW_DB_ID,
+      page_size: 100,
+    };
+
+    // VerifiedOnly=1일 때만 Verified 필터, 없으면 그냥 통과
+    if (verifiedOnly) {
+      queryPayload.filter = {
+        property: "Verified",
+        checkbox: { equals: true },
       };
     }
 
-    const notionRes = await fetch(
-      `https://api.notion.com/v1/databases/${CREW_DB_ID}/query`,
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${NOTION_TOKEN}`,
-          "Notion-Version": "2022-06-28",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          page_size: 100,
-          sorts: [
-            { property: "Name", direction: "ascending" },
-          ],
-        }),
-      }
-    );
+    const res = await notion.databases.query(queryPayload);
 
-    const json = await notionRes.json();
+    const items = res.results.map(page => {
+      const p = page.properties;
 
-    if (!notionRes.ok) {
-      return {
-        statusCode: notionRes.status,
-        body: JSON.stringify({
-          message: "Notion crew fetch error",
-          details: json,
-        }),
-      };
-    }
-
-    const results = (json.results || []).map((page) => {
       return {
         id: page.id,
-        name: textProp(page, "Name") || textProp(page, "Title"),
-        mainRole: selectProp(page, "MainRole") || selectProp(page, "Role") || "staff",
-        roles: multiSelectProp(page, "Roles"),
-        skills: multiSelectProp(page, "Skills"),
-        bio: textProp(page, "Bio"),
-        instagram: urlProp(page, "Instagram"),
-        phone: textProp(page, "Phone"),
-        email: textProp(page, "Email"),
-        profileImageUrl: filesProp(page, "ProfileImage") || filesProp(page, "Profile Image"),
-        // verified 값은 남겨두되 UI에서는 안 씀
-        verified: checkboxProp(page, "Verified"),
+        name: getTitle(p.Name) || getTitle(p.Title) || getRichText(p.NameText),
+        mainRole: getSelect(p["Main Role"]) || getSelect(p.Role) || getSelect(p.MainRole),
+        roles: getMultiSelect(p.Roles) || getMultiSelect(p.RoleTags),
+        skills: getMultiSelect(p.Skills),
+        bio: getRichText(p.Bio),
+        instagram: getUrl(p.Instagram),
+        phone: getPhone(p.Phone),
+        email: getEmail(p.Email),
+        profileImageUrl: getUrl(p.ProfileImage) || getUrl(p.Image),
+        verified: getCheckbox(p.Verified), // 화면에서 뱃지는 안 씀, 데이터만 유지
       };
     });
 
     return {
       statusCode: 200,
-      body: JSON.stringify(results),
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(items),
     };
-
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
     return {
       statusCode: 500,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: "Server error",
-        details: e.message,
+        message: "Notion crew fetch error",
+        details: err?.message || String(err),
       }),
     };
   }
