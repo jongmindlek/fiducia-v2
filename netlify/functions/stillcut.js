@@ -1,64 +1,88 @@
-// stillcut.js (public root)
+// stillcut.js
 
-// 요소 참조
 const form = document.querySelector("#stillcutForm");
-const fileInput = document.querySelector("#images");
-const fileListEl = document.querySelector("#fileList");
-const statusEl = document.querySelector("#submitStatus");
+const statusEl = document.querySelector("#status");
+const submitBtn = document.querySelector("#submitBtn");
+const fileHint = document.querySelector("#fileHint");
+const fileInput = form.querySelector('input[name="images"]');
 
-// 파일 리스트 UI
-const renderFiles = () => {
-  fileListEl.innerHTML = "";
-  const files = Array.from(fileInput.files || []);
-  if (files.length === 0) return;
+function setStatus(msg, isError=false){
+  statusEl.textContent = msg || "";
+  statusEl.style.color = isError ? "#ff9a9a" : "#b8c7ff";
+}
 
-  files.slice(0, 5).forEach(f => {
-    const li = document.createElement("li");
-    li.textContent = `${f.name} (${Math.round(f.size/1024)}KB)`;
-    fileListEl.appendChild(li);
-  });
-};
+function getFileMeta(files){
+  return [...files].slice(0,5).map(f => ({
+    name: f.name,
+    sizeKB: Math.round(f.size/1024),
+    type: f.type
+  }));
+}
 
-fileInput?.addEventListener("change", renderFiles);
+fileInput.addEventListener("change", ()=>{
+  const files = fileInput.files || [];
+  const meta = getFileMeta(files);
+  if(meta.length === 0){
+    fileHint.textContent = "";
+    return;
+  }
+  fileHint.innerHTML = `
+    선택된 파일(${meta.length}/5):
+    <ul style="margin:6px 0 0 16px; padding:0;">
+      ${meta.map(m=>`<li>${m.name} (${m.sizeKB}KB)</li>`).join("")}
+    </ul>
+  `;
+});
 
-form?.addEventListener("submit", async (e) => {
+form.addEventListener("submit", async (e)=>{
   e.preventDefault();
-  statusEl.textContent = "예약 전송 중...";
+  setStatus("");
 
   const fd = new FormData(form);
-
   const payload = {
-    title: fd.get("title")?.toString().trim(),
+    projectTitle: fd.get("projectTitle")?.toString().trim(),
     phone: fd.get("phone")?.toString().trim(),
     email: fd.get("email")?.toString().trim(),
-    projectTitle: fd.get("projectTitle")?.toString().trim(),
     videoType: fd.get("videoType")?.toString(),
-    runtime: fd.get("runtime")?.toString(),
+    runtime: Number(fd.get("runtime")),
     budget: fd.get("budget")?.toString(),
     shootDate: fd.get("shootDate")?.toString(),
     location: fd.get("location")?.toString().trim(),
     referenceLink: fd.get("referenceLink")?.toString().trim(),
+    imagesMeta: getFileMeta(fileInput.files || []),
     message: fd.get("message")?.toString().trim(),
-    imagesMeta: Array.from(fileInput.files || [])
-      .slice(0, 5)
-      .map(f => `${f.name}:${Math.round(f.size/1024)}KB`)
   };
 
-  try {
+  // 기본 검증
+  if(!payload.projectTitle || !payload.phone || !payload.email || !payload.videoType ||
+     !payload.runtime || !payload.budget || !payload.shootDate || !payload.location || !payload.message){
+    setStatus("필수 항목을 확인해줘!", true);
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "전송 중...";
+
+  try{
     const res = await fetch("/api/stillcut", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
       body: JSON.stringify(payload)
     });
+    const data = await res.json().catch(()=> ({}));
 
-    const out = await res.json();
-    if (!res.ok) throw new Error(out?.details || out?.message || "unknown");
+    if(!res.ok){
+      throw new Error(data?.details || data?.message || "Notion stillcut error");
+    }
 
+    setStatus("예약 완료! 곧 연락할게요 🙂");
     form.reset();
-    renderFiles();
-
-    statusEl.textContent = "예약 완료! 곧 카톡/메일로 안내드릴게요.";
-  } catch (err) {
-    statusEl.textContent = `예약 실패: ${err.message}`;
+    fileHint.textContent = "";
+  }catch(err){
+    console.error(err);
+    setStatus("예약 실패: " + err.message, true);
+  }finally{
+    submitBtn.disabled = false;
+    submitBtn.textContent = "예약 제출";
   }
 });
