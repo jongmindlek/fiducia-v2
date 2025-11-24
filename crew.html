@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link rel="stylesheet" href="./style.css"/>
+  <link rel="stylesheet" href="./styles.css"/>
   <title>Crew | Fiducia Collective</title>
 </head>
 <body>
-
   <nav class="nav">
     <div class="container nav-inner">
-      <div class="brand">
-        <img src="/mnt/data/2DB68B72-078E-4BBD-B3EF-C2810A77E226.jpeg" alt="Fiducia Collective logo">
-      </div>
+      <a class="brand" href="./index.html">
+        <span class="brand-top">Fiducia</span>
+        <span class="brand-bottom">COLLECTIVE</span>
+      </a>
       <div class="nav-links">
         <a class="tab" href="./index.html">메인</a>
         <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
@@ -24,167 +24,151 @@
   </nav>
 
   <main class="container section">
+    <h1 class="page-title">crew</h1>
+
     <section class="card">
-      <h3>crew</h3>
-
-      <div class="form" style="margin-top:8px">
-        <input id="q" placeholder="이름/키워드 검색"/>
-
-        <div class="form-grid">
-          <select id="skillSel">
-            <option value="">Skill 전체</option>
-          </select>
-          <select id="roleSel">
-            <option value="">Role 전체</option>
-            <option value="director">Director</option>
-            <option value="staff">Staff</option>
-          </select>
-        </div>
-
-        <label class="row" style="gap:8px">
-          <input id="verifiedOnly" type="checkbox" style="width:auto"/>
-          Verified만
+      <div class="filters">
+        <input id="q" class="input" placeholder="이름/키워드 검색"/>
+        <select id="skill" class="input">
+          <option value="">Skill 전체</option>
+        </select>
+        <select id="role" class="input">
+          <option value="">Role 전체</option>
+          <option value="director">Director</option>
+          <option value="staff">Staff</option>
+        </select>
+        <label class="checkbox">
+          <input type="checkbox" id="verifiedOnly"/>
+          <span>Verified만</span>
         </label>
       </div>
     </section>
 
-    <div class="grid" style="margin-top:14px">
-      <section class="card" style="grid-column: span 12;">
-        <h3>Directors</h3>
-        <div id="directors" class="list" style="margin-top:12px"></div>
-        <div id="directorsEmpty" class="small" style="display:none;margin-top:8px">Director 없음</div>
-      </section>
+    <section class="crew-section">
+      <h2>Directors</h2>
+      <div id="directors" class="list"></div>
+      <div id="directorsEmpty" class="small empty">Director 없음</div>
+    </section>
 
-      <section class="card" style="grid-column: span 12;">
-        <h3>Staff</h3>
-        <div id="staff" class="list" style="margin-top:12px"></div>
-        <div id="staffEmpty" class="small" style="display:none;margin-top:8px">Staff 없음</div>
-      </section>
+    <section class="crew-section">
+      <h2>Staff</h2>
+      <div id="staff" class="list"></div>
+      <div id="staffEmpty" class="small empty">Staff 없음</div>
+    </section>
 
-      <section id="register" class="card" style="grid-column: span 12;">
-        <h3>crew register</h3>
-        <p class="small">
-          감독/스태프 등록은 면접 후 “Verified” 처리된 분만 리스트에 노출됩니다.<br/>
-          아래 버튼으로 지원 정보를 개인 카톡으로 보내주세요.
-        </p>
-
-        <div class="form-actions">
-          <a id="kakaoApply" class="btn primary" href="#">카톡으로 지원정보 보내기</a>
-        </div>
-
-        <div class="small" style="margin-top:8px; padding:10px; border:1px dashed var(--border); border-radius:12px;">
-          보내야 할 정보: 이름 / 역할(감독 or 스태프) / 스킬 / 포폴 링크 / 연락처 / 간단 소개
-        </div>
-      </section>
-    </div>
+    <section id="register" class="card register-card">
+      <h3>crew register</h3>
+      <p class="small">
+        감독/스태프 등록은 면접 후 “Verified” 처리된 분만 리스트에 노출됩니다.<br/>
+        아래 버튼으로 지원 정보를 <b>개인 카톡(나에게)</b>으로 보내주세요.
+      </p>
+      <a class="cta wide" id="kakaoBtn" href="#" target="_blank" rel="noreferrer">
+        카톡으로 지원정보 보내기
+      </a>
+      <div class="hint small">
+        보내야 할 정보: 이름 / 역할(감독 or 스태프) / 스킬 / 포폴 링크 / 연락처 / 간단 소개
+      </div>
+    </section>
   </main>
 
   <script type="module">
-    const dEl = document.querySelector("#directors");
-    const sEl = document.querySelector("#staff");
-    const dEmpty = document.querySelector("#directorsEmpty");
-    const sEmpty = document.querySelector("#staffEmpty");
-    const qEl = document.querySelector("#q");
-    const skillSel = document.querySelector("#skillSel");
-    const roleSel = document.querySelector("#roleSel");
-    const verifiedOnlyEl = document.querySelector("#verifiedOnly");
+    const $ = (s)=>document.querySelector(s);
+    const directorsEl = $("#directors");
+    const staffEl = $("#staff");
+    const directorsEmpty = $("#directorsEmpty");
+    const staffEmpty = $("#staffEmpty");
+    const qEl = $("#q");
+    const skillEl = $("#skill");
+    const roleEl = $("#role");
+    const verifiedOnlyEl = $("#verifiedOnly");
 
-    let CREW = [];
-
-    const thumb = (url) => url
-      ? `<img src="${url}" alt="profile" loading="lazy"/>`
-      : `<div class="thumb">no image</div>`;
+    let crew = [];
 
     function render(){
       const q = qEl.value.trim().toLowerCase();
-      const skill = skillSel.value;
-      const role = roleSel.value;
+      const skill = skillEl.value;
+      const role = roleEl.value;
       const verifiedOnly = verifiedOnlyEl.checked;
 
-      let filtered = CREW.filter(c=>{
-        const text = [c.name, c.bio, ...(c.skills||[]), ...(c.roles||[])].join(" ").toLowerCase();
-        if(q && !text.includes(q)) return false;
-        if(skill && !(c.skills||[]).includes(skill)) return false;
-        if(role && c.mainRole !== role) return false;
-        if(verifiedOnly && !c.verified) return false;
+      const filtered = crew.filter(p=>{
+        if(verifiedOnly && !p.verified) return false;
+        if(role && p.mainRole !== role) return false;
+        if(skill && !(p.skills||[]).includes(skill)) return false;
+        if(q){
+          const blob = [
+            p.name, p.bio, p.mainRole,
+            ...(p.skills||[]), ...(p.roles||[])
+          ].join(" ").toLowerCase();
+          if(!blob.includes(q)) return false;
+        }
         return true;
       });
 
-      const directors = filtered.filter(c=>c.mainRole==="director");
-      const staff = filtered.filter(c=>c.mainRole==="staff");
+      const directors = filtered.filter(p=>p.mainRole==="director");
+      const staff = filtered.filter(p=>p.mainRole==="staff");
 
-      dEl.innerHTML = "";
-      sEl.innerHTML = "";
-
-      directors.forEach(c=>{
-        const a = document.createElement("a");
-        a.className="card person";
-        a.href = c.detailUrl || "./crew-detail.html?id="+c.id;
-        a.innerHTML = `
-          <div class="thumb">${thumb(c.profileImageUrl)}</div>
-          <div class="name">${c.name || "이름 없음"}</div>
-          <div class="small">${c.bio || ""}</div>
-          <div class="tags">
-            ${(c.roles||[]).map(r=>`<span class="tag">${r}</span>`).join("")}
+      const cardHTML = (p)=>`
+        <a class="card person" href="./crew-detail.html?id=${p.id}">
+          <div class="thumb">
+            ${
+              p.profileImageUrl
+                ? `<img src="${p.profileImageUrl}" alt="${p.name}" loading="lazy"/>`
+                : `<div class="thumb noimg">no image</div>`
+            }
           </div>
-        `;
-        dEl.appendChild(a);
-      });
-
-      staff.forEach(c=>{
-        const a = document.createElement("a");
-        a.className="card person";
-        a.href = c.detailUrl || "./crew-detail.html?id="+c.id;
-        a.innerHTML = `
-          <div class="thumb">${thumb(c.profileImageUrl)}</div>
-          <div class="name">${c.name || "이름 없음"}</div>
-          <div class="small">${c.bio || ""}</div>
+          <div class="name">${p.name || "이름 없음"}</div>
+          <div class="small">${p.bio || ""}</div>
           <div class="tags">
-            ${(c.roles||[]).map(r=>`<span class="tag">${r}</span>`).join("")}
+            ${(p.roles||[]).map(r=>`<span class="tag">${r}</span>`).join("")}
+            ${(p.skills||[]).map(s=>`<span class="tag outline">${s}</span>`).join("")}
+            ${p.verified ? `<span class="tag verified">Verified</span>` : ""}
           </div>
-        `;
-        sEl.appendChild(a);
-      });
+        </a>
+      `;
 
-      dEmpty.style.display = directors.length ? "none":"block";
-      sEmpty.style.display = staff.length ? "none":"block";
+      directorsEl.innerHTML = directors.map(cardHTML).join("");
+      staffEl.innerHTML = staff.map(cardHTML).join("");
+
+      directorsEmpty.style.display = directors.length ? "none" : "block";
+      staffEmpty.style.display = staff.length ? "none" : "block";
+    }
+
+    function fillSkillOptions(){
+      const set = new Set();
+      crew.forEach(p => (p.skills||[]).forEach(s=>set.add(s)));
+      [...set].sort().forEach(s=>{
+        const op=document.createElement("option");
+        op.value=s; op.textContent=s;
+        skillEl.appendChild(op);
+      });
     }
 
     async function loadCrew(){
-      dEmpty.style.display="none"; sEmpty.style.display="none";
       try{
         const res = await fetch("/api/crew");
-        const data = await res.json();
-        CREW = Array.isArray(data) ? data : [];
-
-        // skills 옵션 만들기
-        const skillSet = new Set();
-        CREW.forEach(c => (c.skills||[]).forEach(s=>skillSet.add(s)));
-        [...skillSet].sort().forEach(s=>{
-          const opt=document.createElement("option");
-          opt.value=s; opt.textContent=s;
-          skillSel.appendChild(opt);
-        });
-
+        crew = await res.json();
+        if(!Array.isArray(crew)) crew = [];
+        fillSkillOptions();
         render();
       }catch(e){
-        dEmpty.style.display="block"; sEmpty.style.display="block";
-        dEmpty.textContent="Crew 불러오기 실패";
-        sEmpty.textContent="Crew 불러오기 실패";
+        directorsEmpty.textContent="Crew 불러오기 실패";
+        staffEmpty.textContent="Crew 불러오기 실패";
+        directorsEmpty.style.display="block";
+        staffEmpty.style.display="block";
       }
     }
 
-    [qEl, skillSel, roleSel, verifiedOnlyEl].forEach(el=>{
+    [qEl, skillEl, roleEl, verifiedOnlyEl].forEach(el=>{
       el.addEventListener("input", render);
       el.addEventListener("change", render);
     });
 
-    // ✅ 개인 카톡으로 보내기 (네 번호로 바꿔 넣어!)
-    const MY_KAKAO_PHONE = "010-0000-0000";
-    const kakaoApply = document.querySelector("#kakaoApply");
-    kakaoApply.href = `sms:${MY_KAKAO_PHONE}?body=${encodeURIComponent(
-      "지원정보\\n- 이름: \\n- 역할(감독/스태프): \\n- 스킬: \\n- 포폴 링크: \\n- 연락처: \\n- 간단 소개: "
-    )}`;
+    // 개인 카톡으로 보내기 (너 카톡 번호로 바꿔)
+    const KAKAO_TARGET = "010xxxxxxxx"; // <- 여기에 네 번호
+    const msg = encodeURIComponent(
+      "Fiducia Crew 지원합니다.\n이름:\n역할(감독/스태프):\n스킬:\n포폴 링크:\n연락처:\n간단 소개:"
+    );
+    $("#kakaoBtn").href = `sms:${KAKAO_TARGET}?&body=${msg}`;
 
     loadCrew();
   </script>
