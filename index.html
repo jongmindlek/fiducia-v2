@@ -3,16 +3,13 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link rel="stylesheet" href="./style.css"/>
+  <link rel="stylesheet" href="./styles.css"/>
   <title>Fiducia Collective</title>
 </head>
 <body>
   <nav class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="./index.html" aria-label="Fiducia Collective 홈">
-        <div class="brand-title">Fiducia</div>
-        <div class="brand-sub">COLLECTIVE</div>
-      </a>
+      <div class="brand">FIDUCIA COLLECTIVE</div>
       <div class="nav-links">
         <a class="tab active" href="./index.html">메인</a>
         <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
@@ -23,8 +20,13 @@
     </div>
   </nav>
 
-  <header class="hero container hero-center">
-    <h1 class="hero-title">신뢰를<br/>디자인하는<br/>프로덕션 플랫폼</h1>
+  <header class="hero container">
+    <!-- ✅ 로고를 '텍스트 로고'로 중앙에 박기 -->
+    <div class="logo-title">Fiducia</div>
+    <div class="logo-sub">COLLECTIVE</div>
+
+    <!-- ✅ 메인 문구 중앙정렬 -->
+    <h1>신뢰를<br/>디자인하는<br/>프로덕션 플랫폼</h1>
     <div class="sub">Trust isn't what follows art. It's where art begins.</div>
     <a class="cta" href="./crew.html">Director's Market</a>
   </header>
@@ -33,14 +35,14 @@
     <div class="grid">
       <section class="card" style="grid-column: span 12;">
         <h3>recent work</h3>
-        <p>노션에서 Published 체크된 작업을 불러옵니다.</p>
+        <p class="help">노션에서 작업을 불러옵니다.</p>
         <div id="works" class="list" style="margin-top:12px"></div>
         <div id="worksEmpty" class="small" style="display:none;margin-top:8px">표시할 작업이 아직 없어요.</div>
       </section>
 
-      <section class="card hero-center" style="grid-column: span 12;">
+      <section class="card" style="grid-column: span 12;">
         <h3>'Fiducia collective'란?</h3>
-        <p>
+        <p class="help">
           AI 기반 시각화 기술과 검증된 감독 네트워크를 결합해<br/>
           영상 기획 부담을 줄이고, 신뢰 있게 연결하는<br/>
           크리에이티브 프로덕션입니다.
@@ -53,8 +55,8 @@
     <div class="container row" style="justify-content:space-between">
       <div>© Fiducia Collective</div>
       <div class="row">
-        <a class="small" href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-        <span class="small">Contact: DM 주세요</span>
+        <span>Instagram</span>
+        <span>Contact</span>
       </div>
     </div>
   </footer>
@@ -65,15 +67,15 @@
 
     const thumb = (url) => url
       ? `<img src="${url}" alt="thumbnail" loading="lazy"/>`
-      : `<div class="thumb"><span class="small">no image</span></div>`;
+      : `<div class="thumb">no image</div>`;
 
     async function loadWorks(){
       worksEl.innerHTML = "";
       try{
         const res = await fetch("/api/works");
-        const data = await res.json();
-        const works = Array.isArray(data) ? data : [];
-        if(works.length===0){
+        if(!res.ok) throw new Error("works fetch failed");
+        const works = await res.json();
+        if(!Array.isArray(works) || works.length===0){
           emptyEl.style.display="block";
           return;
         }
@@ -82,16 +84,10 @@
           const card = document.createElement("a");
           card.className="person";
           card.href = w.url || "#";
-          card.target = "_blank";
-          card.rel = "noreferrer";
           card.innerHTML = `
             <div class="thumb">${thumb(w.thumbnailUrl)}</div>
             <div class="name">${w.title || "Untitled"}</div>
             <div class="small">${w.subTitle || ""}</div>
-            <div class="tags">
-              ${w.roleLabel ? `<span class="tag">${w.roleLabel}</span>`:""}
-              ${w.roleName ? `<span class="tag">${w.roleName}</span>`:""}
-            </div>
           `;
           worksEl.appendChild(card);
         });
