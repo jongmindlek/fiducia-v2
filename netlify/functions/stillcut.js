@@ -1,79 +1,153 @@
-// ===============================
-//  AI STILLCUT RESERVATION JS
-// ===============================
+// stillcut.js (AI Stillcut Reservation Page)
 
-console.log("stillcut.js loaded");
+const $ = (sel) => document.querySelector(sel);
 
-// 폼 요소들
-const form = document.querySelector("#form");
-const statusEl = document.querySelector("#status");
-const imagesInput = document.querySelector("#images");
-const fileNamesEl = document.querySelector("#fileNames");
+const form =
+  $("#stillcutForm") ||
+  $("form[data-form='stillcut']") ||
+  $("form");
 
-// -------------------------------
-// 이미지 선택 시 메타정보 업데이트
-// -------------------------------
-imagesInput.addEventListener("change", () => {
-  const files = [...imagesInput.files].slice(0, 5);
+const statusEl =
+  $("#status") ||
+  $("#formStatus") ||
+  (() => {
+    const d = document.createElement("div");
+    d.id = "status";
+    d.className = "small";
+    form?.appendChild(d);
+    return d;
+  })();
 
-  fileNamesEl.innerHTML = files
+const fileInput =
+  $("#images") ||
+  $("#imageFiles") ||
+  $("input[type='file'][name='images']") ||
+  $("input[type='file']");
+
+const fileListEl =
+  $("#fileList") ||
+  (() => {
+    const d = document.createElement("div");
+    d.id = "fileList";
+    d.className = "small";
+    fileInput?.parentElement?.appendChild(d);
+    return d;
+  })();
+
+const MAX_FILES = 5;
+
+function setStatus(msg, isError = false) {
+  statusEl.textContent = msg;
+  statusEl.style.color = isError ? "#ff8b8b" : "#b6ffcc";
+}
+
+function getValue(id, fallbackName) {
+  const el = $("#" + id) || (fallbackName ? $(`[name='${fallbackName}']`) : null);
+  return el ? el.value.trim() : "";
+}
+
+function getFiles() {
+  if (!fileInput?.files) return [];
+  return Array.from(fileInput.files);
+}
+
+function renderFileList(files) {
+  if (!files.length) {
+    fileListEl.textContent = "";
+    return;
+  }
+  fileListEl.innerHTML = files
     .map((f) => `• ${f.name} (${Math.round(f.size / 1024)}KB)`)
     .join("<br/>");
+}
 
-  if (imagesInput.files.length > 5) {
-    statusEl.textContent = "이미지는 최대 5개까지 선택 가능해요.";
+fileInput?.addEventListener("change", () => {
+  let files = getFiles();
+  if (files.length > MAX_FILES) {
+    files = files.slice(0, MAX_FILES);
+
+    // 강제로 잘라내기(브라우저 제한 때문에 새 FileList 만들기)
+    const dt = new DataTransfer();
+    files.forEach((f) => dt.items.add(f));
+    fileInput.files = dt.files;
+
+    setStatus(`이미지는 최대 ${MAX_FILES}개까지만 가능해!`, true);
   } else {
-    statusEl.textContent = "";
+    setStatus("");
   }
+  renderFileList(files);
 });
 
-// -------------------------------
-// 폼 제출 처리
-// -------------------------------
-form.addEventListener("submit", async (e) => {
+function validate(payload) {
+  const required = [
+    ["ProjectTitle", payload.ProjectTitle],
+    ["Phone", payload.Phone],
+    ["Email", payload.Email],
+    ["VideoType", payload.VideoType],
+    ["Runtime", payload.Runtime],
+    ["Budget", payload.Budget],
+    ["ShootDate", payload.ShootDate],
+    ["Location", payload.Location],
+    ["Message", payload.Message],
+  ];
+
+  const missing = required.filter(([, v]) => !v);
+  if (missing.length) {
+    const names = missing.map(([k]) => k).join(", ");
+    return `필수 항목 비어있음: ${names}`;
+  }
+  return null;
+}
+
+form?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  statusEl.textContent = "예약 전송 중...";
+  setStatus("예약 제출 중...");
 
-  const fd = new FormData(form);
-  const files = [...imagesInput.files].slice(0, 5);
-
-  // JSON 형태로 변환
+  // Notion DB 컬럼명에 맞춘 payload
   const payload = {
-    projectTitle: fd.get("projectTitle"),
-    phone: fd.get("phone"),
-    email: fd.get("email"),
-    videoType: fd.get("videoType"),
-    runtime: fd.get("runtime"),
-    budgetRange: fd.get("budgetRange"),
-    shootDate: fd.get("shootDate"),
-    location: fd.get("location"),
-    referenceLink: fd.get("referenceLink"),
-    message: fd.get("message"),
-    images: files.map((f) => ({
+    ProjectTitle: getValue("projectTitle", "projectTitle"),
+    Phone: getValue("phone", "phone"),
+    Email: getValue("email", "email"),
+    VideoType: getValue("videoType", "videoType"),
+    Runtime: getValue("runtime", "runtime"), // 숫자/텍스트 둘 다 OK
+    Budget: getValue("budget", "budget"),   // select 값
+    ShootDate: getValue("shootDate", "shootDate"), // YYYY-MM-DD
+    Location: getValue("location", "location"),
+    ReferenceLink: getValue("referenceLink", "referenceLink"),
+    Message: getValue("message", "message"),
+    Images: getFiles().map((f) => ({
       name: f.name,
       size: f.size,
       type: f.type,
+      lastModified: f.lastModified,
     })),
+    Status: "Requested",
   };
 
+  const err = validate(payload);
+  if (err) {
+    setStatus(err, true);
+    return;
+  }
+
   try {
-    const res = await fetch("/api/stillcut-reservation", {
+    const res = await fetch("/api/stillcut", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
 
-    const out = await res.json();
+    const data = await res.json().catch(() => ({}));
 
-    if (!res.ok) throw new Error(out?.message || "예약 실패");
+    if (!res.ok) {
+      throw new Error(data?.details || data?.message || "Notion stillcut error");
+    }
 
-    // 성공 UI 처리
-    statusEl.textContent = "예약 완료! 확인 후 연락드릴게요.";
-
+    setStatus("예약 완료! 곧 카톡/메일로 안내할게요.");
     form.reset();
-    imagesInput.value = "";
-    fileNamesEl.innerHTML = "";
-  } catch (err) {
-    statusEl.textContent = "예약 실패: " + err.message;
+    renderFileList([]);
+  } catch (error) {
+    console.error(error);
+    setStatus(`예약 실패: ${error.message}`, true);
   }
 });
