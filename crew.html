@@ -4,15 +4,12 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <link rel="stylesheet" href="./style.css"/>
-  <title>Crew | Fiducia Collective</title>
+  <title>Fiducia Collective — Crew</title>
 </head>
 <body>
   <nav class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="./index.html">
-        <div class="brand-title">Fiducia</div>
-        <div class="brand-sub">COLLECTIVE</div>
-      </a>
+      <div class="brand">FIDUCIA COLLECTIVE</div>
       <div class="nav-links">
         <a class="tab" href="./index.html">메인</a>
         <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
@@ -24,190 +21,210 @@
   </nav>
 
   <main class="container section">
-    <div class="grid">
+    <header class="row" style="align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <h1 style="margin:0;">crew</h1>
+    </header>
 
-      <!-- filter -->
-      <section class="card" style="grid-column: span 12;">
-        <h3>crew</h3>
-
-        <div class="form" style="margin-top:10px">
-          <div class="full">
-            <label>이름/키워드 검색</label>
-            <input id="q" placeholder="이름, 역할, 스킬 등 검색"/>
-          </div>
-
-          <div>
-            <label>Skill</label>
-            <select id="skill">
-              <option value="">Skill 전체</option>
-            </select>
-          </div>
-
-          <div>
-            <label>Role</label>
-            <select id="role">
-              <option value="">Role 전체</option>
-              <option value="director">Director</option>
-              <option value="staff">Staff</option>
-            </select>
-          </div>
-
-          <div class="full row" style="margin-top:2px">
-            <input id="verifiedOnly" type="checkbox" style="width:auto"/>
-            <label for="verifiedOnly" style="margin:0">Verified만</label>
-          </div>
+    <!-- Filters -->
+    <section class="card" style="margin-bottom:16px;">
+      <div class="grid" style="gap:10px;">
+        <div style="grid-column: span 12;">
+          <input id="q" class="input" placeholder="이름/키워드 검색" />
         </div>
-      </section>
 
-      <!-- directors -->
-      <section class="card" style="grid-column: span 12;">
-        <h3>Directors</h3>
-        <div id="directors" class="list" style="margin-top:10px"></div>
-        <div id="directorsEmpty" class="small" style="margin-top:8px;display:none">Director 없음</div>
-      </section>
+        <div style="grid-column: span 6;">
+          <label class="small" style="display:block;margin-bottom:6px;">Skill</label>
+          <select id="skill" class="input">
+            <option value="">Skill 전체</option>
+          </select>
+        </div>
 
-      <!-- staff -->
-      <section class="card" style="grid-column: span 12;">
-        <h3>Staff</h3>
-        <div id="staff" class="list" style="margin-top:10px"></div>
-        <div id="staffEmpty" class="small" style="margin-top:8px;display:none">Staff 없음</div>
-      </section>
+        <div style="grid-column: span 6;">
+          <label class="small" style="display:block;margin-bottom:6px;">Role</label>
+          <select id="role" class="input">
+            <option value="">Role 전체</option>
+          </select>
+        </div>
+      </div>
+    </section>
 
-      <!-- register -->
-      <section id="register" class="card" style="grid-column: span 12;">
+    <!-- Directors -->
+    <section class="section">
+      <h2 style="margin-bottom:8px;">Directors</h2>
+      <div id="directors" class="list"></div>
+      <div id="directorsEmpty" class="small" style="display:none;">Director 없음</div>
+    </section>
+
+    <!-- Staff -->
+    <section class="section" style="margin-top:22px;">
+      <h2 style="margin-bottom:8px;">Staff</h2>
+      <div id="staff" class="list"></div>
+      <div id="staffEmpty" class="small" style="display:none;">Staff 없음</div>
+    </section>
+
+    <!-- Register -->
+    <section id="register" class="section" style="margin-top:28px;">
+      <div class="card">
         <h3>crew register</h3>
-        <p class="small">
-          감독/스태프 등록은 면접 후 “Verified” 처리된 분만 리스트에 노출됩니다.<br/>
-          아래 버튼으로 지원 정보를 **개인 카톡**으로 보내주세요.
+        <p class="small" style="line-height:1.6;">
+          감독/스태프 등록은 면접 후 등록됩니다.<br/>
+          아래 버튼으로 지원 정보를 <b>개인 카톡(나에게)</b>으로 보내주세요.
         </p>
 
-        <!-- ✅ 여기만 네 카톡 링크로 바꿔줘 -->
-        <!-- 예: https://open.kakao.com/o/xxxxxx 또는 카카오톡 나에게 보내기 링크 -->
-        <a id="kakaoBtn" class="btn" href="KAKAO_LINK" target="_blank" rel="noreferrer">
+        <a
+          class="cta"
+          style="display:inline-flex;align-items:center;justify-content:center;padding:14px 18px;margin-top:10px;"
+          href="https://open.kakao.com/o/sYOUR_KAKAO_LINK"
+          target="_blank" rel="noreferrer"
+        >
           카톡으로 지원정보 보내기
         </a>
 
-        <div class="small" style="margin-top:8px;line-height:1.7">
-          보내야 할 정보: 이름 / 역할(감독 or 스태프) / 스킬 / 포폴 링크 /
-          연락처 / 간단 소개
+        <div class="small" style="margin-top:10px;opacity:.8;">
+          보내야 할 정보: 이름 / 역할(감독 or 스태프) / 스킬 / 포폴 링크 / 연락처 / 간단 소개
         </div>
-      </section>
-
-    </div>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
     <div class="container row" style="justify-content:space-between">
       <div>© Fiducia Collective</div>
       <div class="row">
-        <a class="small" href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+        <span>Instagram</span>
+        <span>Contact</span>
       </div>
     </div>
   </footer>
 
   <script type="module">
-    const els = {
-      q: document.querySelector("#q"),
-      skill: document.querySelector("#skill"),
-      role: document.querySelector("#role"),
-      verifiedOnly: document.querySelector("#verifiedOnly"),
-      directors: document.querySelector("#directors"),
-      staff: document.querySelector("#staff"),
-      directorsEmpty: document.querySelector("#directorsEmpty"),
-      staffEmpty: document.querySelector("#staffEmpty")
-    };
+    const directorsEl = document.querySelector("#directors");
+    const staffEl = document.querySelector("#staff");
+    const directorsEmpty = document.querySelector("#directorsEmpty");
+    const staffEmpty = document.querySelector("#staffEmpty");
 
-    let CREW = [];
+    const qEl = document.querySelector("#q");
+    const skillEl = document.querySelector("#skill");
+    const roleEl = document.querySelector("#role");
 
-    const renderPeople = (list, mount, emptyEl) => {
-      mount.innerHTML = "";
-      if(!list.length){
-        emptyEl.style.display = "block";
-        return;
+    let allCrew = [];
+
+    const thumb = (url) => url
+      ? `<img src="${url}" alt="profile" loading="lazy"/>`
+      : `<div class="thumb">no image</div>`;
+
+    function uniq(arr){
+      return [...new Set(arr.filter(Boolean))].sort();
+    }
+
+    function fillSelect(select, values){
+      const keepFirst = select.querySelector("option[value='']");
+      select.innerHTML = "";
+      select.appendChild(keepFirst);
+      values.forEach(v=>{
+        const op = document.createElement("option");
+        op.value = v;
+        op.textContent = v;
+        select.appendChild(op);
+      });
+    }
+
+    function matchesFilters(item){
+      const q = qEl.value.trim().toLowerCase();
+      const skill = skillEl.value;
+      const role = roleEl.value;
+
+      if (q){
+        const hay = [
+          item.name, item.bio, item.instagram, item.phone, item.email,
+          ...(item.roles||[]), ...(item.skills||[])
+        ].join(" ").toLowerCase();
+        if (!hay.includes(q)) return false;
       }
-      emptyEl.style.display = "none";
-      list.forEach(p=>{
+      if (skill && !(item.skills||[]).includes(skill)) return false;
+      if (role && !(item.roles||[]).includes(role)) return false;
+
+      return true;
+    }
+
+    function render(){
+      directorsEl.innerHTML = "";
+      staffEl.innerHTML = "";
+
+      const filtered = allCrew.filter(matchesFilters);
+
+      const directors = filtered.filter(c => c.mainRole === "director");
+      const staff = filtered.filter(c => c.mainRole === "staff");
+
+      directorsEmpty.style.display = directors.length ? "none" : "block";
+      staffEmpty.style.display = staff.length ? "none" : "block";
+
+      directors.forEach(c=>{
         const a = document.createElement("a");
-        a.className = "person";
-        a.href = p.portfolioUrl || p.instagram || "#";
-        a.target = "_blank";
-        a.rel = "noreferrer";
+        a.className = "card person";
+        a.href = c.id ? `./crew-detail.html?id=${c.id}` : "#";
         a.innerHTML = `
-          <div class="thumb">
-            ${p.profileImageUrl ? `<img src="${p.profileImageUrl}" alt="${p.name||"crew"}"/>`
-                               : `<span class="small">no image</span>`}
-          </div>
-          <div class="name">${p.name || "Untitled"}</div>
-          <div class="small">${p.bio || ""}</div>
+          <div class="thumb">${thumb(c.profileImageUrl)}</div>
+          <div class="name">${c.name || "Unnamed"}</div>
+          <div class="small">${c.bio || ""}</div>
           <div class="tags">
-            ${(p.roles||[]).map(r=>`<span class="tag">${r}</span>`).join("")}
-            ${(p.skills||[]).map(s=>`<span class="tag">${s}</span>`).join("")}
-            ${p.verified ? `<span class="tag">Verified</span>` : ""}
+            ${(c.roles||[]).slice(0,4).map(r=>`<span class="tag">${r}</span>`).join("")}
+            ${(c.skills||[]).slice(0,4).map(s=>`<span class="tag">${s}</span>`).join("")}
           </div>
         `;
-        mount.appendChild(a);
-      });
-    };
-
-    const applyFilters = () => {
-      const q = els.q.value.trim().toLowerCase();
-      const skill = els.skill.value;
-      const role = els.role.value;
-      const verifiedOnly = els.verifiedOnly.checked;
-
-      const filtered = CREW.filter(p=>{
-        if(verifiedOnly && !p.verified) return false;
-        if(role && p.mainRole !== role) return false;
-        if(skill && !(p.skills||[]).includes(skill)) return false;
-
-        if(!q) return true;
-        const blob = [
-          p.name, p.bio, p.mainRole,
-          ...(p.roles||[]), ...(p.skills||[])
-        ].join(" ").toLowerCase();
-        return blob.includes(q);
+        directorsEl.appendChild(a);
       });
 
-      renderPeople(filtered.filter(p=>p.mainRole==="director"), els.directors, els.directorsEmpty);
-      renderPeople(filtered.filter(p=>p.mainRole==="staff"), els.staff, els.staffEmpty);
-    };
+      staff.forEach(c=>{
+        const a = document.createElement("a");
+        a.className = "card person";
+        a.href = c.id ? `./crew-detail.html?id=${c.id}` : "#";
+        a.innerHTML = `
+          <div class="thumb">${thumb(c.profileImageUrl)}</div>
+          <div class="name">${c.name || "Unnamed"}</div>
+          <div class="small">${c.bio || ""}</div>
+          <div class="tags">
+            ${(c.roles||[]).slice(0,4).map(r=>`<span class="tag">${r}</span>`).join("")}
+            ${(c.skills||[]).slice(0,4).map(s=>`<span class="tag">${s}</span>`).join("")}
+          </div>
+        `;
+        staffEl.appendChild(a);
+      });
+    }
 
     async function loadCrew(){
+      directorsEl.innerHTML = "";
+      staffEl.innerHTML = "";
+      directorsEmpty.style.display = "none";
+      staffEmpty.style.display = "none";
+
       try{
         const res = await fetch("/api/crew");
         const data = await res.json();
 
-        // ✅ 에러가 오면 화면에 그대로 보여주기
-        if(!Array.isArray(data)){
-          CREW = [];
-          els.directorsEmpty.style.display="block";
-          els.directorsEmpty.textContent="crew 불러오기 실패";
-          els.staffEmpty.style.display="block";
-          els.staffEmpty.textContent="crew 불러오기 실패";
-          return;
-        }
+        if(!Array.isArray(data)) throw new Error("crew data invalid");
 
-        CREW = data;
+        allCrew = data;
 
-        // skill 옵션 자동 구성
-        const allSkills = [...new Set(CREW.flatMap(p=>p.skills||[]))].sort();
-        els.skill.innerHTML = `<option value="">Skill 전체</option>` +
-          allSkills.map(s=>`<option value="${s}">${s}</option>`).join("");
+        // 필터 옵션 채우기
+        const allSkills = uniq(allCrew.flatMap(c=>c.skills||[]));
+        const allRoles  = uniq(allCrew.flatMap(c=>c.roles||[]));
+        fillSelect(skillEl, allSkills);
+        fillSelect(roleEl, allRoles);
 
-        applyFilters();
+        render();
       }catch(e){
-        els.directorsEmpty.style.display="block";
-        els.directorsEmpty.textContent="crew 불러오기 실패";
-        els.staffEmpty.style.display="block";
-        els.staffEmpty.textContent="crew 불러오기 실패";
+        console.error(e);
+        directorsEmpty.style.display = "block";
+        staffEmpty.style.display = "block";
+        directorsEmpty.textContent = "crew 불러오기 실패";
+        staffEmpty.textContent = "crew 불러오기 실패";
       }
     }
 
-    ["input","change"].forEach(evt=>{
-      els.q.addEventListener(evt, applyFilters);
-      els.skill.addEventListener(evt, applyFilters);
-      els.role.addEventListener(evt, applyFilters);
-      els.verifiedOnly.addEventListener(evt, applyFilters);
+    [qEl, skillEl, roleEl].forEach(el=>{
+      el.addEventListener("input", render);
+      el.addEventListener("change", render);
     });
 
     loadCrew();
