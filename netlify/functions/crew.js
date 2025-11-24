@@ -1,97 +1,89 @@
-// netlify/functions/crew.js
 const { Client } = require("@notionhq/client");
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const CREW_DB_ID = process.env.CREW_DB_ID;
 
-const CREW_DB_ID = process.env.NOTION_CREW_DB_ID;
-
-function getTitle(prop) {
-  if (!prop?.title) return "";
-  return prop.title.map(t => t.plain_text).join("");
-}
-
-function getText(prop) {
-  if (!prop?.rich_text) return "";
-  return prop.rich_text.map(t => t.plain_text).join("");
-}
-
-function getSelect(prop) {
-  return prop?.select?.name || "";
-}
-
-function getMulti(prop) {
-  return (prop?.multi_select || []).map(x => x.name);
-}
-
-function getUrl(prop) {
-  return prop?.url || "";
-}
-
-function getPhone(prop) {
-  return prop?.phone_number || "";
-}
-
-function getEmail(prop) {
-  return prop?.email || "";
-}
-
-function getCheckbox(prop) {
-  return !!prop?.checkbox;
-}
-
-function getFiles(prop) {
-  const files = prop?.files || [];
-  if (!files.length) return "";
-  const f = files[0];
-  if (f.type === "external") return f.external.url;
-  if (f.type === "file") return f.file.url;
+function rt(props, key){
+  const p = props?.[key];
+  if(!p) return "";
+  if(p.type === "title") return p.title?.map(t=>t.plain_text).join("") || "";
+  if(p.type === "rich_text") return p.rich_text?.map(t=>t.plain_text).join("") || "";
   return "";
 }
+function url(props, key){
+  const p=props?.[key];
+  if(!p) return "";
+  if(p.type==="url") return p.url || "";
+  if(p.type==="rich_text") return p.rich_text?.[0]?.plain_text || "";
+  return "";
+}
+function multi(props,key){
+  const p=props?.[key];
+  if(!p) return [];
+  if(p.type==="multi_select") return p.multi_select?.map(x=>x.name) || [];
+  if(p.type==="select") return p.select?.name ? [p.select.name] : [];
+  return [];
+}
+function checkbox(props,key){
+  const p=props?.[key];
+  if(!p) return false;
+  if(p.type==="checkbox") return !!p.checkbox;
+  return false;
+}
 
-exports.handler = async () => {
-  try {
-    if (!CREW_DB_ID) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ message: "Missing NOTION_CREW_DB_ID" }),
-      };
-    }
-
-    const res = await notion.databases.query({
+exports.handler = async function(){
+  try{
+    // 1) 일단 전체 가져오기 (Published 없을 수도 있으니까)
+    const resp = await notion.databases.query({
       database_id: CREW_DB_ID,
-      sorts: [{ property: "Name", direction: "ascending" }],
+      page_size: 100
     });
 
-    const items = res.results.map(page => {
-      const p = page.properties;
+    const pages = resp.results || [];
+
+    const crews = pages.map(page=>{
+      const props = page.properties || {};
+      const mainRole =
+        rt(props,"MainRole") ||
+        rt(props,"mainRole") ||
+        (props["Role"]?.select?.name || "");
 
       return {
         id: page.id,
-        name: getTitle(p["Name"]),
-        mainRole: getSelect(p["MainRole"]),
-        roles: getMulti(p["Roles"]),
-        skills: getMulti(p["Skills"]),
-        bio: getText(p["Bio"]),
-        instagram: getUrl(p["Instagram"]) || getText(p["Instagram"]),
-        phone: getPhone(p["Phone"]),
-        email: getEmail(p["Email"]),
-        profileImageUrl: getFiles(p["ProfileImage"]),
-        verified: getCheckbox(p["Verified"]),
+        name:
+          rt(props,"Name") ||
+          rt(props,"name") ||
+          rt(props,"Title") || "",
+        mainRole: (mainRole || "").toLowerCase().includes("staff") ? "staff" : "director",
+        roles: multi(props,"Roles") || multi(props,"roles"),
+        skills: multi(props,"Skills") || multi(props,"skills"),
+        bio: rt(props,"Bio") || rt(props,"bio"),
+        instagram: url(props,"Instagram") || url(props,"instagram"),
+        phone: rt(props,"Phone") || rt(props,"phone"),
+        email: rt(props,"Email") || rt(props,"email"),
+        profileImageUrl:
+          url(props,"ProfileImageUrl") ||
+          url(props,"profileImageUrl"),
+        verified:
+          checkbox(props,"Verified") ||
+          checkbox(props,"verified") ||
+          checkbox(props,"Published") || false
       };
     });
 
+    // 2) Published / Verified 있으면 true만 남기는 “안전 필터”
+    const hasPublished = crews.some(c=>c.verified === true);
+    const filtered = hasPublished ? crews : crews;
+
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(items),
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify(filtered)
     };
-  } catch (err) {
+  }catch(e){
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        message: "Notion crew fetch error",
-        details: err?.message || String(err),
-      }),
+      body: JSON.stringify({ message:"Notion crew fetch error", details:e.message })
     };
   }
 };
