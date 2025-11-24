@@ -1,102 +1,189 @@
-// netlify/functions/crew.js
-const { Client } = require("@notionhq/client");
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="./styles.css"/>
+  <title>Crew | Fiducia Collective</title>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">FIDUCIA COLLECTIVE</div>
+      <div class="nav-links">
+        <a class="tab" href="./index.html">메인</a>
+        <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
+        <a class="tab" href="./gear.html">장비 예약</a>
+        <a class="tab active" href="./crew.html">감독/스태프 리스트</a>
+        <a class="tab" href="./crew.html#register">감독/스태프 등록</a>
+      </div>
+    </div>
+  </nav>
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
-const CREW_DB_ID = process.env.CREW_DB_ID;
+  <main class="container section grid">
+    <section class="card" style="grid-column: span 12;">
+      <h2 style="margin:4px 0 10px">crew</h2>
 
-// 안전하게 노션 property 읽기
-function getTitle(prop) {
-  if (!prop || prop.type !== "title") return "";
-  return prop.title.map(t => t.plain_text).join("");
-}
-function getRichText(prop) {
-  if (!prop || prop.type !== "rich_text") return "";
-  return prop.rich_text.map(t => t.plain_text).join("");
-}
-function getSelect(prop) {
-  if (!prop || prop.type !== "select") return "";
-  return prop.select ? prop.select.name : "";
-}
-function getMultiSelect(prop) {
-  if (!prop || prop.type !== "multi_select") return [];
-  return prop.multi_select.map(s => s.name);
-}
-function getCheckbox(prop) {
-  if (!prop || prop.type !== "checkbox") return false;
-  return !!prop.checkbox;
-}
-function getUrl(prop) {
-  if (!prop || prop.type !== "url") return "";
-  return prop.url || "";
-}
-function getEmail(prop) {
-  if (!prop || prop.type !== "email") return "";
-  return prop.email || "";
-}
-function getPhone(prop) {
-  if (!prop || prop.type !== "phone_number") return "";
-  return prop.phone_number || "";
-}
+      <div class="filters">
+        <div>
+          <label>이름/키워드 검색</label>
+          <input id="q" placeholder="이름, 역할, 스킬 등 검색"/>
+        </div>
+        <div>
+          <label>Skill</label>
+          <select id="skill">
+            <option value="">Skill 전체</option>
+          </select>
+        </div>
+        <div>
+          <label>Role</label>
+          <select id="role">
+            <option value="">Role 전체</option>
+            <option value="director">감독</option>
+            <option value="staff">스태프</option>
+          </select>
+        </div>
+      </div>
+      <!-- ✅ Verified 체크박스, 인증 뱃지 UI 삭제 -->
+    </section>
 
-exports.handler = async (event) => {
-  try {
-    if (event.httpMethod !== "GET") {
-      return { statusCode: 405, body: "Method Not Allowed" };
+    <section class="card" style="grid-column: span 12;">
+      <h3>Directors</h3>
+      <div id="directors" class="list" style="margin-top:10px"></div>
+      <div id="directorsEmpty" class="small" style="display:none;margin-top:6px">Director 없음</div>
+    </section>
+
+    <section class="card" style="grid-column: span 12;">
+      <h3>Staff</h3>
+      <div id="staff" class="list" style="margin-top:10px"></div>
+      <div id="staffEmpty" class="small" style="display:none;margin-top:6px">Staff 없음</div>
+    </section>
+
+    <section id="register" class="card" style="grid-column: span 12;">
+      <h3>crew register</h3>
+      <p class="help">
+        감독/스태프 등록은 면접 후 “Verified” 처리된 분만 리스트에 노출됩니다.<br/>
+        아래 버튼으로 지원 정보를 **개인 카톡**으로 보내주세요.
+      </p>
+      <button id="kakaoBtn" class="btn" type="button">카톡으로 지원정보 보내기</button>
+      <div class="notice" style="margin-top:10px">
+        보내야 할 정보: 이름 / 역할(감독 or 스태프) / 스킬 / 포폴 링크 / 연락처 / 간단 소개
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© Fiducia Collective</div>
+  </footer>
+
+  <script type="module">
+    const directorsEl = document.querySelector("#directors");
+    const staffEl = document.querySelector("#staff");
+    const dirEmptyEl = document.querySelector("#directorsEmpty");
+    const staffEmptyEl = document.querySelector("#staffEmpty");
+    const qEl = document.querySelector("#q");
+    const skillEl = document.querySelector("#skill");
+    const roleEl = document.querySelector("#role");
+
+    let allCrew = [];
+
+    const thumb = (url) => url
+      ? `<img src="${url}" alt="profile" loading="lazy"/>`
+      : `<div class="thumb">no image</div>`;
+
+    function renderList(list, targetEl, emptyEl){
+      targetEl.innerHTML = "";
+      if(list.length === 0){
+        emptyEl.style.display="block";
+        return;
+      }
+      emptyEl.style.display="none";
+
+      list.forEach(c=>{
+        const a = document.createElement("a");
+        a.className="person";
+        a.href = c.profileUrl ? `./crew-detail.html?id=${c.id}` : "#";
+        a.innerHTML = `
+          <div class="thumb">${thumb(c.profileImageUrl)}</div>
+          <div class="name">${c.name || "No name"}</div>
+          <div class="small">${c.bio || ""}</div>
+          <div class="tags">
+            ${(c.roles||[]).map(r=>`<span class="tag">${r}</span>`).join("")}
+            ${(c.skills||[]).map(s=>`<span class="tag">${s}</span>`).join("")}
+          </div>
+        `;
+        targetEl.appendChild(a);
+      });
     }
 
-    const url = new URL(event.rawUrl);
-    const verifiedOnly = url.searchParams.get("verifiedOnly") === "1";
+    function applyFilters(){
+      const q = qEl.value.trim().toLowerCase();
+      const skill = skillEl.value;
+      const role = roleEl.value;
 
-    // ✅ Published 같은 존재 불확실한 필터 절대 쓰지 않음
-    const queryPayload = {
-      database_id: CREW_DB_ID,
-      page_size: 100,
-    };
+      let filtered = allCrew.filter(c=>{
+        const hay = [
+          c.name, c.mainRole, (c.roles||[]).join(" "),
+          (c.skills||[]).join(" "), c.bio
+        ].join(" ").toLowerCase();
 
-    // VerifiedOnly=1일 때만 Verified 필터, 없으면 그냥 통과
-    if (verifiedOnly) {
-      queryPayload.filter = {
-        property: "Verified",
-        checkbox: { equals: true },
-      };
+        if(q && !hay.includes(q)) return false;
+        if(skill && !(c.skills||[]).includes(skill)) return false;
+        if(role && c.mainRole !== role) return false;
+        return true;
+      });
+
+      const dirs = filtered.filter(c=>c.mainRole==="director");
+      const staffs = filtered.filter(c=>c.mainRole==="staff");
+
+      renderList(dirs, directorsEl, dirEmptyEl);
+      renderList(staffs, staffEl, staffEmptyEl);
     }
 
-    const res = await notion.databases.query(queryPayload);
+    async function loadCrew(){
+      directorsEl.innerHTML = staffEl.innerHTML = "";
+      dirEmptyEl.style.display = staffEmptyEl.style.display = "none";
 
-    const items = res.results.map(page => {
-      const p = page.properties;
+      try{
+        const res = await fetch("/api/crew");
+        if(!res.ok) throw new Error("crew fetch failed");
+        const data = await res.json();
+        allCrew = Array.isArray(data) ? data : [];
 
-      return {
-        id: page.id,
-        name: getTitle(p.Name) || getTitle(p.Title) || getRichText(p.NameText),
-        mainRole: getSelect(p["Main Role"]) || getSelect(p.Role) || getSelect(p.MainRole),
-        roles: getMultiSelect(p.Roles) || getMultiSelect(p.RoleTags),
-        skills: getMultiSelect(p.Skills),
-        bio: getRichText(p.Bio),
-        instagram: getUrl(p.Instagram),
-        phone: getPhone(p.Phone),
-        email: getEmail(p.Email),
-        profileImageUrl: getUrl(p.ProfileImage) || getUrl(p.Image),
-        verified: getCheckbox(p.Verified), // 화면에서 뱃지는 안 씀, 데이터만 유지
-      };
+        // 스킬 옵션 채우기
+        const skills = new Set();
+        allCrew.forEach(c => (c.skills||[]).forEach(s => skills.add(s)));
+        [...skills].sort().forEach(s=>{
+          const opt = document.createElement("option");
+          opt.value = s; opt.textContent = s;
+          skillEl.appendChild(opt);
+        });
+
+        applyFilters();
+      }catch(e){
+        dirEmptyEl.style.display="block";
+        staffEmptyEl.style.display="block";
+        dirEmptyEl.textContent="crew 불러오기 실패";
+        staffEmptyEl.textContent="crew 불러오기 실패";
+        console.error(e);
+      }
+    }
+
+    qEl.addEventListener("input", applyFilters);
+    skillEl.addEventListener("change", applyFilters);
+    roleEl.addEventListener("change", applyFilters);
+
+    // ✅ 개인 카톡 보내기 (링크만 열어줌)
+    document.querySelector("#kakaoBtn").addEventListener("click", ()=>{
+      const text = encodeURIComponent(
+        "[Fiducia Crew 지원]\n이름:\n역할(감독/스태프):\n스킬:\n포폴 링크:\n연락처:\n간단 소개:"
+      );
+      // 너 개인 카톡 '나에게 보내기'는 웹에서 직접 열 수 없으니,
+      // 카카오톡 공유용 링크(채팅방 선택 화면)를 열어주는 방식.
+      window.open(`https://share.kakao.com/?text=${text}`, "_blank");
     });
 
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(items),
-    };
-  } catch (err) {
-    return {
-      statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: "Notion crew fetch error",
-        details: err?.message || String(err),
-      }),
-    };
-  }
-};
+    loadCrew();
+  </script>
+</body>
+</html>
