@@ -1,55 +1,59 @@
-const { Client } = require("@notionhq/client");
+import { Client } from "@notionhq/client";
 
-exports.handler = async (event) => {
-  if(event.httpMethod !== "POST"){
+const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const STILL_DB_ID = process.env.STILL_DB_ID;
+
+export const handler = async (event) => {
+  if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
   try {
-    const notion = new Client({ auth: process.env.NOTION_TOKEN });
-    const database_id = process.env.STILLCUT_DB_ID;
-
     const data = JSON.parse(event.body || "{}");
 
-    // Notion property helper
-    const title = (t)=>({ title:[{ text:{ content:String(t||"") } }] });
-    const rich = (t)=>({ rich_text:[{ text:{ content:String(t||"") } }] });
-    const select = (name)=> name ? ({ select:{ name:String(name) } }) : undefined;
-    const date = (d)=> d ? ({ date:{ start:String(d) } }) : undefined;
+    const imagesMeta = safeJSON(data.imagesMeta, []);
 
-    const props = {
-      "ProjectTitle": title(data.projectTitle),
-      "Phone": rich(data.phone),
-      "Email": rich(data.email),
-      "Video Type": select(data.videoType),
-      "Runtime": rich(data.runtime),
-      "Budget": select(data.budget),
-      "Shoot Date": date(data.shootDate),
-      "Location": rich(data.location),
-      "Reference Link": rich(data.referenceLink || ""),
-      "Images": rich(data.imagesMeta || ""),
-      "Message": rich(data.message),
-      "Status": select("Requested")
+    const properties = {
+      "ProjectTitle": { title: [{ text: { content: data.projectTitle || "Untitled" } }] },
+      "Phone": { phone_number: data.phone || "" },
+      "Email": { email: data.email || "" },
+      "Video Type": data.videoType ? { select: { name: data.videoType } } : undefined,
+      "Runtime": data.runtime ? { number: Number(data.runtime) } : undefined,
+      "Budget": data.budget ? { select: { name: data.budget } } : undefined,
+      "Shoot Date": data.shootDate ? { date: { start: data.shootDate } } : undefined,
+      "Location": data.location ? { rich_text: [{ text: { content: data.location } }] } : undefined,
+      "Reference Link": data.referenceLink ? { url: data.referenceLink } : undefined,
+      "Images": imagesMeta.length
+        ? { rich_text: [{ text: { content: imagesMeta.map(x=>x.name).join(", ") } }] }
+        : { rich_text: [] },
+      "Message": data.message
+        ? { rich_text: [{ text: { content: data.message } }] }
+        : { rich_text: [] },
+      "Status": { select: { name: "New" } }
     };
 
     // undefined 제거
-    Object.keys(props).forEach(k=> props[k]===undefined && delete props[k]);
+    Object.keys(properties).forEach(k => properties[k] === undefined && delete properties[k]);
 
     await notion.pages.create({
-      parent: { database_id },
-      properties: props
+      parent: { database_id: STILL_DB_ID },
+      properties
     });
 
     return {
       statusCode: 200,
-      headers:{ "Content-Type":"application/json" },
+      headers: { "Content-Type":"application/json" },
       body: JSON.stringify({ ok:true })
     };
-  } catch (e) {
+  } catch (err) {
     return {
       statusCode: 500,
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({ message:"Notion stillcut fetch error", details:e.message })
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({ message:"Notion stillcut fetch error", details: err.message })
     };
   }
 };
+
+function safeJSON(str, fallback){
+  try { return JSON.parse(str); } catch { return fallback; }
+}
