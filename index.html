@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link rel="stylesheet" href="./style.css"/>
+  <link rel="stylesheet" href="./styles.css"/>
   <title>Fiducia Collective</title>
 </head>
 <body>
-
   <nav class="nav">
     <div class="container nav-inner">
-      <div class="brand">
-        <img src="/mnt/data/2DB68B72-078E-4BBD-B3EF-C2810A77E226.jpeg" alt="Fiducia Collective logo">
-      </div>
+      <a class="brand" href="./index.html" aria-label="Fiducia Collective">
+        <span class="brand-top">Fiducia</span>
+        <span class="brand-bottom">COLLECTIVE</span>
+      </a>
       <div class="nav-links">
         <a class="tab active" href="./index.html">메인</a>
         <a class="tab" href="./ai-stillcut.html">AI 스틸컷(예약)</a>
@@ -24,7 +24,13 @@
   </nav>
 
   <header class="hero container">
-    <h1>신뢰를<br/>디자인하는<br/>프로덕션 플랫폼</h1>
+    <!-- 메인 중앙 텍스트 로고 -->
+    <div class="hero-logo" aria-hidden="true">
+      <div class="hero-logo-top">Fiducia</div>
+      <div class="hero-logo-bottom">COLLECTIVE</div>
+    </div>
+
+    <h1 class="hero-title">신뢰를<br/>디자인하는<br/>프로덕션 플랫폼</h1>
     <div class="sub">Trust isn't what follows art. It's where art begins.</div>
     <a class="cta" href="./crew.html">Director's Market</a>
   </header>
@@ -33,18 +39,17 @@
     <div class="grid">
       <section class="card" style="grid-column: span 12;">
         <h3>recent work</h3>
-        <p class="small">노션에서 Published 체크된 작업을 불러옵니다.</p>
+        <p>노션에서 Published 체크된 작업을 불러옵니다.</p>
         <div id="works" class="list" style="margin-top:12px"></div>
         <div id="worksEmpty" class="small" style="display:none;margin-top:8px">표시할 작업이 아직 없어요.</div>
       </section>
 
       <section class="card" style="grid-column: span 12;">
         <h3>'Fiducia collective'란?</h3>
-        <p class="small">
+        <p>
           AI 기반 시각화 기술과 검증된 감독 네트워크를 결합해<br/>
           영상 기획 부담을 줄이고, 신뢰 있게 연결하는<br/>
-          크리에이티브 프로덕션입니다.<br/><br/>
-          AI 스틸컷 / 감독 매칭 / 장비 예약을 한 곳에서.
+          크리에이티브 프로덕션입니다.
         </p>
       </section>
     </div>
@@ -54,8 +59,8 @@
     <div class="container row" style="justify-content:space-between">
       <div>© Fiducia Collective</div>
       <div class="row">
-        <span>Instagram</span>
-        <span>Contact</span>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+        <a href="mailto:hello@fiducia.com">Contact</a>
       </div>
     </div>
   </footer>
@@ -66,7 +71,7 @@
 
     const thumb = (url) => url
       ? `<img src="${url}" alt="thumbnail" loading="lazy"/>`
-      : `<div class="thumb">no image</div>`;
+      : `<div class="thumb noimg">no image</div>`;
 
     async function loadWorks(){
       worksEl.innerHTML = "";
